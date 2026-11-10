@@ -1,4 +1,4 @@
-```
+
 # Sistema Seguro de Gestión de Tareas (KawsayTasks)
 **Guía de Práctica 04: Ingeniería de Software Seguro**  
 **Curso:** Ingeniería de Software II  
