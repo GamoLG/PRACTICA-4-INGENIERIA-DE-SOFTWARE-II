@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de Tareas Seguro - ISW UNSAAC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800">
+
+  <!-- BARRA DE NAVEGACIÓN -->
+  <header class="bg-indigo-900 text-white shadow-md">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div>
+        <h1 class="text-xl font-bold tracking-tight">KawsayTasks • SSDLC Secure Portal</h1>
+        <p class="text-xs text-indigo-200">Práctica 04: Ingeniería de Software Seguro - UNSAAC</p>
+      </div>
+      <div id="userBadge" class="hidden flex items-center gap-3">
+        <span id="userDisplay" class="text-sm bg-indigo-800 px-3 py-1 rounded-full border border-indigo-700"></span>
+        <button onclick="cerrarSesion()" class="text-xs bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded font-medium transition">Cerrar Sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    
+    <!-- ALERTA GLOBAL -->
+    <div id="alertBox" class="hidden mb-6 p-4 rounded-lg font-medium text-sm"></div>
+
+    <!-- SECCIÓN 1: AUTENTICACIÓN (LOGIN Y REGISTRO) -->
+    <div id="authSection" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Iniciar Sesión -->
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+        <h2 class="text-lg font-bold text-slate-900 mb-4 border-b pb-2">Iniciar Sesión</h2>
+        <form onsubmit="iniciarSesion(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase">Usuario</label>
+            <input id="loginUser" type="text" required class="w-full mt-1 px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase">Contraseña</label>
+            <div class="relative mt-1">
+              <input id="loginPass" type="password" required class="w-full px-3 py-2 pr-10 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+              <button type="button" onclick="togglePassword('loginPass', this)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 text-sm focus:outline-none" title="Mostrar/Ocultar contraseña">
+                👁️
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg text-sm transition">Acceder</button>
+        </form>
+      </div>
+
+      <!-- Registro de Usuario -->
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+        <h2 class="text-lg font-bold text-slate-900 mb-4 border-b pb-2">Registro de Usuario</h2>
+        <form onsubmit="registrarUsuario(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase">Usuario</label>
+            <input id="regUser" type="text" minlength="3" required class="w-full mt-1 px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase">Contraseña (Mín. 8 caracteres)</label>
+            <div class="relative mt-1">
+              <input id="regPass" type="password" minlength="8" required class="w-full px-3 py-2 pr-10 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+              <button type="button" onclick="togglePassword('regPass', this)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 text-sm focus:outline-none" title="Mostrar/Ocultar contraseña">
+                👁️
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase">Rol</label>
+            <select id="regRole" class="w-full mt-1 px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+              <option value="estudiante">Estudiante</option>
+              <option value="docente">Docente</option>
+              <option value="administrador">Administrador</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg text-sm transition">Crear Cuenta</button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- SECCIÓN 2: PANEL DE TAREAS (SOLO AUTENTICADOS) -->
+    <div id="dashboardSection" class="hidden space-y-6">
+      
+      <!-- Panel de Creación y Búsqueda -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Formulario Crear Tarea -->
+        <div class="md:col-span-1 bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+          <h3 class="font-bold text-slate-800 mb-3 text-sm uppercase tracking-wide">Nueva Tarea</h3>
+          <form onsubmit="crearTarea(event)" class="space-y-3">
+            <div>
+              <input id="taskTitle" type="text" placeholder="Título (3-120 car.)" minlength="3" maxlength="120" required class="w-full px-3 py-2 border rounded-lg text-xs outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <textarea id="taskDesc" rows="3" placeholder="Descripción (opcional)" maxlength="1000" class="w-full px-3 py-2 border rounded-lg text-xs outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            </div>
+            <div>
+              <select id="taskStatus" class="w-full px-3 py-2 border rounded-lg text-xs outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                <option value="pendiente">Pendiente</option>
+                <option value="en_progreso">En Progreso</option>
+                <option value="completada">Completada</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg text-xs transition">Guardar Tarea</button>
+          </form>
+        </div>
+
+        <!-- Búsqueda Segura -->
+        <div class="md:col-span-2 bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+          <div>
+            <h3 class="font-bold text-slate-800 mb-3 text-sm uppercase tracking-wide">Búsqueda Segura (Prepared Statements)</h3>
+            <div class="flex gap-2">
+              <input id="searchInput" type="text" placeholder="Buscar por título..." class="flex-grow px-3 py-2 border rounded-lg text-xs outline-none focus:ring-2 focus:ring-indigo-500">
+              <button onclick="buscarTareas()" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg text-xs font-medium transition">Buscar</button>
+              <button onclick="cargarTareas()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-lg text-xs transition">Reset</button>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-slate-50 border border-slate-200 rounded text-xs text-slate-600">
+            <strong>Protección Activa:</strong> Control Anti-IDOR en servidor (Estudiantes acceden exclusivamente a sus registros; Docentes y Administradores auditan de forma global).
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tabla de Tareas -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+          <h3 class="font-bold text-slate-800 text-sm">Listado de Tareas</h3>
+          <span id="taskCount" class="text-xs bg-slate-200 text-slate-700 px-2.5 py-0.5 rounded-full font-semibold">0 tareas</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-wider border-b">
+              <tr>
+                <th class="py-3 px-4">ID</th>
+                <th class="py-3 px-4">Título</th>
+                <th class="py-3 px-4">Descripción</th>
+                <th class="py-3 px-4">Estado</th>
+                <th class="py-3 px-4">Dueño ID</th>
+                <th class="py-3 px-4 text-right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="taskList" class="divide-y divide-slate-100 text-slate-700">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- LÓGICA JAVASCRIPT CON AUTORIZACIÓN JWT Y FETCH -->
+  <script>
+    const API_BASE = window.location.origin;
+
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === "password") {
+        input.type = "text";
+        btn.textContent = "🙈";
+      } else {
+        input.type = "password";
+        btn.textContent = "👁️";
+      }
+    }
+
+    function showAlert(msg, isError = false) {
+      const box = document.getElementById("alertBox");
+      box.textContent = msg;
+      box.className = `mb-6 p-4 rounded-lg font-medium text-sm block ${isError ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`;
+      setTimeout(() => box.className = "hidden", 4000);
+    }
+
+    async function registrarUsuario(e) {
+      e.preventDefault();
+      const payload = {
+        username: document.getElementById("regUser").value,
+        password: document.getElementById("regPass").value,
+        role: document.getElementById("regRole").value
+      };
+      try {
+        const res = await fetch(`${API_BASE}/auth/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Error en registro");
+        showAlert("Usuario creado exitosamente. Ahora inicie sesión.");
+        document.getElementById("regUser").value = "";
+        document.getElementById("regPass").value = "";
+      } catch (err) {
+        showAlert(err.message, true);
+      }
+    }
+
+    async function iniciarSesion(e) {
+      e.preventDefault();
+      const payload = {
+        username: document.getElementById("loginUser").value,
+        password: document.getElementById("loginPass").value
+      };
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Credenciales incorrectas");
+
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("userRole", data.role);
+        localStorage.setItem("username", payload.username);
+        
+        cargarEstadoSesion();
+        cargarTareas();
+        showAlert(`Bienvenido, ${payload.username} (${data.role})`);
+      } catch (err) {
+        showAlert(err.message, true);
+      }
+    }
+
+    function cargarEstadoSesion() {
+      const token = localStorage.getItem("token");
+      if (token) {
+        document.getElementById("authSection").classList.add("hidden");
+        document.getElementById("dashboardSection").classList.remove("hidden");
+        document.getElementById("userBadge").classList.remove("hidden");
+        document.getElementById("userDisplay").textContent = `${localStorage.getItem("username")} • ${localStorage.getItem("userRole")}`;
+      } else {
+        document.getElementById("authSection").classList.remove("hidden");
+        document.getElementById("dashboardSection").classList.add("hidden");
+        document.getElementById("userBadge").classList.add("hidden");
+      }
+    }
+
+    function cerrarSesion() {
+      localStorage.clear();
+      cargarEstadoSesion();
+      showAlert("Sesión finalizada");
+    }
+
+    async function cargarTareas() {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      try {
+        const res = await fetch(`${API_BASE}/tasks`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (res.status === 401) return cerrarSesion();
+        const tasks = await res.json();
+        renderizarTabla(tasks);
+      } catch (err) {
+        showAlert("Error cargando tareas", true);
+      }
+    }
+
+    async function buscarTareas() {
+      const q = document.getElementById("searchInput").value.trim();
+      if (!q) return cargarTareas();
+      const token = localStorage.getItem("token");
+      try {
+        const res = await fetch(`${API_BASE}/tasks/search?q=${encodeURIComponent(q)}`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        const tasks = await res.json();
+        renderizarTabla(tasks);
+      } catch (err) {
+        showAlert("Error en la búsqueda", true);
+      }
+    }
+
+    async function crearTarea(e) {
+      e.preventDefault();
+      const token = localStorage.getItem("token");
+      const payload = {
+        title: document.getElementById("taskTitle").value,
+        description: document.getElementById("taskDesc").value || null,
+        status: document.getElementById("taskStatus").value
+      };
+      try {
+        const res = await fetch(`${API_BASE}/tasks`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Error al crear tarea");
+        document.getElementById("taskTitle").value = "";
+        document.getElementById("taskDesc").value = "";
+        showAlert("Tarea creada exitosamente");
+        cargarTareas();
+      } catch (err) {
+        showAlert(err.message, true);
+      }
+    }
+
+    async function eliminarTarea(id) {
+      if (!confirm(`¿Eliminar la tarea #${id}?`)) return;
+      const token = localStorage.getItem("token");
+      try {
+        const res = await fetch(`${API_BASE}/tasks/${id}`, {
+          method: "DELETE",
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.detail || "Error al eliminar");
+        }
+        showAlert(`Tarea #${id} eliminada`);
+        cargarTareas();
+      } catch (err) {
+        showAlert(err.message, true);
+      }
+    }
+
+    function renderizarTabla(tasks) {
+      const tbody = document.getElementById("taskList");
+      document.getElementById("taskCount").textContent = `${tasks.length} tareas`;
+      tbody.innerHTML = "";
+
+      if (tasks.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400">No se encontraron tareas registradas</td></tr>`;
+        return;
+      }
+
+      tasks.forEach(t => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono">${t.id}</td>
+          <td class="py-3 px-4 font-semibold text-slate-800">${escapeHTML(t.title)}</td>
+          <td class="py-3 px-4 text-slate-500">${escapeHTML(t.description || '-')}</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-semibold ${t.status === 'completada' ? 'bg-emerald-100 text-emerald-800' : t.status === 'en_progreso' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">${t.status}</span></td>
+          <td class="py-3 px-4 font-mono text-slate-500">ID: ${t.owner_id}</td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="eliminarTarea(${t.id})" class="text-red-600 hover:text-red-800 font-medium text-xs">Eliminar</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Sanitización contextual contra XSS en renderizado DOM
+    function escapeHTML(str) {
+      return str ? str.replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+      }[tag] || tag)) : '';
+    }
+
+    // Inicializar estado de sesión al cargar
+    cargarEstadoSesion();
+    if (localStorage.getItem("token")) cargarTareas();
+  </script>
+</body>
+</html>
