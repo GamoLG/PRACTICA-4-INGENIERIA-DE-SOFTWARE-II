@@ -1,123 +1,164 @@
-# API Segura de Gestión de Tareas - ISW UNSAAC
-
-## 1. Descripción Técnica y Arquitectura
-Implementación de una API RESTful desarrollada con **FastAPI** y **SQLite** bajo el enfoque **SSDLC** (Security Software Development Life Cycle), mitigando vulnerabilidades críticas del **OWASP Top 10** (A01: Broken Access Control, A03: Injection, A07: Identification and Authentication Failures) y los escenarios auditados en la práctica de laboratorio.
-
-### Controles de Seguridad Implementados:
-- **Autenticación:** Hash `bcrypt` con costo adaptativo (`salt rounds = 12`). Tokens JWT con expiración estricta y algoritmo HMAC-SHA256. Mensajes y tiempos de respuesta idénticos para mitigar enumeración de cuentas.
-- **Prevención IDOR:** Verificación de propiedad del recurso en servidor antes de procesar lecturas/actualizaciones (`owner_id == session.user_id`), retornando `HTTP 403 Forbidden` ante accesos no autorizados.
-- **Prevención SQLi:** *Prepared Statements* (consultas parametrizadas con placeholders `?` y tuplas de argumentos) en todas las operaciones, incluyendo el endpoint de búsqueda con comodines (`LIKE ?`).
-- **Validación Estricta:** DTOs con Pydantic V2 enforcing `extra="forbid"` (mitigación de *Mass Assignment*) y listas blancas (*whitelists*) para estados permitidos (`pendiente`, `en_progreso`, `completada`).
-- **Control de Acceso Basado en Roles (RBAC):** Jerarquía de privilegios entre `estudiante`, `docente` y `administrador`.
+```
+# Sistema Seguro de Gestión de Tareas (KawsayTasks)
+**Guía de Práctica 04: Ingeniería de Software Seguro**  
+**Curso:** Ingeniería de Software II  
+**Institución:** Universidad Nacional de San Antonio Abad del Cusco (UNSAAC)  
+**Escuela Profesional:** Ingeniería Informática y de Sistemas  
+**Autor:** Jhoel Alex Luicho Quispe (Código: 224871)  
+**Usuario GitHub:** GamoLG  
+**Repositorio:** [PRACTICA-4-INGENIERIA-DE-SOFTWARE-II](https://github.com/GamoLG/PRACTICA-4-INGENIERIA-DE-SOFTWARE-II)
 
 ---
 
-## 2. Paquetes y Dependencias a Instalar
+## 1. Descripción Técnica y Arquitectura del Sistema
+El proyecto consiste en una aplicación web completa desarrollada bajo los lineamientos del ciclo de vida de desarrollo de software seguro (**SSDLC**), mitigando de forma proactiva vulnerabilidades críticas tipificadas en el **OWASP Top 10** (específicamente *A01: Broken Access Control*, *A03: Injection* y *A07: Identification and Authentication Failures*).
 
-Para ejecutar la API, correr las pruebas automatizadas y realizar el análisis SAST, se requieren las siguientes librerías de Python:
+La solución desacopla la capa de presentación de la capa lógica y de persistencia:
+* **Backend:** API RESTful de alto rendimiento construida con **FastAPI** en Python 3.11, implementando el ciclo de vida asíncrono `lifespan` y base de datos relacional integrada con **SQLite3**.
+* **Frontend:** Interfaz SPA (*Single Page Application*) servida dinámicamente desde el backend (`index.html`), estructurada con HTML5 semántico, Tailwind CSS y JavaScript Vanilla interactivo con sanitización DOM nativa y control de visibilidad de contraseñas (`togglePassword`).
+* **Seguridad Defensiva:** Validación estricta de esquemas, consultas preparadas obligatorias, hashing criptográfico adaptativo y control de acceso a nivel de objeto (Anti-IDOR) y roles (RBAC).
 
-| Paquete | Versión Recomendada | Función en el Proyecto |
-| :--- | :--- | :--- |
-| **`fastapi`** | `>=0.110.0` | Framework web reactivo de alto rendimiento. |
-| **`uvicorn[standard]`** | `>=0.28.0` | Servidor ASGI para desplegar FastAPI en local. |
-| **`pydantic`** | `>=2.6.0` | Validación estricta de esquemas, tipos y payloads. |
-| **`bcrypt`** | `>=4.1.2` | Hashing lento y seguro de contraseñas con salt. |
-| **`pyjwt`** | `>=2.8.0` | Creación y decodificación criptográfica de tokens JWT. |
-| **`pytest`** | `>=8.0.0` | Framework para pruebas automatizadas unitarias y de integración. |
-| **`httpx`** | `>=0.27.0` | Cliente HTTP utilizado internamente por `TestClient` para simular peticiones. |
-| **`pylint`** | `>=3.0.0` | Herramienta SAST para análisis estático de código fuente. |
 
-### Comando de Instalación Rápida (Un solo paso):
-
-```bash
-pip install fastapi "uvicorn[standard]" pydantic bcrypt pyjwt pytest httpx pylint
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│                        CAPA DE PRESENTACIÓN                            │ │  • SPA HTML5 + Tailwind CSS (index.html)                               │ │  • Consola Interactiva OpenAPI / Swagger UI (/docs)                    │ └───────────────────────────────────┬────────────────────────────────────┘ │ HTTP / JSON (Bearer JWT) ┌───────────────────────────────────▼────────────────────────────────────┐ │                       BACKEND SEGURO (FastAPI)                         │ │  • Autenticación: bcrypt (salt=12) + PyJWT (HS256, exp=60m)            │ │  • RBAC & Objeto: estudiante, docente, administrador (Anti-IDOR)       │ │  • Validación: DTOs Pydantic V2 (extra="forbid")                       │ │  • Anti-SQLi: Prepared Statements en SQLite3                           │ └───────────────────────────────────┬────────────────────────────────────┘ │ SQL Parametrizado (?) ┌───────────────────────────────────▼────────────────────────────────────┐ │                      PERSISTENCIA (SQLite3)                            │ │  • Tablas: users (password_hash) | tasks (owner_id FK)                 │ └────────────────────────────────────────────────────────────────────────┘
 ```
 
-O utilizando el archivo `requirements.txt`:
+---
+
+## 2. Controles de Seguridad Implementados (OWASP / SSDLC)
+
+### A. Autenticación Robusta y Gestión de Credenciales (Ejercicio 1.2)
+* **Algoritmo de Hash Lento:** Almacenamiento exclusivo de contraseñas procesadas mediante **bcrypt** con un factor de trabajo adaptativo de 12 rondas (`salt rounds = 12`). Nunca se persiste texto plano ni algoritmos vulnerables o rápidos (MD5, SHA-1, SHA-256 plano).
+* **Tokens de Sesión Efímeros:** Generación y validación de tokens de acceso Bearer **JWT** firmados criptográficamente mediante HMAC-SHA256 (`HS256`) con ventana de expiración obligatoria (`exp` a 60 minutos).
+* **Mitigación de Enumeración de Cuentas:** Mensajes de error unificados (`"Credenciales incorrectas"`) y código de estado idéntico (`HTTP 401 Unauthorized`) tanto ante nombres de usuario inexistentes como ante contraseñas inválidas.
+* **Control de Interfaz:** Ocultamiento predeterminado de credenciales con opción de inspección temporal controlada por el usuario (`type="password"` $\leftrightarrow$ `type="text"`).
+
+### B. Control de Acceso a Nivel de Objeto y Roles (Anti-IDOR & RBAC)
+* **Control RBAC:** Tres roles jerárquicos: `estudiante`, `docente` y `administrador`.
+* **Guarda de Propiedad en Servidor (Anti-IDOR):** En las operaciones de actualización (`PUT /tasks/{id}`) y eliminación (`DELETE /tasks/{id}`), el backend comprueba en el contexto de base de datos que `task.owner_id == current_user.id`. Si un usuario autenticado intenta manipular el identificador de un recurso ajeno, la solicitud es rechazada de inmediato con **`HTTP 403 Forbidden`**.
+* **Auditoría Superior:** Los roles `docente` y `administrador` poseen permisos de visualización global, mientras que el `administrador` tiene facultades de saneamiento sobre cualquier tarea.
+
+### C. Prevención de Inyección SQL (Anti-SQLi)
+* **Consultas Parametrizadas (Prepared Statements):** Ningún parámetro suministrado por el cliente se concatena en cadenas SQL. Todas las transacciones utilizan placeholders de enlace posicional (`?`) enviando los datos en tuplas inmutables (`(param,)`).
+* **Búsqueda Segura:** El endpoint `GET /tasks/search?q=` interpola comodines (`f"%{q}%"`) pasados como dato literal al driver SQLite, neutralizando payloads clásicos como `' OR 1=1 --`.
+
+### D. Validación Estricta de Entradas (Anti-Mass Assignment)
+* **Validación por Lista Blanca:** Modelos Pydantic V2 con restricción explícita `model_config = ConfigDict(extra="forbid")`. El envío de campos no autorizados (ej. inyección de `"role": "administrador"` en la creación de tareas) provoca el rechazo automático con **`HTTP 422 Unprocessable Entity`**.
+* **Límites de Carga:** Longitudes acotadas para títulos (3 a 120 caracteres), descripciones (máximo 1 000 caracteres) y estados tipificados estrictos (`pendiente`, `en_progreso`, `completada`).
+
+---
+
+## 3. Catálogo de Endpoints de la API
+
+| Método | Ruta | Acceso / Rol | Código Éxito | Códigos de Error | Descripción Técnica |
+| :--- | :--- | :--- | :---: | :---: | :--- |
+| `GET` | `/` | Público | `200 OK` | `404` | Sirve la interfaz web SPA (`index.html`). |
+| `GET` | `/docs` | Público | `200 OK` | - | Interfaz Swagger UI / OpenAPI interactiva. |
+| `POST` | `/auth/register` | Público | `201 Created` | `400, 422` | Registra usuario con rol y genera hash bcrypt. |
+| `POST` | `/auth/login` | Público | `200 OK` | `401, 422` | Emite el token JWT Bearer de sesión. |
+| `POST` | `/tasks` | Autenticado | `201 Created` | `401, 422` | Crea una nueva tarea asociada al usuario en sesión. |
+| `GET` | `/tasks` | Autenticado | `200 OK` | `401` | Lista tareas (propias para estudiante; todas para docente/admin). |
+| `GET` | `/tasks/search` | Autenticado | `200 OK` | `401, 422` | Búsqueda por título parametrizada contra SQLi. |
+| `PUT` | `/tasks/{id}` | Propietario / Admin | `200 OK` | `401, 403, 404, 422` | Actualiza tarea; valida pertenencia anti-IDOR. |
+| `DELETE` | `/tasks/{id}` | Propietario / Admin | `200 OK` | `401, 403, 404` | Elimina tarea; valida pertenencia anti-IDOR. |
+
+---
+
+## 4. Requisitos de Instalación del Entorno
+
+### Dependencias del Sistema
+* Python 3.10 o superior (verificado en Python 3.11.4 de 64 bits).
+* Git instalado y configurado.
+
+### Instalación de Paquetes
+Clona el repositorio y ubícate en la raíz del proyecto:
+```bash
+git clone https://github.com/GamoLG/PRACTICA-4-INGENIERIA-DE-SOFTWARE-II.git
+cd PRACTICA-4-INGENIERIA-DE-SOFTWARE-II
+
+````
+
+Instala todas las dependencias requeridas mediante `pip`:
+
 ```bash
 pip install -r requirements.txt
+
 ```
 
----
+*(O de forma directa: `pip install fastapi uvicorn pydantic bcrypt pyjwt pytest httpx pylint`)*.
 
-## 3. Matriz de Modelado STRIDE y Riesgos ($P \times I$)
+## 5. Guía de Ejecución y Pruebas
 
-Evaluación de los hallazgos según el caso de estudio base y mapeo a la taxonomía STRIDE con cálculo de nivel de riesgo ($R = P \times I$):
+### 5.1. Levantar el Servidor de Aplicación
 
-| Hallazgo Auditado | Categoría STRIDE | Actor de Amenaza | Probabilidad ($P$) | Impacto ($I$) | Nivel de Riesgo ($P \times I$) | Control Técnico / Mitigación Implementada |
-| :--- | :--- | :--- | :---: | :---: | :---: | :--- |
-| **Hallazgo A:** Alteración de ID (`/reservas?id=104` a `105`) expone datos ajenos. | **Elevation of Privilege** / **Information Disclosure** (IDOR) | Usuario autenticado estándar | 4 | 4 | **16 (Alto)** | Control de acceso a nivel de objeto en backend (`owner_id == session.user_id`). Ante accesos ajenos, el servidor responde estrictamente `HTTP 403 Forbidden`. |
-| **Hallazgo B:** Parámetros de búsqueda concatenados directamente en consultas SQL. | **Tampering** / **Information Disclosure** (SQLi) | Atacante externo / usuario malicioso | 4 | 5 | **20 (Crítico)** | Consultas Parametrizadas (*Prepared Statements* con marcadores de posición `?` y tuplas de argumentos). |
-| **Hallazgo C:** Renderización directa de cadenas sin escapar en salida web. | **Tampering** (XSS) | Usuario con permisos de creación de contenido | 3 | 3 | **9 (Medio)** | Tipado estricto mediante DTOs Pydantic, serialización JSON automática que neutraliza HTML y sanitización contextual de cadenas. |
+Ejecuta el servidor ASGI Uvicorn mediante el módulo de Python:
 
----
-
-## 4. Requisitos de Seguridad Verificables
-
-1. **RS-01 [Almacenamiento de Credenciales]:** Contraseñas hasheadas exclusivamente con `bcrypt` (12 rondas de salt).
-2. **RS-02 [Anti-Enumeración]:** Login responde `401 Unauthorized` con mensaje genérico `"Credenciales incorrectas"` tanto para usuario inexistente como clave inválida.
-3. **RS-03 [Anti-IDOR]:** Un estudiante solo puede editar o eliminar sus propias tareas. Accesos no autorizados retornan `HTTP 403 Forbidden`.
-4. **RS-04 [Anti-SQLi]:** Filtros de búsqueda utilizan `WHERE title LIKE ?` pasando `(f"%{q}%",)` como tupla binaria, neutralizando payloads como `' OR 1=1 --`.
-5. **RS-05 [Anti-Mass Assignment]:** DTOs Pydantic con `model_config = ConfigDict(extra="forbid")`. La inyección de campos como `"role": "admin"` arroja `HTTP 422 Unprocessable Entity`.
-
----
-
-## 5. Estructura del Repositorio
-
-```text
-gestion_tarea_api/
-│── main.py              # API RESTful en FastAPI (Auth JWT, RBAC, CRUD, Búsqueda segura)
-│── test_security.py     # Suite de pruebas automatizadas con pytest (4 casos de seguridad)
-│── requirements.txt     # Lista de dependencias del proyecto
-│── tasks.db             # Base de datos SQLite (generada dinámicamente)
-└── README.md            # Memoria técnica y documentación de ejecución
-```
-
----
-
-## 6. Instrucciones de Ejecución
-
-### Paso 1: Iniciar el Servidor de la API
 ```bash
 python -m uvicorn main:app --reload --port 8000
-```
-- **Documentación Swagger UI:** `http://127.0.0.1:8000/docs`
-- **Documentación Redoc:** `http://127.0.0.1:8000/redoc`
 
-### Paso 2: Ejecutar las Pruebas Automatizadas de Seguridad
-En una segunda terminal, corre:
+```
+
+Acceso en navegadores:
+
+- **Frontend Web (KawsayTasks):** `http://127.0.0.1:8000/`
+- **Swagger UI / Documentación OpenAPI:** `http://127.0.0.1:8000/docs`
+
+### 5.2. Ejecución de la Suite de Pruebas Automatizadas (Pytest)
+
+En una segunda terminal, corre las aserciones de seguridad:
+
 ```bash
 python -m pytest test_security.py -v
-```
-**Resultado esperado (4 tests en verde):**
-```text
-test_security.py::test_01_registro_y_login_seguro PASSED                         [ 25%]
-test_security.py::test_02_validacion_servidor_y_anti_mass_assignment PASSED     [ 50%]
-test_security.py::test_03_control_acceso_anti_idor PASSED                       [ 75%]
-test_security.py::test_04_prevencion_inyeccion_sql PASSED                        [100%]
-================================== 4 passed in 3.20s ===================================
+
 ```
 
-### Paso 3: Análisis Estático de Código (SAST)
+**Resultado validado (4/4 tests en verde):**
+
+- `test_01_registro_y_login_seguro PASSED`: Verifica hash de contraseñas, login con JWT y rechazo de usuarios inexistentes (mitigación de enumeración).
+- `test_02_validacion_servidor_y_anti_mass_assignment PASSED`: Verifica el rechazo con código 422 ante la inyección de parámetros prohibidos o estados corruptos.
+- `test_03_control_acceso_anti_idor PASSED`: Verifica que el estudiante B recibe `403 Forbidden` al intentar editar o borrar un registro creado por el estudiante A.
+- `test_04_prevencion_inyeccion_sql PASSED`: Verifica que payloads de inyección SQL no desbordan datos no autorizados.
+
+### 5.3. Análisis Estático de Código Fuente (SAST)
+
+Ejecuta el linter de seguridad y calidad:
+
 ```bash
 python -m pylint main.py
+
 ```
+
+## 6. Estructura del Repositorio
+
+```text
+PRACTICA-4-INGENIERIA-DE-SOFTWARE-II/
+│── .gitignore           # Exclusión de base de datos local (*.db), cachés y entornos
+│── README.md            # Memoria técnica completa y manual de procedimientos
+│── requirements.txt     # Manifiesto de dependencias con versiones
+│── main.py              # Backend FastAPI, autenticación JWT, RBAC, CRUD y Anti-IDOR
+│── index.html           # Frontend SPA responsivo con Tailwind CSS y control de claves
+└── test_security.py     # Suite de pruebas automatizadas con Pytest y TestClient
+
+```
+
+````
 
 ---
 
-## 7. Catálogo Completo de Endpoints
+### ¿Qué se hizo y qué se debe hacer ahora?
 
-### Autenticación
-| Método | Endpoint | Descripción | Acceso |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/auth/register` | Registro de usuario con hash seguro (bcrypt) | Público |
-| `POST` | `/auth/login` | Inicio de sesión, retorna JWT Bearer | Público |
+####  Lo que ya está hecho y comprobado:
+1. Implementación completa de la API en FastAPI con autenticación `bcrypt`, sesiones `JWT`, control `RBAC` (estudiante, docente, admin), mitigación de `IDOR` y prevención de `SQLi`[cite: 2, 5, 6, 7, 10, 11].
+2. Frontend interactivo SPA (`index.html`) con TailwindCSS, conectado al backend, con botones para mostrar/ocultar contraseña y tablas dinámicas[cite: 14].
+3. Suite de pruebas automatizadas en `test_security.py` verificada con **`4 passed`**[cite: 12].
+4. Repositorio en GitHub configurado y vinculado bajo tu usuario `GamoLG`.
 
-### Gestión de Tareas
-| Método | Endpoint | Descripción | Acceso |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/tasks` | Crear nueva tarea vinculada al usuario activo | Requiere JWT |
-| `GET` | `/tasks` | Listar tareas (Estudiante: solo suyas; Docente/Admin: todas) | Requiere JWT (RBAC) |
-| `GET` | `/tasks/search?q={query}` | Búsqueda segura por título usando sentencias parametrizadas | Requiere JWT |
-| `PUT` | `/tasks/{id}` | Actualizar tarea con validación de propiedad (Anti-IDOR) | Dueño o Admin |
-| `DELETE` | `/tasks/{id}` | Eliminar tarea con validación de propiedad (Anti-IDOR) | Dueño o Admin |
+#### 📋 Lo que debes hacer ahora para entregar:
+1. **Actualizar el README en tu proyecto:**
+   * Abre `README.md` en tu editor, pega este contenido completo y guárdalo.
+2. **Subir los últimos cambios a GitHub:**
+   ```bash
+   git add README.md index.html main.py
+   git commit -m "docs: actualizar memoria tecnica y controles ssdlc en readme"
+   git push origin main
