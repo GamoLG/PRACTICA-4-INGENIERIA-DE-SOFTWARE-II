@@ -158,8 +158,6 @@ PRACTICA-4-INGENIERIA-DE-SOFTWARE-II/
 
 ```
 
-````
-
 ---
 
 ### ¿Qué se hizo y qué se debe hacer ahora?
