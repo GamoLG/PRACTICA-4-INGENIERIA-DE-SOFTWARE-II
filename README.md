@@ -21,7 +21,23 @@ La solución desacopla la capa de presentación de la capa lógica y de persiste
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        CAPA DE PRESENTACIÓN                            │ │  • SPA HTML5 + Tailwind CSS (index.html)                               │ │  • Consola Interactiva OpenAPI / Swagger UI (/docs)                    │ └───────────────────────────────────┬────────────────────────────────────┘ │ HTTP / JSON (Bearer JWT) ┌───────────────────────────────────▼────────────────────────────────────┐ │                       BACKEND SEGURO (FastAPI)                         │ │  • Autenticación: bcrypt (salt=12) + PyJWT (HS256, exp=60m)            │ │  • RBAC & Objeto: estudiante, docente, administrador (Anti-IDOR)       │ │  • Validación: DTOs Pydantic V2 (extra="forbid")                       │ │  • Anti-SQLi: Prepared Statements en SQLite3                           │ └───────────────────────────────────┬────────────────────────────────────┘ │ SQL Parametrizado (?) ┌───────────────────────────────────▼────────────────────────────────────┐ │                      PERSISTENCIA (SQLite3)                            │ │  • Tablas: users (password_hash) | tasks (owner_id FK)                 │ └────────────────────────────────────────────────────────────────────────┘
+│                        CAPA DE PRESENTACIÓN                            │
+│  • SPA HTML5 + Tailwind CSS (index.html)                               │
+│  • Consola Interactiva OpenAPI / Swagger UI (/docs)                    │
+└───────────────────────────────────┬────────────────────────────────────┘
+│ HTTP / JSON (Bearer JWT)
+┌───────────────────────────────────▼────────────────────────────────────┐
+│                       BACKEND SEGURO (FastAPI)                         │
+│  • Autenticación: bcrypt (salt=12) + PyJWT (HS256, exp=60m)            │
+│  • RBAC & Objeto: estudiante, docente, administrador (Anti-IDOR)       │
+│  • Validación: DTOs Pydantic V2 (extra="forbid")                       │
+│  • Anti-SQLi: Prepared Statements en SQLite3                           │
+└───────────────────────────────────┬────────────────────────────────────┘
+│ SQL Parametrizado (?)
+┌───────────────────────────────────▼────────────────────────────────────┐
+│                      PERSISTENCIA (SQLite3)                            │
+│  • Tablas: users (password_hash) | tasks (owner_id FK)                 │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
