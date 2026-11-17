@@ -131,9 +131,36 @@ sequenceDiagram
 
 ---
 
-## 4. Suite de Pruebas de Seguridad Automatizadas
+## 4. Actividad 3 — App Vulnerable (SAST)
 
-Suite de **10 pruebas automatizadas** desarrolladas con `pytest` y `TestClient`:
+Archivo `app_vulnerable.py`: aplicación Flask con vulnerabilidades intencionales para análisis estático (Pylint / Bandit):
+
+| Vulnerabilidad | CWE | Severidad | Descripción |
+| :--- | :--- | :--- | :--- |
+| SQL Injection | CWE-89 | Crítica | Concatenación directa de entrada del usuario en consulta SQL |
+| IDOR | CWE-639 | Crítica | No se verifica que el usuario sea propietario del recurso |
+| XSS Reflejado | CWE-79 | Alta | `render_template_string` sin sanitización permite ejecutar JavaScript |
+| SQL Injection (LIKE) | CWE-89 | Crítica | Concatenación directa del parámetro de búsqueda |
+
+---
+
+## 5. Actividad 4 — App Segura (Refactorización)
+
+Archivo `app_segura.py`: versión corregida con los siguientes controles:
+
+- **SQL Injection →** Consultas parametrizadas con marcadores `?`
+- **IDOR →** Validación de ownership en servidor, retorna HTTP 403 Forbidden
+- **XSS →** `markupsafe.escape()` para codificación de salida
+- **Contraseñas →** Hash con `bcrypt` (12 rondas) en lugar de texto plano
+- **Validación →** Longitud, tipo y valores permitidos en todas las entradas
+
+**Resultado Bandit:** 0 vulnerabilidades detectadas.
+
+---
+
+## 6. Suite de Pruebas de Seguridad Automatizadas
+
+Suite de **19 pruebas automatizadas** desarrolladas con `pytest` y `TestClient`:
 
 ```bash
 python -m pytest test_security.py -v
@@ -141,35 +168,31 @@ python -m pytest test_security.py -v
 
 | Prueba | Objetivo Verificado |
 | :--- | :--- |
-| `test_01_registro_y_login_seguro` | Registro con hash bcrypt, login válido y mitigación de enumeración. |
-| `test_02_validacion_servidor_y_anti_mass_assignment` | Rechazo 422 ante inyección de campos no permitidos o estados inválidos. |
-| `test_03_control_acceso_anti_idor` | Rechazo 403 Forbidden cuando un usuario intenta editar o eliminar tarea ajena. |
-| `test_04_prevencion_inyeccion_sql` | Neutralización de payloads SQLi como `' OR 1=1 --` en búsquedas. |
-| `test_05_rbac_docente_y_administrador` | Privilegios de auditoría para docentes y edición global para administradores. |
-| `test_06_ciclo_crud_completo_con_endpoint_id` | Ciclo completo de vida de tarea (crear, leer por ID, editar, eliminar y 404). |
-| `test_07_fuerza_bruta_bloqueo_progresivo` | Simulación de fuerza bruta: activación de bloqueo temporal `HTTP 429`. |
-| `test_08_restablecimiento_contrasena_un_solo_uso` | Restablecimiento con token y verificación de que no puede reutilizarse (400). |
-| `test_09_revocacion_sesion_al_cambiar_contrasena` | Verificación de que tokens JWT previos son revocados (401) tras cambio de clave. |
-| `test_10_sesion_expirada` | Rechazo con 401 Unauthorized ante tokens JWT vencidos en el tiempo. |
+| `test_01_registro_y_login_seguro` | Registro con hash bcrypt, login válido y mitigación de enumeración |
+| `test_02_validacion_servidor_y_anti_mass_assignment` | Rechazo 422 ante campos no permitidos o estados inválidos |
+| `test_03_control_acceso_anti_idor` | Rechazo 403 Forbidden al editar o eliminar tarea ajena |
+| `test_04_prevencion_inyeccion_sql` | Neutralización de payloads SQLi en búsquedas |
+| `test_05_rbac_docente_y_administrador` | Privilegios de auditoría (docente) y edición global (admin) |
+| `test_06_ciclo_crud_completo_con_endpoint_id` | Ciclo completo crear, leer, editar, eliminar y 404 |
+| `test_07_fuerza_bruta_bloqueo_progresivo` | Activación de bloqueo temporal HTTP 429 |
+| `test_08_restablecimiento_contrasena_un_solo_uso` | Token de reset no puede reutilizarse (400) |
+| `test_09_revocacion_sesion_al_cambiar_contrasena` | Tokens JWT previos revocados (401) tras cambio de clave |
+| `test_10_sesion_expirada` | Rechazo 401 ante tokens JWT vencidos |
+| `test_11_campo_vacio_titulo` | Título vacío retorna 422 |
+| `test_12_campo_demasiado_largo` | Título > 120 caracteres retorna 422 |
+| `test_13_estado_invalido` | Estado no permitido retorna 422 |
+| `test_14_campo_extra_inyectado` | Campo extra (extra=forbid) retorna 422 |
+| `test_15_caracteres_especiales_y_unicode` | Payloads XSS/SQLi aceptados como texto, emojis y ñ |
+| `test_16_sin_token_autenticacion` | Sin token retorna 401/403 en todos los endpoints protegidos |
+| `test_17_busqueda_sqli_parametrizada` | Payloads SQLi en búsqueda no alteran la consulta |
+| `test_18_busqueda_cadena_larga` | Búsqueda > 50 caracteres retorna 422 |
+| `test_19_valores_nulos_en_body` | Valores null en campos requeridos retorna 422 |
 
-**Resultado de ejecución:**
-```text
-test_security.py::test_01_registro_y_login_seguro PASSED                 [ 10%]
-test_security.py::test_02_validacion_servidor_y_anti_mass_assignment PASSED [ 20%]
-test_security.py::test_03_control_acceso_anti_idor PASSED                [ 30%]
-test_security.py::test_04_prevencion_inyeccion_sql PASSED                [ 40%]
-test_security.py::test_05_rbac_docente_y_administrador PASSED            [ 50%]
-test_security.py::test_06_ciclo_crud_completo_con_endpoint_id PASSED     [ 60%]
-test_security.py::test_07_fuerza_bruta_bloqueo_progresivo PASSED         [ 70%]
-test_security.py::test_08_restablecimiento_contrasena_un_solo_uso PASSED [ 80%]
-test_security.py::test_09_revocacion_sesion_al_cambiar_contrasena PASSED [ 90%]
-test_security.py::test_10_sesion_expirada PASSED                         [100%]
-======================== 10 passed in 4.45s ========================
-```
+**Resultado:** 19 passed ✅
 
 ---
 
-## 5. Instrucciones de Ejecución
+## 7. Instrucciones de Ejecución
 
 ```bash
 # 1. Instalar dependencias
@@ -178,9 +201,16 @@ pip install -r requirements.txt
 # 2. Iniciar servidor local
 python -m uvicorn main:app --reload --port 8000
 
-# 3. Correr las 10 pruebas automatizadas
+# 3. Correr las 19 pruebas automatizadas
 python -m pytest test_security.py -v
+
+# 4. Análisis SAST de la app vulnerable
+pip install pylint bandit
+pylint app_vulnerable.py
+bandit app_vulnerable.py
+bandit app_segura.py
 ```
 
 * **Frontend Web:** `http://127.0.0.1:8000`
 * **Swagger UI Docs:** `http://127.0.0.1:8000/docs`
+* **Demo en Render:** `https://practica-4-ingenieria-de-software-ii.onrender.com`
