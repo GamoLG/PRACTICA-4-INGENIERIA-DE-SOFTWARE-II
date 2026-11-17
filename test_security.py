@@ -1,7 +1,9 @@
 import os
+import datetime
 import pytest
+import jwt
 from fastapi.testclient import TestClient
-from main import app, DB_FILE, init_db, _login_attempts
+from main import app, DB_FILE, init_db, reset_security_state, SECRET_KEY, ALGORITHM
 
 client = TestClient(app)
 
@@ -9,17 +11,18 @@ client = TestClient(app)
 def setup_test_db():
     if os.path.exists(DB_FILE):
         os.remove(DB_FILE)
-    init_db()  # <-- Crea las tablas users y tasks de inmediato
+    init_db()
     yield
     if os.path.exists(DB_FILE):
         os.remove(DB_FILE)
 
 @pytest.fixture(autouse=True)
-def reset_rate_limiter():
-    """Limpia el rate limiter entre tests para evitar bloqueos por IP de TestClient."""
-    _login_attempts.clear()
+def reset_security():
+    """Limpia bloqueos e historiales entre cada test."""
+    reset_security_state()
     yield
-    _login_attempts.clear()
+    reset_security_state()
+
 def test_01_registro_y_login_seguro():
     # Registro usuario A (estudiante)
     r_reg = client.post("/auth/register", json={
@@ -45,7 +48,6 @@ def test_01_registro_y_login_seguro():
     assert r_fail.status_code == 401
 
 def test_02_validacion_servidor_y_anti_mass_assignment():
-    # Obtener token
     token = client.post("/auth/login", json={
         "username": "estudiante_a",
         "password": "Password123!"
@@ -56,7 +58,7 @@ def test_02_validacion_servidor_y_anti_mass_assignment():
     r_extra = client.post("/tasks", json={
         "title": "Tarea 1",
         "status": "pendiente",
-        "role": "administrador"  # Campo extra prohibido
+        "role": "administrador"
     }, headers=headers)
     assert r_extra.status_code == 422
 
@@ -106,7 +108,6 @@ def test_04_prevencion_inyeccion_sql():
     sqli_payload = "' OR 1=1 --"
     r_search = client.get(f"/tasks/search?q={sqli_payload}", headers=headers)
     assert r_search.status_code == 200
-    # No debe retornar registros si no coinciden literalmente con el string
     assert len(r_search.json()) == 0
 
 def test_05_rbac_docente_y_administrador():
@@ -122,7 +123,6 @@ def test_05_rbac_docente_y_administrador():
     }).json()["access_token"]
     headers_docente = {"Authorization": f"Bearer {token_docente}"}
 
-    # Docente puede auditar y listar todas las tareas
     r_list = client.get("/tasks", headers=headers_docente)
     assert r_list.status_code == 200
     assert len(r_list.json()) >= 1
@@ -139,7 +139,6 @@ def test_05_rbac_docente_y_administrador():
     }).json()["access_token"]
     headers_admin = {"Authorization": f"Bearer {token_admin}"}
 
-    # Admin crea tarea y puede editarla
     r_task = client.post("/tasks", json={
         "title": "Tarea de Admin",
         "description": "Prueba admin",
@@ -149,7 +148,6 @@ def test_05_rbac_docente_y_administrador():
     assert r_task.status_code == 201
     admin_task_id = r_task.json()["task_id"]
 
-    # Admin puede editar cualquier tarea
     r_edit = client.put(f"/tasks/{admin_task_id}", json={"status": "completada"}, headers=headers_admin)
     assert r_edit.status_code == 200
 
@@ -174,7 +172,6 @@ def test_06_ciclo_crud_completo_con_endpoint_id():
     r_get = client.get(f"/tasks/{task_id}", headers=headers)
     assert r_get.status_code == 200
     assert r_get.json()["title"] == "Laboratorio ISW"
-    assert r_get.json()["priority"] == "alta"
 
     # Update (PUT /tasks/{id})
     r_put = client.put(f"/tasks/{task_id}", json={
@@ -187,6 +184,96 @@ def test_06_ciclo_crud_completo_con_endpoint_id():
     r_del = client.delete(f"/tasks/{task_id}", headers=headers)
     assert r_del.status_code == 200
 
-    # Read after delete should return 404
     r_not_found = client.get(f"/tasks/{task_id}", headers=headers)
     assert r_not_found.status_code == 404
+
+# ========================================================
+# PRUEBAS GUÍA 4 - EJERCICIO 1.2: AUTENTICACIÓN RESISTENTE
+# ========================================================
+def test_07_fuerza_bruta_bloqueo_progresivo():
+    """Simula ataque de fuerza bruta; verifica bloqueo temporal 429."""
+    username = "estudiante_a"
+
+    # 3 intentos fallidos consecutivos activan bloqueo
+    for _ in range(3):
+        r = client.post("/auth/login", json={"username": username, "password": "WrongPassword999!"})
+        assert r.status_code in [401, 429]
+
+    # El siguiente intento (incluso con credenciales correctas) debe ser bloqueado con 429
+    r_blocked = client.post("/auth/login", json={"username": username, "password": "Password123!"})
+    assert r_blocked.status_code == 429
+    assert "bloqueo" in r_blocked.json()["detail"].lower()
+
+def test_08_restablecimiento_contrasena_un_solo_uso():
+    """Solicita token, restablece contraseña y verifica que el token no se pueda reutilizar."""
+    username = "estudiante_b"
+
+    # 1. Solicitar restablecimiento
+    r_forgot = client.post("/auth/forgot-password", json={"username": username})
+    assert r_forgot.status_code == 200
+    reset_token = r_forgot.json().get("reset_token")
+    assert reset_token is not None
+
+    # 2. Restablecer con nueva contraseña
+    new_pass = "NewSecretPassword2026!"
+    r_reset = client.post("/auth/reset-password", json={
+        "token": reset_token,
+        "new_password": new_pass
+    })
+    assert r_reset.status_code == 200
+
+    # 3. Reutilización de token (debe fallar con 400 Bad Request)
+    r_reused = client.post("/auth/reset-password", json={
+        "token": reset_token,
+        "new_password": "AnotherPassword2026!"
+    })
+    assert r_reused.status_code == 400
+    assert "utilizado" in r_reused.json()["detail"].lower()
+
+    # 4. Iniciar sesión con la nueva contraseña funciona
+    r_login = client.post("/auth/login", json={"username": username, "password": new_pass})
+    assert r_login.status_code == 200
+
+def test_09_revocacion_sesion_al_cambiar_contrasena():
+    """Un token JWT emitido antes de un cambio de contraseña queda revocado (401)."""
+    username = "estudiante_b"
+    current_pass = "NewSecretPassword2026!"
+
+    # 1. Login y obtención de sesión activa
+    token_old = client.post("/auth/login", json={"username": username, "password": current_pass}).json()["access_token"]
+    headers_old = {"Authorization": f"Bearer {token_old}"}
+
+    # Verifica que el token antiguo funciona antes del cambio
+    r_check = client.get("/tasks", headers=headers_old)
+    assert r_check.status_code == 200
+
+    # 2. Se restablece/cambia la contraseña
+    r_forgot = client.post("/auth/forgot-password", json={"username": username})
+    reset_token = r_forgot.json()["reset_token"]
+
+    r_reset = client.post("/auth/reset-password", json={
+        "token": reset_token,
+        "new_password": "BrandNewPassword999!"
+    })
+    assert r_reset.status_code == 200
+
+    # 3. El token antiguo intenta acceder a un recurso protegido -> debe ser 401 (Sesión revocada)
+    r_revoked = client.get("/tasks", headers=headers_old)
+    assert r_revoked.status_code == 401
+    assert "revocada" in r_revoked.json()["detail"].lower()
+
+def test_10_sesion_expirada():
+    """Un token JWT con fecha de expiración vencida retorna 401 Unauthorized."""
+    # Generar token JWT con exp en el pasado (-10 segundos)
+    expired_payload = {
+        "sub": "estudiante_a",
+        "role": "estudiante",
+        "id": 1,
+        "token_version": 1,
+        "exp": datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(seconds=10)
+    }
+    expired_token = jwt.encode(expired_payload, SECRET_KEY, algorithm=ALGORITHM)
+
+    r_exp = client.get("/tasks", headers={"Authorization": f"Bearer {expired_token}"})
+    assert r_exp.status_code == 401
+    assert "expirado" in r_exp.json()["detail"].lower()

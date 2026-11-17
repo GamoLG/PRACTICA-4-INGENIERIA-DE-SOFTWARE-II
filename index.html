@@ -137,6 +137,15 @@
             >
               Acceder
             </button>
+            <div class="text-center pt-2">
+              <button
+                type="button"
+                onclick="openRecoveryModal()"
+                class="text-xs text-indigo-600 hover:text-indigo-800 font-medium hover:underline transition"
+              >
+                ¿Olvidaste tu contraseña? Restablécela aquí
+              </button>
+            </div>
           </form>
         </div>
 
@@ -404,6 +413,94 @@
   </dialog>
 
   <!-- ══════════════════════════════════════════════
+       PASSWORD RECOVERY MODAL
+  ══════════════════════════════════════════════ -->
+  <dialog
+    id="recoveryModal"
+    class="rounded-2xl shadow-2xl border border-slate-200 p-0 w-full max-w-md mx-auto"
+    style="margin-top: 10vh;"
+  >
+    <div class="bg-white rounded-2xl overflow-hidden">
+      <!-- Modal header -->
+      <div class="bg-indigo-700 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-white font-bold text-base">🔑 Restablecer Contraseña</h3>
+        <button onclick="closeRecoveryModal()" class="text-indigo-200 hover:text-white transition text-xl leading-none">&times;</button>
+      </div>
+
+      <!-- Paso 1: Solicitar Token -->
+      <div id="recoveryStep1" class="px-6 py-5 space-y-4">
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Ingresa tu nombre de usuario para generar un token seguro de restablecimiento de un solo uso.
+        </p>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Usuario</label>
+          <input
+            id="forgotUsername"
+            type="text"
+            placeholder="Nombre de usuario"
+            class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+        <button
+          type="button"
+          onclick="requestRecoveryToken()"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg text-sm transition"
+        >
+          Solicitar Token de Recuperación
+        </button>
+      </div>
+
+      <!-- Paso 2: Cambiar Contraseña con Token -->
+      <div id="recoveryStep2" class="hidden px-6 py-5 space-y-4 border-t border-slate-100">
+        <div class="p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-xs text-indigo-800">
+          <strong>Token generado:</strong> Se ha generado tu token temporal de un solo uso (válido por 15 minutos).
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Token de un solo uso</label>
+          <input
+            id="resetTokenInput"
+            type="text"
+            placeholder="Pega el token aquí"
+            class="w-full px-3 py-2 font-mono border border-slate-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Nueva Contraseña</label>
+          <div class="relative">
+            <input
+              id="newPasswordInput"
+              type="password"
+              placeholder="Mín. 8 car., mayúscula, número, especial"
+              class="w-full px-3 py-2 pr-10 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <button type="button" onclick="togglePwd('newPasswordInput','eyeNewPass')"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+              <span id="eyeNewPass">👁️</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-1">Requiere mín. 8 caracteres, 1 mayúscula, 1 número y 1 símbolo especial.</p>
+        </div>
+        <button
+          type="button"
+          onclick="submitPasswordReset()"
+          class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg text-sm transition"
+        >
+          Confirmar y Restablecer
+        </button>
+      </div>
+
+      <div class="px-6 pb-4 pt-2 flex justify-end">
+        <button
+          onclick="closeRecoveryModal()"
+          class="text-xs text-slate-500 hover:text-slate-800"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ══════════════════════════════════════════════
        TOAST CONTAINER
   ══════════════════════════════════════════════ -->
   <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 items-end pointer-events-none"></div>
@@ -638,10 +735,93 @@
     /* ─────────────────────────────────────────────
        AUTH: Logout
     ───────────────────────────────────────────── */
-    function logout() {
+    async function logout() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          await fetch(`${API}/auth/logout`, {
+            method: 'POST',
+            headers: authHeaders()
+          });
+        } catch (_) {}
+      }
       ['token', 'userId', 'role', 'username'].forEach(k => localStorage.removeItem(k));
-      toast('Sesión cerrada', 'success');
+      toast('Sesión cerrada y revocada', 'success');
       renderSessionState();
+    }
+
+    /* ─────────────────────────────────────────────
+       AUTH: Password Recovery
+    ───────────────────────────────────────────── */
+    function openRecoveryModal() {
+      document.getElementById('forgotUsername').value = '';
+      document.getElementById('resetTokenInput').value = '';
+      document.getElementById('newPasswordInput').value = '';
+      document.getElementById('recoveryStep1').classList.remove('hidden');
+      document.getElementById('recoveryStep2').classList.add('hidden');
+      document.getElementById('recoveryModal').showModal();
+    }
+
+    function closeRecoveryModal() {
+      document.getElementById('recoveryModal').close();
+    }
+
+    async function requestRecoveryToken() {
+      const username = document.getElementById('forgotUsername').value.trim();
+      if (!username) {
+        toast('Ingresa tu nombre de usuario', 'error');
+        return;
+      }
+      try {
+        const res = await fetch(`${API}/auth/forgot-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          toast(data.detail || 'Error al procesar solicitud', 'error');
+          return;
+        }
+        toast(data.message, 'success');
+        if (data.reset_token) {
+          document.getElementById('resetTokenInput').value = data.reset_token;
+          document.getElementById('recoveryStep2').classList.remove('hidden');
+        }
+      } catch (err) {
+        toast('No se pudo conectar con el servidor', 'error');
+      }
+    }
+
+    async function submitPasswordReset() {
+      const token = document.getElementById('resetTokenInput').value.trim();
+      const new_password = document.getElementById('newPasswordInput').value;
+
+      if (!token) {
+        toast('El token es requerido', 'error');
+        return;
+      }
+      if (!new_password) {
+        toast('Ingresa la nueva contraseña', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/auth/reset-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, new_password })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          toast(data.detail || 'Error al restablecer contraseña', 'error');
+          return;
+        }
+        toast(data.message, 'success');
+        closeRecoveryModal();
+      } catch (err) {
+        toast('No se pudo conectar con el servidor', 'error');
+      }
     }
 
     /* ─────────────────────────────────────────────

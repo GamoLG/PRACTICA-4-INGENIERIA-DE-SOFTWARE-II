@@ -1,124 +1,186 @@
 # API Segura de Gestión de Tareas - ISW UNSAAC
-
-## 1. Descripción Técnica y Arquitectura
-Implementación de una API RESTful desarrollada con **FastAPI** y **SQLite** bajo el enfoque **SSDLC** (Security Software Development Life Cycle), mitigando vulnerabilidades críticas del **OWASP Top 10** (A01: Broken Access Control, A03: Injection, A04: Insecure Design, A05: Security Misconfiguration, A07: Identification and Authentication Failures, A09: Security Logging and Monitoring Failures) y los escenarios auditados en la práctica de laboratorio.
-
-### Controles de Seguridad Implementados:
-- **Autenticación Robusta:** Hash `bcrypt` con costo adaptativo (`salt rounds = 12`). Tokens JWT con expiración estricta y algoritmo HMAC-SHA256. Validación de complejidad de contraseñas (mínimo 8 caracteres, mayúscula, dígito y símbolo especial).
-- **Rate Limiting:** Límite de 5 intentos por minuto por dirección IP en `/auth/login` (mitigación de ataques de fuerza bruta, retorna `HTTP 429 Too Many Requests`).
-- **Prevención IDOR:** Verificación estricta de propiedad del recurso en servidor en operaciones de lectura individual, edición y eliminación (`owner_id == session.user_id`), respondiendo `HTTP 403 Forbidden` ante accesos no autorizados.
-- **Prevención SQLi:** *Prepared Statements* (consultas parametrizadas con placeholders `?` y tuplas de argumentos) en todas las operaciones, incluyendo el endpoint de búsqueda con comodines (`LIKE ?`).
-- **Validación Estricta:** DTOs con Pydantic V2 enforcing `extra="forbid"` (mitigación de *Mass Assignment*) y listas blancas (*whitelists*) para estados (`pendiente`, `en_progreso`, `completada`) y prioridades (`baja`, `media`, `alta`).
-- **Control de Acceso Basado en Roles (RBAC):**
-  - **Estudiante:** Acceso exclusivo a sus propias tareas (crear, listar, leer, editar, eliminar).
-  - **Docente:** Auditoría global (puede listar y buscar tareas de todos los estudiantes, pero solo editar las suyas).
-  - **Administrador:** Privilegios globales de lectura, edición y eliminación sobre cualquier tarea.
-- **Cabeceras de Seguridad HTTP (Middleware):** Inyección automática de `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `X-XSS-Protection: 1; mode=block` y `Referrer-Policy: strict-origin-when-cross-origin`.
-- **Registro y Auditoría:** Logging persistente en `audit.log` y consola para eventos de autenticación (éxitos/fallos con IP) y modificaciones de tareas (creación, edición, eliminación).
-- **Protección XSS en Frontend:** Función contextual `escapeHTML()` en JavaScript, diálogos nativos y manejo seguro de errores con desempaquetado de detalles Pydantic.
+## Guía 4: Ingeniería de Software Seguro — Ejercicio Propuesto 1.2
+### Implementación de Autenticación Resistente a Ataques Comunes
 
 ---
 
-## 2. Paquetes y Dependencias
+## 1. Diagramas de Flujo de Autenticación y Seguridad
 
-| Paquete | Versión Recomendada | Función en el Proyecto |
-| :--- | :--- | :--- |
-| **`fastapi`** | `>=0.110.0` | Framework web reactivo de alto rendimiento. |
-| **`uvicorn[standard]`** | `>=0.28.0` | Servidor ASGI para desplegar FastAPI en local. |
-| **`pydantic`** | `>=2.6.0` | Validación estricta de esquemas, tipos y payloads. |
-| **`bcrypt`** | `>=4.1.2` | Hashing lento y seguro de contraseñas con salt. |
-| **`pyjwt`** | `>=2.8.0` | Creación y decodificación criptográfica de tokens JWT. |
-| **`pytest`** | `>=8.0.0` | Framework para pruebas automatizadas unitarias y de integración. |
-| **`httpx`** | `>=0.27.0` | Cliente HTTP utilizado internamente por `TestClient` para simular peticiones. |
+### A. Flujo de Autenticación con Bloqueo Progresivo y Regeneración de Sesión
 
-### Instalación:
-```bash
-pip install -r requirements.txt
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as Usuario / Atacante
+    participant W as WAF / Rate Limiter
+    participant API as FastAPI Backend
+    participant DB as SQLite DB
+    participant Log as audit.log
+
+    U->>W: POST /auth/login {username, password}
+    W->>W: Verificar bloqueo activo (IP y Usuario)
+    alt Bloqueo temporal activo (3 fallos=30s, 5 fallos=180s)
+        W-->>U: HTTP 429 Too Many Requests (Tiempo restante)
+        W->>Log: Registro de intento en bloqueo
+    else Sin bloqueo activo
+        W->>API: Procesar credenciales
+        API->>DB: Consultar usuario y password_hash (bcrypt)
+        alt Credenciales inválidas o usuario no existe
+            API->>W: Registrar intento fallido
+            API->>Log: LOGIN FAIL {username, IP}
+            API-->>U: HTTP 401 Unauthorized ("Credenciales incorrectas")
+        else Credenciales válidas
+            API->>W: Limpiar historial de fallos
+            API->>API: Generar JWT con nuevo JTI (UUID) y token_version
+            API->>Log: LOGIN OK {username, IP}
+            API-->>U: HTTP 200 OK {access_token, role}
+        end
+    end
+```
+
+### B. Flujo de Restablecimiento de Contraseña y Revocación de Sesión
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as Usuario
+    participant API as FastAPI Backend
+    participant DB as SQLite DB
+    participant Log as audit.log
+
+    Note over U,API: 1. Solicitud de Restablecimiento
+    U->>API: POST /auth/forgot-password {username}
+    API->>DB: Invalidar tokens anteriores (used = 1)
+    API->>API: Generar token seguro (secrets.token_urlsafe)
+    API->>API: Calcular SHA-256(token)
+    API->>DB: Guardar token_hash con expiración corta (15 min)
+    API->>Log: PASSWORD_RESET_REQUEST {username, IP} (sin exponer token)
+    API-->>U: HTTP 200 OK ("Si la cuenta existe...", reset_token)
+
+    Note over U,API: 2. Cambio de Contraseña y Revocación
+    U->>API: POST /auth/reset-password {token, new_password}
+    API->>API: Validar complejidad de contraseña (regex)
+    API->>DB: Buscar token_hash no usado (used = 0) y no expirado
+    alt Token inválido o ya utilizado
+        API-->>U: HTTP 400 Bad Request ("Token inválido o ya utilizado")
+    else Token válido
+        API->>API: Hashear nueva contraseña con bcrypt (12 rondas)
+        API->>DB: UPDATE users SET password_hash, token_version = token_version + 1
+        API->>DB: UPDATE password_reset_tokens SET used = 1
+        API->>Log: PASSWORD_RESET_SUCCESS {user_id, IP} (Sesiones revocadas)
+        API-->>U: HTTP 200 OK ("Contraseña restablecida. Sesiones revocadas.")
+    end
+
+    Note over U,API: 3. Intento de uso de token JWT anterior
+    U->>API: GET /tasks con JWT emitido previo al cambio
+    API->>DB: Verificar token_version del JWT vs BD
+    API-->>U: HTTP 401 Unauthorized ("Sesión revocada debido a cambio de credenciales")
 ```
 
 ---
 
-## 3. Matriz de Modelado STRIDE y Riesgos ($P \times I$)
+## 2. Controles de Seguridad Implementados (Guía 4 - Ejercicio 1.2)
 
-| Hallazgo Auditado | Categoría STRIDE | Actor de Amenaza | Probabilidad ($P$) | Impacto ($I$) | Nivel de Riesgo ($P \times I$) | Control Técnico / Mitigación Implementada |
-| :--- | :--- | :--- | :---: | :---: | :---: | :--- |
-| **Hallazgo A:** Alteración de ID (`/tasks/104` a `105`) expone/modifica datos ajenos. | **Elevation of Privilege** / **Information Disclosure** (IDOR) | Usuario autenticado estándar | 4 | 4 | **16 (Alto)** | Control de acceso a nivel de objeto en backend (`owner_id == session.user_id`). Responde estrictamente `HTTP 403 Forbidden`. |
-| **Hallazgo B:** Parámetros de búsqueda concatenados directamente en consultas SQL. | **Tampering** / **Information Disclosure** (SQLi) | Atacante externo / usuario malicioso | 4 | 5 | **20 (Crítico)** | Consultas Parametrizadas (*Prepared Statements* con marcadores de posición `?` y tuplas de argumentos). |
-| **Hallazgo C:** Renderización directa de cadenas sin escapar en salida web. | **Tampering** (XSS) | Usuario con permisos de creación de contenido | 3 | 3 | **9 (Medio)** | Tipado estricto mediante DTOs Pydantic, serialización JSON automática y sanitización `escapeHTML()` en frontend. |
-| **Fuerza Bruta:** Intentos repetidos de autenticación sobre `/auth/login`. | **Denial of Service** / **Elevation of Privilege** | Atacante con diccionario de credenciales | 4 | 4 | **16 (Alto)** | Rate Limiter en memoria (máximo 5 intentos por minuto por IP -> `HTTP 429 Too Many Requests`). |
-
----
-
-## 4. Requisitos de Seguridad Verificables
-
-1. **RS-01 [Almacenamiento de Credenciales]:** Contraseñas hasheadas exclusivamente con `bcrypt` (12 rondas de salt) y política de complejidad exigida en DTO.
-2. **RS-02 [Anti-Enumeración & Rate Limiting]:** Login responde `401 Unauthorized` genérico ante credenciales incorrectas y `429 Too Many Requests` ante exceso de intentos.
-3. **RS-03 [Anti-IDOR]:** Un estudiante solo puede ver, editar o eliminar sus propias tareas. Accesos a tareas ajenas retornan `HTTP 403 Forbidden`.
-4. **RS-04 [Anti-SQLi]:** Filtros de búsqueda utilizan `WHERE title LIKE ?` pasando `(f"%{q}%",)` como tupla binaria, neutralizando payloads como `' OR 1=1 --`.
-5. **RS-05 [Anti-Mass Assignment]:** DTOs Pydantic con `model_config = ConfigDict(extra="forbid")`. La inyección de campos extras arroja `HTTP 422 Unprocessable Entity`.
-6. **RS-06 [Auditoría]:** Cada acción crítica genera trazas fechadas en `audit.log`.
-
----
-
-## 5. Estructura del Repositorio
-
-```text
-gestion_tarea_api/
-├── .gitignore           # Exclusión de base de datos, logs, caché y entornos
-├── main.py              # API RESTful en FastAPI (Auth, RBAC, CRUD, Búsqueda, Middleware)
-├── index.html           # SPA moderna interactiva (Tailwind CSS, Modal, Cards, Toasts)
-├── test_security.py     # Suite de 6 pruebas automatizadas con pytest
-├── requirements.txt     # Dependencias del proyecto
-├── tasks.db             # Base de datos SQLite (generada dinámicamente con índices y WAL)
-├── audit.log            # Registro de auditoría de seguridad
-└── README.md            # Memoria técnica completa
-```
+1. **Hash Criptográfico Lento:** `bcrypt` con costo adaptativo de 12 rondas de salt para almacenamiento de contraseñas.
+2. **Límite de Intentos y Bloqueo Temporal Progresivo:**
+   - Seguimiento independiente por **dirección IP** y por **nombre de usuario**.
+   - 3 a 4 intentos fallidos: **30 segundos** de bloqueo (`HTTP 429`).
+   - 5 o más intentos fallidos: **180 segundos (3 minutos)** de bloqueo (`HTTP 429`).
+3. **Mensajes Genéricos Anti-Enumeración:** Respuestas homogéneas (`401 Unauthorized: "Credenciales incorrectas"`) tanto para usuarios inexistentes como contraseñas erróneas.
+4. **Regeneración de Sesión:** Cada login exitoso genera un identificador de sesión único criptográfico (`jti = UUIDv4`).
+5. **Revocación de Sesión al Cambiar Contraseña:** Campo `token_version` por usuario. Al cambiar credenciales o hacer logout se incrementa el contador, invalidando de inmediato todos los JWT antiguos.
+6. **Restablecimiento de Contraseña Resistente:**
+   - Token aleatorio criptoseguro generado con `secrets.token_urlsafe(32)`.
+   - Almacenamiento protegido: en la base de datos se guarda únicamente el hash `SHA-256` del token.
+   - Expiración corta de 15 minutos.
+   - Invalidación automática de tokens previos.
+   - Token de un solo uso (`used = 1`).
+   - Registro en `audit.log` sin exponer el contenido del token.
+7. **Control de Acceso Basado en Roles (RBAC):**
+   - **Estudiante:** Acceso exclusivo a sus tareas propias.
+   - **Docente:** Auditoría y visualización de todas las tareas.
+   - **Administrador:** Lectura, edición y eliminación de cualquier tarea.
+8. **Protección Anti-IDOR y Anti-SQLi:**
+   - Verificación de propiedad en servidor (`owner_id == session.user_id`).
+   - Consultas con sentencias parametrizadas (*Prepared Statements* con marcadores `?`).
+9. **Cabeceras HTTP de Seguridad:** Inyección de `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `X-XSS-Protection: 1; mode=block`, `Referrer-Policy: strict-origin-when-cross-origin`.
 
 ---
 
-## 6. Instrucciones de Ejecución
+## 3. Catálogo Completo de Endpoints
 
-### Paso 1: Iniciar el Servidor de la API
-```bash
-python -m uvicorn main:app --reload --port 8000
-```
-- **Aplicación Web:** `http://127.0.0.1:8000/`
-- **Documentación Swagger UI:** `http://127.0.0.1:8000/docs`
-- **Documentación Redoc:** `http://127.0.0.1:8000/redoc`
-
-### Paso 2: Ejecutar las Pruebas Automatizadas
-En una terminal:
-```bash
-python -m pytest test_security.py -v
-```
-**Resultado esperado (6 tests en verde):**
-```text
-test_security.py::test_01_registro_y_login_seguro PASSED                         [ 16%]
-test_security.py::test_02_validacion_servidor_y_anti_mass_assignment PASSED     [ 33%]
-test_security.py::test_03_control_acceso_anti_idor PASSED                       [ 50%]
-test_security.py::test_04_prevencion_inyeccion_sql PASSED                        [ 66%]
-test_security.py::test_05_rbac_docente_y_administrador PASSED                    [ 83%]
-test_security.py::test_06_ciclo_crud_completo_con_endpoint_id PASSED             [100%]
-================================== 6 passed in 3.29s ===================================
-```
-
----
-
-## 7. Catálogo Completo de Endpoints
-
-### Autenticación
-| Método | Endpoint | Descripción | Acceso |
+### Autenticación y Gestión de Sesión
+| Método | Endpoint | Descripción | Control de Seguridad |
 | :--- | :--- | :--- | :--- |
-| `POST` | `/auth/register` | Registro de usuario (bcrypt + validación de complejidad) | Público |
-| `POST` | `/auth/login` | Inicio de sesión, retorna JWT Bearer (con Rate Limiting) | Público |
+| `POST` | `/auth/register` | Registro de usuario | Hash bcrypt (12 rondas) + complejidad estricta |
+| `POST` | `/auth/login` | Inicio de sesión (JWT) | Bloqueo progresivo por IP y cuenta + JTI único |
+| `POST` | `/auth/logout` | Cierre de sesión seguro | Revocación en servidor (`token_version + 1`) |
+| `POST` | `/auth/forgot-password` | Solicitud de restablecimiento | Token de un solo uso, expiración 15 min, anti-enumeración |
+| `POST` | `/auth/reset-password` | Confirmar nueva contraseña | Invalida token, actualiza hash y revoca sesiones previas |
 
 ### Gestión de Tareas
 | Método | Endpoint | Descripción | Acceso |
 | :--- | :--- | :--- | :--- |
-| `POST` | `/tasks` | Crear nueva tarea vinculada al usuario activo | Requiere JWT |
-| `GET` | `/tasks` | Listar tareas (Estudiante: solo suyas; Docente/Admin: todas) | Requiere JWT (RBAC) |
-| `GET` | `/tasks/{id}` | Obtener detalle de una tarea por su ID con Anti-IDOR | Dueño, Docente o Admin |
-| `GET` | `/tasks/search?q={query}` | Búsqueda segura por título usando sentencias parametrizadas | Requiere JWT |
-| `PUT` | `/tasks/{id}` | Actualizar título, descripción, estado o prioridad | Dueño o Admin |
-| `DELETE` | `/tasks/{id}` | Eliminar tarea con validación de propiedad (Anti-IDOR) | Dueño o Admin |
+| `POST` | `/tasks` | Crear tarea | Requiere JWT |
+| `GET` | `/tasks` | Listar tareas con filtros | RBAC (Estudiante: propias / Docente y Admin: todas) |
+| `GET` | `/tasks/{id}` | Ver detalle de una tarea | Anti-IDOR (Dueño, Docente o Admin) |
+| `GET` | `/tasks/search?q=` | Búsqueda por título | Prepared Statements contra SQLi |
+| `PUT` | `/tasks/{id}` | Actualizar tarea | Anti-IDOR (Solo Dueño o Admin) |
+| `DELETE` | `/tasks/{id}` | Eliminar tarea | Anti-IDOR (Solo Dueño o Admin) |
 | `GET` | `/` | Servir frontend web SPA interactivo | Público |
+
+---
+
+## 4. Suite de Pruebas de Seguridad Automatizadas
+
+Suite de **10 pruebas automatizadas** desarrolladas con `pytest` y `TestClient`:
+
+```bash
+python -m pytest test_security.py -v
+```
+
+| Prueba | Objetivo Verificado |
+| :--- | :--- |
+| `test_01_registro_y_login_seguro` | Registro con hash bcrypt, login válido y mitigación de enumeración. |
+| `test_02_validacion_servidor_y_anti_mass_assignment` | Rechazo 422 ante inyección de campos no permitidos o estados inválidos. |
+| `test_03_control_acceso_anti_idor` | Rechazo 403 Forbidden cuando un usuario intenta editar o eliminar tarea ajena. |
+| `test_04_prevencion_inyeccion_sql` | Neutralización de payloads SQLi como `' OR 1=1 --` en búsquedas. |
+| `test_05_rbac_docente_y_administrador` | Privilegios de auditoría para docentes y edición global para administradores. |
+| `test_06_ciclo_crud_completo_con_endpoint_id` | Ciclo completo de vida de tarea (crear, leer por ID, editar, eliminar y 404). |
+| `test_07_fuerza_bruta_bloqueo_progresivo` | Simulación de fuerza bruta: activación de bloqueo temporal `HTTP 429`. |
+| `test_08_restablecimiento_contrasena_un_solo_uso` | Restablecimiento con token y verificación de que no puede reutilizarse (400). |
+| `test_09_revocacion_sesion_al_cambiar_contrasena` | Verificación de que tokens JWT previos son revocados (401) tras cambio de clave. |
+| `test_10_sesion_expirada` | Rechazo con 401 Unauthorized ante tokens JWT vencidos en el tiempo. |
+
+**Resultado de ejecución:**
+```text
+test_security.py::test_01_registro_y_login_seguro PASSED                 [ 10%]
+test_security.py::test_02_validacion_servidor_y_anti_mass_assignment PASSED [ 20%]
+test_security.py::test_03_control_acceso_anti_idor PASSED                [ 30%]
+test_security.py::test_04_prevencion_inyeccion_sql PASSED                [ 40%]
+test_security.py::test_05_rbac_docente_y_administrador PASSED            [ 50%]
+test_security.py::test_06_ciclo_crud_completo_con_endpoint_id PASSED     [ 60%]
+test_security.py::test_07_fuerza_bruta_bloqueo_progresivo PASSED         [ 70%]
+test_security.py::test_08_restablecimiento_contrasena_un_solo_uso PASSED [ 80%]
+test_security.py::test_09_revocacion_sesion_al_cambiar_contrasena PASSED [ 90%]
+test_security.py::test_10_sesion_expirada PASSED                         [100%]
+======================== 10 passed in 4.45s ========================
+```
+
+---
+
+## 5. Instrucciones de Ejecución
+
+```bash
+# 1. Instalar dependencias
+pip install -r requirements.txt
+
+# 2. Iniciar servidor local
+python -m uvicorn main:app --reload --port 8000
+
+# 3. Correr las 10 pruebas automatizadas
+python -m pytest test_security.py -v
+```
+
+* **Frontend Web:** `http://127.0.0.1:8000`
+* **Swagger UI Docs:** `http://127.0.0.1:8000/docs`
