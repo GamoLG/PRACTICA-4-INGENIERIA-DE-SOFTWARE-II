@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LABORATORIO 4-INGENIERIA DE SOFTWARE II</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ── Toast animations ── */
+    @keyframes slideInRight {
+      from { transform: translateX(120%); opacity: 0; }
+      to   { transform: translateX(0);    opacity: 1; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to   { opacity: 0; transform: translateX(120%); }
+    }
+    .toast-enter { animation: slideInRight 0.35s ease forwards; }
+    .toast-leave { animation: fadeOut 0.4s ease forwards; }
+
+    /* ── Dialog backdrop ── */
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(2px);
+    }
+
+    /* ── Line clamp for description ── */
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ── Smooth scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen font-sans text-slate-800">
+
+  <!-- ══════════════════════════════════════════════
+       STICKY HEADER
+  ══════════════════════════════════════════════ -->
+  <header class="sticky top-0 z-40 bg-indigo-700 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow">
+          <svg class="w-5 h-5 text-indigo-700" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div>
+          <span class="text-white font-bold text-lg leading-none">LABORATORIO 4-INGENIERIA DE SOFTWARE II</span>
+          <span class="text-indigo-300 text-xs block leading-none">ISW UNSAAC</span>
+        </div>
+      </div>
+
+      <!-- User info + logout (hidden when no session) -->
+      <div id="headerUser" class="hidden items-center gap-3">
+        <span id="userBadge" class="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide text-white"></span>
+        <span id="headerUsername" class="text-indigo-100 text-sm font-medium hidden sm:inline"></span>
+        <button
+          onclick="logout()"
+          class="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          Salir
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════════════ -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ── AUTH SECTION ── -->
+    <section id="authSection" class="hidden">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-slate-800">LABORATORIO 4-INGENIERIA DE SOFTWARE II</h1>
+        <p class="text-slate-500 mt-2">Gestiona tus tareas académicas de forma eficiente</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+
+        <!-- Login Card -->
+        <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-200">
+          <div class="flex items-center gap-2 mb-5">
+            <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+              </svg>
+            </div>
+            <h2 class="text-lg font-bold text-slate-800">Iniciar Sesión</h2>
+          </div>
+
+          <form id="loginForm" onsubmit="login(event)" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Usuario</label>
+              <input
+                id="loginUsername"
+                type="text"
+                placeholder="Tu nombre de usuario"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
+              <div class="relative">
+                <input
+                  id="loginPassword"
+                  type="password"
+                  placeholder="Tu contraseña"
+                  required
+                  class="w-full px-3 py-2 pr-10 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                />
+                <button type="button" onclick="togglePwd('loginPassword','eyeLogin')"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition">
+                  <span id="eyeLogin">👁️</span>
+                </button>
+              </div>
+            </div>
+            <button
+              type="submit"
+              class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+            >
+              Acceder
+            </button>
+          </form>
+        </div>
+
+        <!-- Register Card -->
+        <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-200">
+          <div class="flex items-center gap-2 mb-5">
+            <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+              <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+              </svg>
+            </div>
+            <h2 class="text-lg font-bold text-slate-800">Crear Cuenta</h2>
+          </div>
+
+          <form id="registerForm" onsubmit="register(event)" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Usuario</label>
+              <input
+                id="regUsername"
+                type="text"
+                placeholder="Elige un nombre de usuario"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
+              <div class="relative">
+                <input
+                  id="regPassword"
+                  type="password"
+                  placeholder="Mín. 8 car., mayúscula, número, especial"
+                  required
+                  class="w-full px-3 py-2 pr-10 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                />
+                <button type="button" onclick="togglePwd('regPassword','eyeReg')"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition">
+                  <span id="eyeReg">👁️</span>
+                </button>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-1 leading-tight">
+                🔒 Requiere: mín. 8 caracteres, al menos 1 mayúscula, 1 número y 1 carácter especial (ej. <b>!@#$%</b>).
+              </p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Rol</label>
+              <select
+                id="regRole"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+              >
+                <option value="" disabled selected>Selecciona tu rol</option>
+                <option value="estudiante">🎓 Estudiante</option>
+                <option value="docente">📚 Docente</option>
+                <option value="administrador">🛡️ Administrador</option>
+              </select>
+            </div>
+            <button
+              type="submit"
+              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+            >
+              Crear Cuenta
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── DASHBOARD SECTION ── -->
+    <section id="dashboardSection" class="hidden space-y-6">
+
+      <!-- Stat Cards Row -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Total -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex items-center gap-4">
+          <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium uppercase tracking-wide">Total</p>
+            <p id="statTotal" class="text-2xl font-bold text-slate-800">0</p>
+          </div>
+        </div>
+        <!-- Completadas -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex items-center gap-4">
+          <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium uppercase tracking-wide">Completadas</p>
+            <p id="statDone" class="text-2xl font-bold text-emerald-600">0</p>
+          </div>
+        </div>
+        <!-- En Progreso -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex items-center gap-4">
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium uppercase tracking-wide">En Progreso</p>
+            <p id="statProgress" class="text-2xl font-bold text-blue-600">0</p>
+          </div>
+        </div>
+        <!-- Pendientes -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex items-center gap-4">
+          <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium uppercase tracking-wide">Pendientes</p>
+            <p id="statPending" class="text-2xl font-bold text-amber-600">0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
+        <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+          <!-- Search group -->
+          <div class="flex gap-2 flex-1">
+            <div class="relative flex-1 max-w-sm">
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <input
+                id="searchInput"
+                type="text"
+                placeholder="Buscar tareas…"
+                onkeydown="if(event.key==='Enter') searchTasks()"
+                class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              />
+            </div>
+            <button
+              onclick="searchTasks()"
+              class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors"
+            >Buscar</button>
+            <button
+              onclick="clearSearch()"
+              class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-medium rounded-lg transition-colors"
+            >Reset</button>
+          </div>
+          <!-- New task -->
+          <button
+            onclick="openTaskModal(null)"
+            class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2 rounded-lg transition-colors whitespace-nowrap"
+          >
+            <span class="text-base leading-none">＋</span>
+            Nueva Tarea
+          </button>
+        </div>
+      </div>
+
+      <!-- Task Cards Grid -->
+      <div id="tasksGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 min-h-[200px]">
+        <!-- Cards injected here -->
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ══════════════════════════════════════════════
+       TASK MODAL (native dialog)
+  ══════════════════════════════════════════════ -->
+  <dialog
+    id="taskModal"
+    class="rounded-2xl shadow-2xl border border-slate-200 p-0 w-full max-w-lg mx-auto"
+    style="margin-top: 10vh;"
+  >
+    <div class="bg-white rounded-2xl overflow-hidden">
+      <!-- Modal header -->
+      <div class="bg-indigo-700 px-6 py-4 flex items-center justify-between">
+        <h3 id="modalTitle" class="text-white font-bold text-lg">Nueva Tarea</h3>
+        <button onclick="closeTaskModal()" class="text-indigo-200 hover:text-white transition text-xl leading-none">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="px-6 py-5 space-y-4">
+        <!-- Título -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">
+            Título <span class="text-red-500">*</span>
+          </label>
+          <input
+            id="modalTitleInput"
+            type="text"
+            placeholder="Título de la tarea"
+            class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+          />
+        </div>
+
+        <!-- Descripción -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Descripción</label>
+          <textarea
+            id="modalDesc"
+            rows="3"
+            placeholder="Descripción opcional…"
+            class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
+          ></textarea>
+        </div>
+
+        <!-- Estado + Prioridad -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Estado</label>
+            <select
+              id="modalStatus"
+              class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            >
+              <option value="pendiente">⏳ Pendiente</option>
+              <option value="en_progreso">🔄 En Progreso</option>
+              <option value="completada">✅ Completada</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Prioridad</label>
+            <select
+              id="modalPriority"
+              class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            >
+              <option value="baja">🔵 Baja</option>
+              <option value="media" selected>🟡 Media</option>
+              <option value="alta">🔴 Alta</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="px-6 pb-5 flex justify-end gap-3">
+        <button
+          onclick="closeTaskModal()"
+          class="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-sm transition-colors"
+        >
+          Cancelar
+        </button>
+        <button
+          id="submitBtn"
+          onclick="submitTask()"
+          class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg text-sm transition-colors flex items-center gap-2"
+        >
+          <span id="submitBtnText">Guardar</span>
+          <svg id="submitSpinner" class="hidden animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ══════════════════════════════════════════════
+       TOAST CONTAINER
+  ══════════════════════════════════════════════ -->
+  <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 items-end pointer-events-none"></div>
+
+  <!-- ══════════════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════════════ -->
+  <script>
+    'use strict';
+
+    const API = window.location.origin;
+    let currentEditTaskId = null;
+    let tasksStore = {};
+
+    /* ─────────────────────────────────────────────
+       UTILITY: Parse Error Message
+    ───────────────────────────────────────────── */
+    function parseErrorMessage(detail, fallback = 'Ha ocurrido un error') {
+      if (!detail) return fallback;
+      if (typeof detail === 'string') return detail;
+      if (Array.isArray(detail)) {
+        return detail.map(item => {
+          let msg = item.msg || JSON.stringify(item);
+          return msg.replace(/^Value error,\s*/i, '');
+        }).join('. ');
+      }
+      if (typeof detail === 'object') {
+        return detail.msg || detail.message || JSON.stringify(detail);
+      }
+      return String(detail);
+    }
+
+    /* ─────────────────────────────────────────────
+       UTILITY: Toast notifications
+    ───────────────────────────────────────────── */
+    function toast(msg, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const el = document.createElement('div');
+
+      const text = typeof msg === 'string' ? msg : parseErrorMessage(msg);
+
+      const colors = type === 'success'
+        ? 'bg-emerald-600 text-white'
+        : 'bg-red-600 text-white';
+
+      const icon = type === 'success'
+        ? `<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+           </svg>`
+        : `<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+               d="M6 18L18 6M6 6l12 12"/>
+           </svg>`;
+
+      el.className = `pointer-events-auto flex items-center gap-2 ${colors} px-4 py-3 rounded-xl shadow-lg text-sm font-medium max-w-sm toast-enter`;
+      el.innerHTML = `${icon}<span>${escapeHTML(text)}</span>`;
+      container.appendChild(el);
+
+      setTimeout(() => {
+        el.classList.remove('toast-enter');
+        el.classList.add('toast-leave');
+        setTimeout(() => el.remove(), 450);
+      }, 4000);
+    }
+
+    /* ─────────────────────────────────────────────
+       UTILITY: Escape HTML (XSS protection)
+    ───────────────────────────────────────────── */
+    function escapeHTML(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /* ─────────────────────────────────────────────
+       UTILITY: Format date string
+       "2026-11-17 10:00:00" → "17 nov 2026, 10:00"
+    ───────────────────────────────────────────── */
+    function formatDate(str) {
+      if (!str) return '—';
+      try {
+        const normalized = str.replace(' ', 'T');
+        const d = new Date(normalized);
+        return d.toLocaleString('es-PE', {
+          day: '2-digit', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit', hour12: false
+        });
+      } catch {
+        return str;
+      }
+    }
+
+    /* ─────────────────────────────────────────────
+       UTILITY: Toggle password visibility
+    ───────────────────────────────────────────── */
+    function togglePwd(inputId, eyeId) {
+      const inp = document.getElementById(inputId);
+      const eye = document.getElementById(eyeId);
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        eye.textContent = '🙈';
+      } else {
+        inp.type = 'password';
+        eye.textContent = '👁️';
+      }
+    }
+
+    /* ─────────────────────────────────────────────
+       SESSION: Render auth vs dashboard
+    ───────────────────────────────────────────── */
+    function renderSessionState() {
+      const token = localStorage.getItem('token');
+      const auth  = document.getElementById('authSection');
+      const dash  = document.getElementById('dashboardSection');
+      const hUser = document.getElementById('headerUser');
+
+      if (token) {
+        auth.classList.add('hidden');
+        dash.classList.remove('hidden');
+        hUser.classList.remove('hidden');
+        hUser.classList.add('flex');
+        initUserBadge();
+        loadTasks();
+      } else {
+        auth.classList.remove('hidden');
+        dash.classList.add('hidden');
+        hUser.classList.add('hidden');
+        hUser.classList.remove('flex');
+      }
+    }
+
+    function initUserBadge() {
+      const role     = localStorage.getItem('role') || 'estudiante';
+      const username = localStorage.getItem('username') || 'Usuario';
+      const badge    = document.getElementById('userBadge');
+      const uname    = document.getElementById('headerUsername');
+
+      const colors = {
+        administrador: 'bg-red-500',
+        docente:       'bg-blue-500',
+        estudiante:    'bg-emerald-500',
+      };
+
+      const labels = {
+        administrador: '🛡️ Admin',
+        docente:       '📚 Docente',
+        estudiante:    '🎓 Estudiante',
+      };
+
+      badge.className = `px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide text-white ${colors[role] || 'bg-slate-500'}`;
+      badge.textContent = labels[role] || role;
+      uname.textContent = username;
+    }
+
+    /* ─────────────────────────────────────────────
+       AUTH: Login
+    ───────────────────────────────────────────── */
+    async function login(e) {
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const res = await fetch(`${API}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          toast(data.detail || 'Error al iniciar sesión', 'error');
+          return;
+        }
+
+        const token = data.access_token;
+        localStorage.setItem('token', token);
+        localStorage.setItem('username', username);
+
+        // Decode JWT payload to get user id and role
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          if (payload.id)   localStorage.setItem('userId', payload.id);
+          if (payload.role) localStorage.setItem('role', payload.role);
+        } catch (_) {
+          // If decode fails, role/userId remain unset; not critical
+        }
+
+        toast(`¡Bienvenido, ${escapeHTML(username)}!`, 'success');
+        document.getElementById('loginForm').reset();
+        renderSessionState();
+      } catch (err) {
+        toast('No se pudo conectar con el servidor', 'error');
+      }
+    }
+
+    /* ─────────────────────────────────────────────
+       AUTH: Register
+    ───────────────────────────────────────────── */
+    async function register(e) {
+      e.preventDefault();
+      const username = document.getElementById('regUsername').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const role     = document.getElementById('regRole').value;
+
+      try {
+        const res = await fetch(`${API}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password, role }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          toast(data.detail || 'Error al registrar', 'error');
+          return;
+        }
+
+        toast('Cuenta creada. ¡Ahora inicia sesión!', 'success');
+        document.getElementById('registerForm').reset();
+      } catch (err) {
+        toast('No se pudo conectar con el servidor', 'error');
+      }
+    }
+
+    /* ─────────────────────────────────────────────
+       AUTH: Logout
+    ───────────────────────────────────────────── */
+    function logout() {
+      ['token', 'userId', 'role', 'username'].forEach(k => localStorage.removeItem(k));
+      toast('Sesión cerrada', 'success');
+      renderSessionState();
+    }
+
+    /* ─────────────────────────────────────────────
+       TASKS: Load all tasks
+    ───────────────────────────────────────────── */
+    async function loadTasks() {
+      try {
+        const res = await fetch(`${API}/tasks`, {
+          headers: authHeaders(),
+        });
+
+        if (res.status === 401) { logout(); return; }
+
+        const tasks = await res.json();
+        renderCards(tasks);
+        updateStats(tasks);
+      } catch (err) {
+        toast('Error al cargar tareas', 'error');
+      }
+    }
+
+    /* ─────────────────────────────────────────────
+       TASKS: Search tasks
+    ───────────────────────────────────────────── */
+    async function searchTasks() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (!q) { loadTasks(); return; }
+
+      try {
+        const res = await fetch(`${API}/tasks/search?q=${encodeURIComponent(q)}`, {
+          headers: authHeaders(),
+        });
+
+        if (res.status === 401) { logout(); return; }
+
+        const tasks = await res.json();
+        renderCards(tasks);
+        updateStats(tasks);
+      } catch (err) {
+        toast('Error al buscar tareas', 'error');
+      }
+    }
+
+    /* ─────────────────────────────────────────────
+       TASKS: Clear search
+    ───────────────────────────────────────────── */
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      loadTasks();
+    }
+
+    /* ─────────────────────────────────────────────
+       TASKS: Update stat cards
+    ───────────────────────────────────────────── */
+    function updateStats(tasks) {
+      document.getElementById('statTotal').textContent    = tasks.length;
+      document.getElementById('statDone').textContent     = tasks.filter(t => t.status === 'completada').length;
+      document.getElementById('statProgress').textContent = tasks.filter(t => t.status === 'en_progreso').length;
+      document.getElementById('statPending').textContent  = tasks.filter(t => t.status === 'pendiente').length;
+    }
+
+    /* ─────────────────────────────────────────────
+       TASKS: Render task cards
+    ───────────────────────────────────────────── */
+    function renderCards(tasks) {
+      const grid    = document.getElementById('tasksGrid');
+      const userId  = parseInt(localStorage.getItem('userId'));
+      const role    = localStorage.getItem('role');
+      const isAdmin = role === 'administrador';
+
+      tasksStore = {};
+      if (Array.isArray(tasks)) {
+        tasks.forEach(t => { tasksStore[t.id] = t; });
+      }
+
+      if (!tasks || tasks.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full flex flex-col items-center justify-center py-20 text-slate-400">
+            <svg class="w-16 h-16 mb-4 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <p class="text-lg font-medium">No hay tareas</p>
+            <p class="text-sm mt-1">Crea una nueva tarea para comenzar</p>
+          </div>`;
+        return;
+      }
+
+      const priorityBadge = {
+        alta:  'bg-red-100 text-red-700 border border-red-200',
+        media: 'bg-amber-100 text-amber-700 border border-amber-200',
+        baja:  'bg-slate-100 text-slate-600 border border-slate-200',
+      };
+      const priorityLabel = { alta: '🔴 Alta', media: '🟡 Media', baja: '🔵 Baja' };
+
+      const statusBadge = {
+        completada: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
+        en_progreso:'bg-blue-100 text-blue-700 border border-blue-200',
+        pendiente:  'bg-amber-100 text-amber-700 border border-amber-200',
+      };
+      const statusLabel = {
+        completada:  '✅ Completada',
+        en_progreso: '🔄 En Progreso',
+        pendiente:   '⏳ Pendiente',
+      };
+
+      grid.innerHTML = tasks.map(t => {
+        const prio    = t.priority || 'media';
+        const stat    = t.status   || 'pendiente';
+        const canEdit = isAdmin || t.owner_id === userId;
+
+        const actionBtns = canEdit ? `
+          <button
+            onclick="openTaskModalById(${t.id})"
+            class="flex items-center gap-1 text-xs font-medium px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-colors"
+          >✏️ Editar</button>
+          <button
+            onclick="deleteTask(${t.id})"
+            class="flex items-center gap-1 text-xs font-medium px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg transition-colors"
+          >🗑️ Eliminar</button>` : '';
+
+        return `
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col overflow-hidden hover:shadow-md transition-shadow">
+            <!-- Card Header -->
+            <div class="px-4 pt-4 pb-2 flex items-center gap-2 flex-wrap">
+              <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${priorityBadge[prio] || priorityBadge.media}">
+                ${priorityLabel[prio] || prio}
+              </span>
+              <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${statusBadge[stat] || statusBadge.pendiente}">
+                ${statusLabel[stat] || stat}
+              </span>
+            </div>
+
+            <!-- Card Body -->
+            <div class="px-4 py-2 flex-1">
+              <h4 class="font-bold text-slate-800 text-base mb-1">${escapeHTML(t.title)}</h4>
+              <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed">
+                ${escapeHTML(t.description) || '<span class="italic text-slate-400">Sin descripción</span>'}
+              </p>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="px-4 pt-2 pb-3 mt-auto">
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                <span>👤 Dueño ID #${escapeHTML(String(t.owner_id))}</span>
+                <span>${formatDate(t.created_at)}</span>
+              </div>
+              ${canEdit ? `
+              <div class="flex gap-2">
+                ${actionBtns}
+              </div>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    /* ─────────────────────────────────────────────
+       MODAL: Open by ID or directly
+    ───────────────────────────────────────────── */
+    function openTaskModalById(id) {
+      const task = tasksStore[id] || null;
+      openTaskModal(task);
+    }
+
+    function openTaskModal(task = null) {
+      currentEditTaskId = task ? task.id : null;
+      const modal = document.getElementById('taskModal');
+
+      document.getElementById('modalTitle').textContent =
+        task ? `Editar Tarea #${task.id}` : 'Nueva Tarea';
+
+      document.getElementById('modalTitleInput').value = task ? (task.title || '') : '';
+      document.getElementById('modalDesc').value       = task ? (task.description || '') : '';
+      document.getElementById('modalStatus').value     = task ? (task.status || 'pendiente') : 'pendiente';
+      document.getElementById('modalPriority').value   = task ? (task.priority || 'media') : 'media';
+
+      // Reset button state
+      setSubmitLoading(false);
+
+      modal.showModal();
+    }
+
+    /* ─────────────────────────────────────────────
+       MODAL: Close
+    ───────────────────────────────────────────── */
+    function closeTaskModal() {
+      document.getElementById('taskModal').close();
+      currentEditTaskId = null;
+    }
+
+    /* ─────────────────────────────────────────────
+       MODAL: Submit (create or edit)
+    ───────────────────────────────────────────── */
+    async function submitTask() {
+      const title    = document.getElementById('modalTitleInput').value.trim();
+      const desc     = document.getElementById('modalDesc').value.trim();
+      const status   = document.getElementById('modalStatus').value;
+      const priority = document.getElementById('modalPriority').value;
+
+      if (!title) {
+        toast('El título es obligatorio', 'error');
+        return;
+      }
+
+      setSubmitLoading(true);
+
+      const isEdit  = currentEditTaskId !== null;
+      const url     = isEdit ? `${API}/tasks/${currentEditTaskId}` : `${API}/tasks`;
+      const method  = isEdit ? 'PUT' : 'POST';
+      const payload = { title, description: desc, status, priority };
+
+      try {
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json', ...authHeaders() },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          toast(data.detail || 'Error al guardar la tarea', 'error');
+          setSubmitLoading(false);
+          return;
+        }
+
+        toast(isEdit ? 'Tarea actualizada ✔' : 'Tarea creada ✔', 'success');
+        closeTaskModal();
+        await loadTasks();
+      } catch (err) {
+        toast('Error de conexión', 'error');
+        setSubmitLoading(false);
+      }
+    }
+
+    /* ─────────────────────────────────────────────
+       MODAL: Toggle loading state on submit button
+    ───────────────────────────────────────────── */
+    function setSubmitLoading(loading) {
+      const btn     = document.getElementById('submitBtn');
+      const txt     = document.getElementById('submitBtnText');
+      const spinner = document.getElementById('submitSpinner');
+
+      btn.disabled = loading;
+      txt.textContent = loading ? 'Guardando…' : 'Guardar';
+      spinner.classList.toggle('hidden', !loading);
+    }
+
+    /* ─────────────────────────────────────────────
+       TASKS: Delete
+    ───────────────────────────────────────────── */
+    async function deleteTask(id) {
+      if (!confirm(`¿Eliminar la tarea #${id}? Esta acción no se puede deshacer.`)) return;
+
+      try {
+        const res = await fetch(`${API}/tasks/${id}`, {
+          method: 'DELETE',
+          headers: authHeaders(),
+        });
+
+        if (res.status === 403) {
+          toast('No tienes permiso para eliminar esta tarea', 'error');
+          return;
+        }
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          toast(data.detail || 'Error al eliminar', 'error');
+          return;
+        }
+
+        toast(`Tarea #${id} eliminada`, 'success');
+        await loadTasks();
+      } catch (err) {
+        toast('Error de conexión', 'error');
+      }
+    }
+
+    /* ─────────────────────────────────────────────
+       UTILITY: Build auth headers
+    ───────────────────────────────────────────── */
+    function authHeaders() {
+      const token = localStorage.getItem('token');
+      return token ? { Authorization: `Bearer ${token}` } : {};
+    }
+
+    /* ─────────────────────────────────────────────
+       Close modal on backdrop click
+    ───────────────────────────────────────────── */
+    document.getElementById('taskModal').addEventListener('click', function (e) {
+      const rect = this.getBoundingClientRect();
+      if (
+        e.clientX < rect.left   || e.clientX > rect.right ||
+        e.clientY < rect.top    || e.clientY > rect.bottom
+      ) {
+        closeTaskModal();
+      }
+    });
+
+    /* ─────────────────────────────────────────────
+       INIT
+    ───────────────────────────────────────────── */
+    renderSessionState();
+  </script>
+</body>
+</html>
