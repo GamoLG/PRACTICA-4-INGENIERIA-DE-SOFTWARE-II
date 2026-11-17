@@ -616,7 +616,7 @@
        SESSION: Render auth vs dashboard
     ───────────────────────────────────────────── */
     function renderSessionState() {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       const auth  = document.getElementById('authSection');
       const dash  = document.getElementById('dashboardSection');
       const hUser = document.getElementById('headerUser');
@@ -637,8 +637,8 @@
     }
 
     function initUserBadge() {
-      const role     = localStorage.getItem('role') || 'estudiante';
-      const username = localStorage.getItem('username') || 'Usuario';
+      const role     = sessionStorage.getItem('role') || 'estudiante';
+      const username = sessionStorage.getItem('username') || 'Usuario';
       const badge    = document.getElementById('userBadge');
       const uname    = document.getElementById('headerUsername');
 
@@ -682,14 +682,14 @@
         }
 
         const token = data.access_token;
-        localStorage.setItem('token', token);
-        localStorage.setItem('username', username);
+        sessionStorage.setItem('token', token);
+        sessionStorage.setItem('username', username);
 
         // Decode JWT payload to get user id and role
         try {
           const payload = JSON.parse(atob(token.split('.')[1]));
-          if (payload.id)   localStorage.setItem('userId', payload.id);
-          if (payload.role) localStorage.setItem('role', payload.role);
+          if (payload.id)   sessionStorage.setItem('userId', payload.id);
+          if (payload.role) sessionStorage.setItem('role', payload.role);
         } catch (_) {
           // If decode fails, role/userId remain unset; not critical
         }
@@ -736,7 +736,7 @@
        AUTH: Logout
     ───────────────────────────────────────────── */
     async function logout() {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       if (token) {
         try {
           await fetch(`${API}/auth/logout`, {
@@ -745,7 +745,7 @@
           });
         } catch (_) {}
       }
-      ['token', 'userId', 'role', 'username'].forEach(k => localStorage.removeItem(k));
+      ['token', 'userId', 'role', 'username'].forEach(k => sessionStorage.removeItem(k));
       toast('Sesión cerrada y revocada', 'success');
       renderSessionState();
     }
@@ -888,8 +888,8 @@
     ───────────────────────────────────────────── */
     function renderCards(tasks) {
       const grid    = document.getElementById('tasksGrid');
-      const userId  = parseInt(localStorage.getItem('userId'));
-      const role    = localStorage.getItem('role');
+      const userId  = parseInt(sessionStorage.getItem('userId'));
+      const role    = sessionStorage.getItem('role');
       const isAdmin = role === 'administrador';
 
       tasksStore = {};
@@ -1104,7 +1104,7 @@
        UTILITY: Build auth headers
     ───────────────────────────────────────────── */
     function authHeaders() {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       return token ? { Authorization: `Bearer ${token}` } : {};
     }
 

@@ -23,11 +23,12 @@ import jwt
 # ==========================================
 # CONFIGURACIÓN Y CONSTANTES CRIPTOGRÁFICAS
 # ==========================================
-SECRET_KEY = os.environ.get("SECRET_KEY", "UNSAAC_ISW_SECURE_TOKEN_SECRET_KEY_CHANGE_IN_PROD")
+SECRET_KEY = os.environ.get("SECRET_KEY") or secrets.token_urlsafe(48)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 RESET_TOKEN_EXPIRE_MINUTES = 15
-DB_FILE = "tasks.db"
+DB_FILE = os.environ.get("DB_FILE", "tasks.db")
+TRUST_PROXY = os.environ.get("TRUST_PROXY", "0") == "1"
 
 # ==========================================
 # LOGGING DE AUDITORÍA
@@ -133,10 +134,11 @@ def init_db():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE NOT NULL,
+        username TEXT UNIQUE NOT NULL COLLATE NOCASE CHECK(length(username) BETWEEN 3 AND 50),
         password_hash TEXT NOT NULL,
-        role TEXT NOT NULL,
-        token_version INTEGER DEFAULT 1
+        role TEXT NOT NULL CHECK(role IN ('estudiante','docente','administrador')) DEFAULT 'estudiante',
+        token_version INTEGER DEFAULT 1,
+        created_at TEXT DEFAULT (datetime('now'))
     )
     """)
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_username ON users (username)")
@@ -151,14 +153,14 @@ def init_db():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS tasks (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
+        title TEXT NOT NULL CHECK(length(trim(title)) >= 1),
         description TEXT,
-        status TEXT NOT NULL,
+        status TEXT NOT NULL CHECK(status IN ('pendiente','en_progreso','completada')),
         owner_id INTEGER NOT NULL,
-        priority TEXT NOT NULL DEFAULT 'media',
+        priority TEXT NOT NULL DEFAULT 'media' CHECK(priority IN ('baja','media','alta')),
         created_at TEXT DEFAULT (datetime('now')),
         updated_at TEXT DEFAULT (datetime('now')),
-        FOREIGN KEY (owner_id) REFERENCES users (id)
+        FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
     )
     """)
     for col_def in [
@@ -190,8 +192,12 @@ def init_db():
     conn.commit()
     conn.close()
 
+# Dummy hash para mitigar timing en login con usuario inexistente
+DUMMY_PASSWORD_HASH = bcrypt.hashpw(b'dummy', bcrypt.gensalt(rounds=12)).decode('utf-8')
+
 def get_db():
     conn = sqlite3.connect(DB_FILE)
+    conn.execute('PRAGMA foreign_keys = ON')
     conn.row_factory = sqlite3.Row
     try:
         yield conn
@@ -202,6 +208,17 @@ def get_db():
 async def lifespan(app: FastAPI):
     init_db()
     yield
+
+# ==========================================
+# UTILIDAD: IP segura del cliente
+# ==========================================
+def _safe_client_ip(request: Request) -> str:
+    """Extrae la IP real solo si TRUST_PROXY está activo (último valor de X-Forwarded-For)."""
+    if TRUST_PROXY:
+        xff = request.headers.get('x-forwarded-for', '')
+        if xff:
+            return xff.strip().split(',')[-1].strip()
+    return request.client.host if request.client else 'unknown'
 
 # ==========================================
 # INSTANCIA FASTAPI Y SEGURIDAD HTTP
@@ -392,7 +409,7 @@ def register(user_data: UserRegisterSchema, db: sqlite3.Connection = Depends(get
 
 @app.post("/auth/login")
 def login(request: Request, login_data: UserLoginSchema, db: sqlite3.Connection = Depends(get_db)):
-    client_ip = request.client.host if request.client else "unknown"
+    client_ip = _safe_client_ip(request)
 
     # Verificación de bloqueo progresivo previo
     check_login_rate_and_lockout(client_ip, login_data.username)
@@ -404,8 +421,13 @@ def login(request: Request, login_data: UserLoginSchema, db: sqlite3.Connection 
     )
     user = cursor.fetchone()
 
-    # Mitigación enumeración: mensaje y código de estado idénticos para fallos
-    if not user or not verify_password(login_data.password, user["password_hash"]):
+    # Mitigación enumeración y timing: hash dummy si el usuario no existe
+    if not user:
+        verify_password(login_data.password, DUMMY_PASSWORD_HASH)
+        register_failed_login(client_ip, login_data.username)
+        audit_logger.warning(f"LOGIN FAIL - username: {login_data.username} ip: {client_ip}")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales incorrectas")
+    if not verify_password(login_data.password, user["password_hash"]):
         register_failed_login(client_ip, login_data.username)
         audit_logger.warning(f"LOGIN FAIL - username: {login_data.username} ip: {client_ip}")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales incorrectas")
@@ -441,7 +463,7 @@ def forgot_password(
     forgot_data: ForgotPasswordSchema,
     db: sqlite3.Connection = Depends(get_db)
 ):
-    client_ip = request.client.host if request.client else "unknown"
+    client_ip = _safe_client_ip(request)
     cursor = db.cursor()
     cursor.execute("SELECT id FROM users WHERE username = ?", (forgot_data.username,))
     user = cursor.fetchone()
@@ -483,7 +505,7 @@ def reset_password(
     reset_data: ResetPasswordSchema,
     db: sqlite3.Connection = Depends(get_db)
 ):
-    client_ip = request.client.host if request.client else "unknown"
+    client_ip = _safe_client_ip(request)
     tok_hash = hash_token(reset_data.token)
 
     cursor = db.cursor()

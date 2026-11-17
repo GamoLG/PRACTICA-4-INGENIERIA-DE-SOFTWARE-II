@@ -277,3 +277,147 @@ def test_10_sesion_expirada():
     r_exp = client.get("/tasks", headers={"Authorization": f"Bearer {expired_token}"})
     assert r_exp.status_code == 401
     assert "expirado" in r_exp.json()["detail"].lower()
+
+# ========================================================
+# PRUEBAS ACTIVIDAD 3 (Ejercicio 3.1): VALIDACIÓN ROBUSTA
+# ========================================================
+def test_11_campo_vacio_titulo():
+    """Título vacío debe rechazarse con 422."""
+    token = client.post("/auth/login", json={
+        "username": "estudiante_a",
+        "password": "Password123!"
+    }).json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    r = client.post("/tasks", json={"title": "", "status": "pendiente"}, headers=headers)
+    assert r.status_code == 422
+
+def test_12_campo_demasiado_largo():
+    """Título mayor a 120 caracteres debe rechazarse con 422."""
+    token = client.post("/auth/login", json={
+        "username": "estudiante_a",
+        "password": "Password123!"
+    }).json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    titulo_largo = "A" * 121
+    r = client.post("/tasks", json={"title": titulo_largo, "status": "pendiente"}, headers=headers)
+    assert r.status_code == 422
+
+def test_13_estado_invalido():
+    """Estado no permitido debe rechazarse con 422."""
+    token = client.post("/auth/login", json={
+        "username": "estudiante_a",
+        "password": "Password123!"
+    }).json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    r = client.post("/tasks", json={"title": "Tarea test", "status": "hackeado"}, headers=headers)
+    assert r.status_code == 422
+
+def test_14_campo_extra_inyectado():
+    """Campo adicional como role:'admin' debe rechazarse con 422 (extra=forbid)."""
+    token = client.post("/auth/login", json={
+        "username": "estudiante_a",
+        "password": "Password123!"
+    }).json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    r = client.post("/tasks", json={
+        "title": "Tarea normal",
+        "status": "pendiente",
+        "role": "administrador"
+    }, headers=headers)
+    assert r.status_code == 422
+
+def test_15_caracteres_especiales_y_unicode():
+    """Caracteres especiales y Unicode se aceptan pero no causan SQLi ni XSS."""
+    token = client.post("/auth/login", json={
+        "username": "estudiante_a",
+        "password": "Password123!"
+    }).json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # Caracteres que podrían causar SQLi o XSS
+    payloads = [
+        "<script>alert('xss')</script>",
+        "' OR 1=1 --",
+        "Robert'); DROP TABLE tasks;--",
+        "Título con ñ, á, é, ü y emojis 🎓📚",
+    ]
+
+    for payload in payloads:
+        r = client.post("/tasks", json={
+            "title": payload,
+            "status": "pendiente"
+        }, headers=headers)
+        assert r.status_code == 201
+
+    # Verificar que las tareas se guardaron correctamente (no ejecutaron SQL)
+    r = client.get("/tasks", headers=headers)
+    assert r.status_code == 200
+    titles = [t["title"] for t in r.json()]
+    assert "<script>alert('xss')</script>" in titles  # Se guardó como texto, no ejecutó
+
+def test_16_sin_token_autenticacion():
+    """Acceso sin token debe retornar 403 (no autorizado)."""
+    r = client.get("/tasks")
+    assert r.status_code in [401, 403]
+
+    r = client.post("/tasks", json={"title": "Sin auth", "status": "pendiente"})
+    assert r.status_code in [401, 403]
+
+    r = client.put("/tasks/1", json={"title": "Hack"})
+    assert r.status_code in [401, 403]
+
+    r = client.delete("/tasks/1")
+    assert r.status_code in [401, 403]
+
+# ========================================================
+# PRUEBAS ACTIVIDAD 4 (Ejercicio 4.1): BÚSQUEDA SEGURA
+# ========================================================
+def test_17_busqueda_sqli_parametrizada():
+    """Payloads SQLi en búsqueda no alteran la consulta (prepared statements)."""
+    token = client.post("/auth/login", json={
+        "username": "estudiante_a",
+        "password": "Password123!"
+    }).json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    sqli_payloads = [
+        "' OR 1=1 --",
+        "'; DROP TABLE tasks; --",
+        "' UNION SELECT * FROM users --",
+        "1; DELETE FROM tasks",
+    ]
+
+    for payload in sqli_payloads:
+        r = client.get(f"/tasks/search?q={payload}", headers=headers)
+        assert r.status_code == 200
+        # No debe devolver todas las tareas (el OR 1=1 no funcionó)
+
+def test_18_busqueda_cadena_larga():
+    """Búsqueda con cadena muy larga: el servidor responde sin error 500."""
+    token = client.post("/auth/login", json={
+        "username": "estudiante_a",
+        "password": "Password123!"
+    }).json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # max_length en el endpoint es 50
+    r = client.get(f"/tasks/search?q={'A'*51}", headers=headers)
+    assert r.status_code == 422  # Excede max_length
+
+def test_19_valores_nulos_en_body():
+    """Valores nulos en campos requeridos deben rechazarse."""
+    token = client.post("/auth/login", json={
+        "username": "estudiante_a",
+        "password": "Password123!"
+    }).json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    r = client.post("/tasks", json={"title": None, "status": "pendiente"}, headers=headers)
+    assert r.status_code == 422
+
+    r = client.post("/tasks", json={"title": "Test", "status": None}, headers=headers)
+    assert r.status_code == 422
