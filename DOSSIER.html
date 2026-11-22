@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini Dossier – Software Seguro | UNSAAC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    * { font-family: 'Inter', sans-serif; }
+    code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* ── Print styles ──────────────────────────────────────────── */
+    @media print {
+      .no-print { display: none !important; }
+      .page-break { page-break-before: always; break-before: page; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-shadow { box-shadow: none !important; }
+      a { text-decoration: none !important; color: inherit !important; }
+    }
+
+    /* ── Visual helpers ─────────────────────────────────────────── */
+    .gradient-header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 60%, #0369a1 100%);
+    }
+    .ssdlc-arrow {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; color: #94a3b8; flex-shrink: 0;
+    }
+    .badge-critica { background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; }
+    .badge-alta    { background:#fffbeb; color:#d97706; border:1px solid #fcd34d; }
+    .badge-medio   { background:#f0fdf4; color:#16a34a; border:1px solid #86efac; }
+    .badge-critico { background:#dc2626; color:#fff; }
+    .badge-alto    { background:#d97706; color:#fff; }
+    .badge-medio-b { background:#16a34a; color:#fff; }
+
+    .code-block {
+      background: #0f172a;
+      color: #a3e635;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-size: 0.72rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    .code-block .comment { color: #64748b; }
+    .code-block .keyword { color: #818cf8; }
+    .code-block .string  { color: #34d399; }
+    .code-block .danger  { color: #f87171; }
+    .code-block .safe    { color: #4ade80; }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #1e3a5f;
+      border-left: 5px solid #1d4ed8;
+      padding-left: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    table { border-collapse: collapse; width: 100%; }
+    th { background: #1e3a5f; color: white; padding: 0.6rem 0.8rem; font-size: 0.78rem; text-align: left; }
+    td { padding: 0.55rem 0.8rem; font-size: 0.78rem; border-bottom: 1px solid #e2e8f0; }
+    tr:nth-child(even) td { background: #f8fafc; }
+    tr:hover td { background: #eff6ff; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<!-- ════════════════════════════════════════════════════════════
+     PORTADA
+═════════════════════════════════════════════════════════════ -->
+<div class="min-h-screen gradient-header flex flex-col items-center justify-center text-white px-8 py-16 text-center">
+  <!-- Escudo / logo placeholder -->
+  <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-6 shadow-lg">
+    <span class="text-4xl">🎓</span>
+  </div>
+
+  <p class="text-blue-200 text-sm font-medium tracking-widest uppercase mb-1">Universidad Nacional de San Antonio Abad del Cusco</p>
+  <p class="text-blue-200 text-sm mb-6">Escuela Profesional de Ingeniería Informática y de Sistemas</p>
+
+  <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl px-10 py-8 max-w-3xl shadow-2xl mb-8">
+    <p class="text-blue-200 text-xs tracking-widest uppercase mb-3">Tarea 4.1 — Actividad 4.3</p>
+    <h1 class="text-4xl font-extrabold leading-tight mb-3">Mini Dossier de<br/>Software Seguro</h1>
+    <p class="text-blue-100 text-base">Gestión de Tareas API — Implementación de Seguridad SSDLC</p>
+  </div>
+
+  <div class="grid grid-cols-2 gap-6 max-w-2xl w-full mb-8 text-left">
+    <div class="bg-white/10 rounded-xl p-4 border border-white/20">
+      <p class="text-blue-300 text-xs uppercase tracking-wider mb-2">Curso</p>
+      <p class="font-semibold text-sm">Ingeniería de Software II</p>
+    </div>
+    <div class="bg-white/10 rounded-xl p-4 border border-white/20">
+      <p class="text-blue-300 text-xs uppercase tracking-wider mb-2">Docente</p>
+      <p class="font-semibold text-sm">Ing. Alex Fernando Huillca Huaman</p>
+    </div>
+    <div class="bg-white/10 rounded-xl p-4 border border-white/20">
+      <p class="text-blue-300 text-xs uppercase tracking-wider mb-2">Equipo</p>
+      <p class="font-semibold text-sm">Equipo 02</p>
+    </div>
+    <div class="bg-white/10 rounded-xl p-4 border border-white/20">
+      <p class="text-blue-300 text-xs uppercase tracking-wider mb-2">Fecha</p>
+      <p class="font-semibold text-sm">Noviembre 2026</p>
+    </div>
+  </div>
+
+  <div class="bg-white/10 rounded-xl p-4 border border-white/20 max-w-2xl w-full text-left mb-8">
+    <p class="text-blue-300 text-xs uppercase tracking-wider mb-2">Repositorio GitHub</p>
+    <p class="font-mono text-xs text-green-300">https://github.com/GamoLG/PRACTICA-4-INGENIERIA-DE-SOFTWARE-II</p>
+    <p class="text-blue-300 text-xs uppercase tracking-wider mt-3 mb-2">Demo en producción</p>
+    <p class="font-mono text-xs text-green-300">https://practica-4-ingenieria-de-software-ii.onrender.com</p>
+  </div>
+
+  <div class="no-print bg-yellow-400 text-yellow-900 rounded-xl px-6 py-3 text-sm font-semibold shadow">
+    💡 Para exportar a PDF: Ctrl+P → Activar "Gráficos de fondo" → Márgenes: Mínimos → Guardar como PDF
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     ÍNDICE
+═════════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<div class="max-w-5xl mx-auto px-8 py-12">
+  <div class="section-title">Tabla de Contenidos</div>
+  <div class="bg-white rounded-2xl shadow p-8">
+    <ol class="space-y-3 text-blue-800">
+      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition">
+        <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">1</span>
+        <div>
+          <p class="font-semibold">Mapa SSDLC</p>
+          <p class="text-xs text-gray-500">Diagrama de las seis etapas con amenazas y controles de seguridad</p>
+        </div>
+      </li>
+      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition">
+        <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">2</span>
+        <div>
+          <p class="font-semibold">Requisitos de Seguridad</p>
+          <p class="text-xs text-gray-500">Cinco requisitos verificables con identificador, amenaza, prioridad y prueba de aceptación</p>
+        </div>
+      </li>
+      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition">
+        <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">3</span>
+        <div>
+          <p class="font-semibold">Matriz de Riesgos</p>
+          <p class="text-xs text-gray-500">Cinco amenazas con probabilidad, impacto, nivel de riesgo, tratamiento y responsable</p>
+        </div>
+      </li>
+      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition">
+        <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">4</span>
+        <div>
+          <p class="font-semibold">Propuesta de Código Seguro</p>
+          <p class="text-xs text-gray-500">Vulnerabilidades identificadas, correcciones aplicadas y pruebas negativas</p>
+        </div>
+      </li>
+      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition">
+        <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">5</span>
+        <div>
+          <p class="font-semibold">Conclusiones y Evidencias</p>
+          <p class="text-xs text-gray-500">Capturas de los diagramas, resultados de las actividades y reflexión del equipo</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     SECCIÓN 1 — MAPA SSDLC
+═════════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<div class="max-w-5xl mx-auto px-8 py-12">
+  <div class="section-title">1. Mapa SSDLC — Secure Software Development Life Cycle</div>
+  <p class="text-sm text-gray-500 mb-8">Diagrama de las seis etapas aplicadas al sistema <strong>Gestión de Tareas API</strong>, con las amenazas identificadas (STRIDE) y los controles de seguridad implementados en cada fase.</p>
+
+  <!-- Etapas SSDLC en columna única con flechas -->
+  <div class="flex flex-col items-center gap-0">
+
+    <!-- Etapa 1 -->
+    <div class="w-full bg-white rounded-2xl shadow border-l-4 border-indigo-600 p-5 flex gap-5 items-start">
+      <div class="w-14 h-14 rounded-xl bg-indigo-600 flex flex-col items-center justify-center text-white flex-shrink-0">
+        <span class="text-xl">📋</span>
+        <span class="text-xs font-bold">E1</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <h3 class="font-bold text-indigo-700 text-base">Requisitos de Seguridad</h3>
+          <span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-medium">Fase 1</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <p class="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">⚠ Amenazas</p>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>• Requisitos incompletos → funciones inseguras</li>
+              <li>• Ausencia de RBAC desde el diseño</li>
+              <li>• Validación de datos no definida</li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-green-700 uppercase tracking-wider mb-1">✅ Controles</p>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>• DTOs Pydantic con <code class="bg-gray-100 px-1 rounded">extra="forbid"</code></li>
+              <li>• 5 requisitos formales (RS-01 a RS-05)</li>
+              <li>• RBAC: roles admin / docente / estudiante</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ssdlc-arrow py-1">↓</div>
+
+    <!-- Etapa 2 -->
+    <div class="w-full bg-white rounded-2xl shadow border-l-4 border-blue-600 p-5 flex gap-5 items-start">
+      <div class="w-14 h-14 rounded-xl bg-blue-600 flex flex-col items-center justify-center text-white flex-shrink-0">
+        <span class="text-xl">🏗️</span>
+        <span class="text-xs font-bold">E2</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <h3 class="font-bold text-blue-700 text-base">Diseño Seguro</h3>
+          <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">Fase 2</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <p class="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">⚠ Amenazas</p>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>• Spoofing de identidad (JWT sin revocación)</li>
+              <li>• Elevation of Privilege (sin IDOR check)</li>
+              <li>• Tampering de datos sin autorización</li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-green-700 uppercase tracking-wider mb-1">✅ Controles</p>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>• JWT con jti UUID único por sesión</li>
+              <li>• STRIDE aplicado en modelado de amenazas</li>
+              <li>• Arquitectura 3 capas: API / Lógica / DB</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ssdlc-arrow py-1">↓</div>
+
+    <!-- Etapa 3 -->
+    <div class="w-full bg-white rounded-2xl shadow border-l-4 border-cyan-600 p-5 flex gap-5 items-start">
+      <div class="w-14 h-14 rounded-xl bg-cyan-600 flex flex-col items-center justify-center text-white flex-shrink-0">
+        <span class="text-xl">💻</span>
+        <span class="text-xs font-bold">E3</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <h3 class="font-bold text-cyan-700 text-base">Codificación Segura</h3>
+          <span class="text-xs bg-cyan-100 text-cyan-700 px-2 py-0.5 rounded-full font-medium">Fase 3</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <p class="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">⚠ Amenazas</p>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>• Inyección SQL (CWE-89)</li>
+              <li>• IDOR – Acceso a recursos ajenos (CWE-284)</li>
+              <li>• XSS por renderizado sin escape (CWE-79)</li>
+              <li>• Fuerza bruta sin limitación</li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-green-700 uppercase tracking-wider mb-1">✅ Controles</p>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>• Prepared Statements (<code class="bg-gray-100 px-1 rounded">?</code> params)</li>
+              <li>• Anti-IDOR: HTTP 403 si <code class="bg-gray-100 px-1 rounded">owner_id ≠ user_id</code></li>
+              <li>• bcrypt con factor 12 de costo</li>
+              <li>• Rate Limiter progresivo (30s / 180s)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ssdlc-arrow py-1">↓</div>
+
+    <!-- Etapa 4 -->
+    <div class="w-full bg-white rounded-2xl shadow border-l-4 border-violet-600 p-5 flex gap-5 items-start">
+      <div class="w-14 h-14 rounded-xl bg-violet-600 flex flex-col items-center justify-center text-white flex-shrink-0">
+        <span class="text-xl">🧪</span>
+        <span class="text-xs font-bold">E4</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <h3 class="font-bold text-violet-700 text-base">Pruebas de Seguridad</h3>
+          <span class="text-xs bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-medium">Fase 4</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <p class="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">⚠ Amenazas</p>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>• Código con vulnerabilidades no detectadas</li>
+              <li>• SAST sin analizar patrones peligrosos</li>
+              <li>• Pruebas negativas no ejecutadas</li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-green-700 uppercase tracking-wider mb-1">✅ Controles</p>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>• 19 pruebas pytest (100% passing)</li>
+              <li>• Bandit SAST: B608 CWE-89 en app_vulnerable</li>
+              <li>• Pylint: W0612 — variable IDOR sin uso detectada</li>
+              <li>• app_segura.py → 0 issues en Bandit</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ssdlc-arrow py-1">↓</div>
+
+    <!-- Etapa 5 -->
+    <div class="w-full bg-white rounded-2xl shadow border-l-4 border-orange-600 p-5 flex gap-5 items-start">
+      <div class="w-14 h-14 rounded-xl bg-orange-600 flex flex-col items-center justify-center text-white flex-shrink-0">
+        <span class="text-xl">🚀</span>
+        <span class="text-xs font-bold">E5</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <h3 class="font-bold text-orange-700 text-base">Despliegue Seguro</h3>
+          <span class="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium">Fase 5</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <p class="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">⚠ Amenazas</p>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>• Comunicación sin cifrado (HTTP)</li>
+              <li>• CORS permisivo (acceso desde cualquier origen)</li>
+              <li>• Headers de seguridad ausentes</li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-green-700 uppercase tracking-wider mb-1">✅ Controles</p>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>• HTTPS forzado en Render.com</li>
+              <li>• CORS regex: sólo orígenes autorizados</li>
+              <li>• Security Headers middleware (X-Frame, CSP, HSTS)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ssdlc-arrow py-1">↓</div>
+
+    <!-- Etapa 6 -->
+    <div class="w-full bg-white rounded-2xl shadow border-l-4 border-green-600 p-5 flex gap-5 items-start">
+      <div class="w-14 h-14 rounded-xl bg-green-600 flex flex-col items-center justify-center text-white flex-shrink-0">
+        <span class="text-xl">🔍</span>
+        <span class="text-xs font-bold">E6</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <h3 class="font-bold text-green-700 text-base">Operación y Monitoreo</h3>
+          <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">Fase 6</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <p class="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">⚠ Amenazas</p>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>• Ataques sin registro ni trazabilidad</li>
+              <li>• Tokens comprometidos sin revocación</li>
+              <li>• Fuerza bruta sin alertas</li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-green-700 uppercase tracking-wider mb-1">✅ Controles</p>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>• <code class="bg-gray-100 px-1 rounded">audit.log</code> sin payload malicioso</li>
+              <li>• <code class="bg-gray-100 px-1 rounded">token_version</code>: revocación de sesión al cambiar contraseña</li>
+              <li>• Rate limiter bloquea y registra IPs sospechosas</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- fin flex-col -->
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     SECCIÓN 2 — REQUISITOS DE SEGURIDAD
+═════════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<div class="max-w-5xl mx-auto px-8 py-12">
+  <div class="section-title">2. Requisitos de Seguridad</div>
+  <p class="text-sm text-gray-500 mb-6">Cinco requisitos verificables definidos a partir del análisis de amenazas STRIDE. Cada requisito es trazable a un caso de prueba automatizado en <code class="bg-gray-100 px-1 rounded text-xs">test_security.py</code>.</p>
+
+  <div class="bg-white rounded-2xl shadow overflow-hidden">
+    <table>
+      <thead>
+        <tr>
+          <th class="w-16">ID</th>
+          <th>Requisito de Seguridad</th>
+          <th>Amenaza STRIDE</th>
+          <th class="w-20">CWE</th>
+          <th class="w-24">Prioridad</th>
+          <th>Prueba de Aceptación</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="font-mono font-bold text-indigo-700">RS-01</span></td>
+          <td>
+            <p class="font-semibold text-gray-800">Control Anti-IDOR</p>
+            <p class="text-xs text-gray-500 mt-0.5">El sistema debe verificar que el usuario autenticado sea propietario del recurso antes de permitir modificación o eliminación.</p>
+          </td>
+          <td><span class="text-xs">Elevation of Privilege</span></td>
+          <td><span class="font-mono text-xs text-red-600">CWE-284</span></td>
+          <td><span class="badge-critica text-xs font-bold px-2 py-1 rounded-full">CRÍTICA</span></td>
+          <td class="text-xs">Solicitar <code>DELETE /tasks/{id_ajeno}</code> retorna <strong>HTTP 403</strong>. Verificado en <code>test_03_idor</code>.</td>
+        </tr>
+        <tr>
+          <td><span class="font-mono font-bold text-indigo-700">RS-02</span></td>
+          <td>
+            <p class="font-semibold text-gray-800">Prevención de Inyección SQL</p>
+            <p class="text-xs text-gray-500 mt-0.5">Todas las consultas a la base de datos deben usar Prepared Statements con parámetros parametrizados.</p>
+          </td>
+          <td><span class="text-xs">Tampering de datos</span></td>
+          <td><span class="font-mono text-xs text-red-600">CWE-89</span></td>
+          <td><span class="badge-critica text-xs font-bold px-2 py-1 rounded-full">CRÍTICA</span></td>
+          <td class="text-xs">Búsqueda con <code>' OR 1=1 --</code> retorna lista vacía <code>[]</code>. Verificado en <code>test_17_sqli</code>.</td>
+        </tr>
+        <tr>
+          <td><span class="font-mono font-bold text-indigo-700">RS-03</span></td>
+          <td>
+            <p class="font-semibold text-gray-800">Almacenamiento Seguro de Contraseñas</p>
+            <p class="text-xs text-gray-500 mt-0.5">Las contraseñas deben almacenarse con hash bcrypt de factor de costo 12. Nunca en texto plano.</p>
+          </td>
+          <td><span class="text-xs">Information Disclosure</span></td>
+          <td><span class="font-mono text-xs text-red-600">CWE-256</span></td>
+          <td><span class="badge-critica text-xs font-bold px-2 py-1 rounded-full">CRÍTICA</span></td>
+          <td class="text-xs">El campo <code>password</code> en DB inicia con <code>$2b$12$</code>. Verificado en <code>test_01_register</code>.</td>
+        </tr>
+        <tr>
+          <td><span class="font-mono font-bold text-indigo-700">RS-04</span></td>
+          <td>
+            <p class="font-semibold text-gray-800">Rate Limiting Progresivo</p>
+            <p class="text-xs text-gray-500 mt-0.5">Tras 3 intentos fallidos de login, el sistema debe bloquear el acceso progresivamente (30s / 180s).</p>
+          </td>
+          <td><span class="text-xs">Denial of Service / Spoofing</span></td>
+          <td><span class="font-mono text-xs text-orange-600">CWE-307</span></td>
+          <td><span class="badge-alta text-xs font-bold px-2 py-1 rounded-full">ALTA</span></td>
+          <td class="text-xs">4.º intento fallido retorna <strong>HTTP 429</strong> con <code>retry_after</code>. Verificado en <code>test_06_brute</code>.</td>
+        </tr>
+        <tr>
+          <td><span class="font-mono font-bold text-indigo-700">RS-05</span></td>
+          <td>
+            <p class="font-semibold text-gray-800">Revocación de Sesión por token_version</p>
+            <p class="text-xs text-gray-500 mt-0.5">Al cambiar la contraseña, el sistema debe invalidar todos los tokens JWT emitidos anteriormente.</p>
+          </td>
+          <td><span class="text-xs">Repudiation / Spoofing</span></td>
+          <td><span class="font-mono text-xs text-orange-600">CWE-613</span></td>
+          <td><span class="badge-alta text-xs font-bold px-2 py-1 rounded-full">ALTA</span></td>
+          <td class="text-xs">Token viejo tras cambio de contraseña retorna <strong>HTTP 401</strong>. Verificado en <code>test_09_revoke</code>.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Leyenda de prioridades -->
+  <div class="mt-6 flex gap-4 flex-wrap">
+    <div class="flex items-center gap-2 text-xs"><span class="badge-critica px-2 py-1 rounded-full font-bold">CRÍTICA</span> <span class="text-gray-500">Riesgo inaceptable, debe corregirse antes del despliegue</span></div>
+    <div class="flex items-center gap-2 text-xs"><span class="badge-alta px-2 py-1 rounded-full font-bold">ALTA</span> <span class="text-gray-500">Riesgo significativo, debe mitigarse en esta iteración</span></div>
+    <div class="flex items-center gap-2 text-xs"><span class="badge-medio px-2 py-1 rounded-full font-bold">MEDIA</span> <span class="text-gray-500">Riesgo aceptable a corto plazo con monitoreo</span></div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     SECCIÓN 3 — MATRIZ DE RIESGOS
+═════════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<div class="max-w-5xl mx-auto px-8 py-12">
+  <div class="section-title">3. Matriz de Riesgos</div>
+  <p class="text-sm text-gray-500 mb-4">Escala: <strong>Probabilidad (P)</strong> e <strong>Impacto (I)</strong> del 1 al 5. Nivel de Riesgo = P × I. Umbral crítico ≥ 15.</p>
+
+  <!-- Heatmap visual -->
+  <div class="bg-white rounded-2xl shadow p-6 mb-6">
+    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Mapa de Calor P × I</p>
+    <div class="grid grid-cols-6 gap-1 text-xs text-center font-mono">
+      <!-- Header -->
+      <div class="text-gray-400 font-semibold py-1">P\I</div>
+      <div class="text-gray-500 font-semibold py-1">1</div>
+      <div class="text-gray-500 font-semibold py-1">2</div>
+      <div class="text-gray-500 font-semibold py-1">3</div>
+      <div class="text-gray-500 font-semibold py-1">4</div>
+      <div class="text-gray-500 font-semibold py-1">5</div>
+      <!-- P=5 -->
+      <div class="text-gray-500 font-semibold py-1">5</div>
+      <div class="bg-yellow-200 rounded py-1">5</div>
+      <div class="bg-yellow-300 rounded py-1">10</div>
+      <div class="bg-orange-400 text-white rounded py-1">15</div>
+      <div class="bg-red-500 text-white rounded py-1">20</div>
+      <div class="bg-red-600 text-white rounded py-1">25</div>
+      <!-- P=4 -->
+      <div class="text-gray-500 font-semibold py-1">4</div>
+      <div class="bg-green-200 rounded py-1">4</div>
+      <div class="bg-yellow-200 rounded py-1">8</div>
+      <div class="bg-yellow-300 rounded py-1">12</div>
+      <div class="bg-orange-400 text-white rounded py-1 ring-2 ring-red-700 font-bold">16</div>
+      <div class="bg-red-500 text-white rounded py-1 ring-2 ring-red-700 font-bold">20</div>
+      <!-- P=3 -->
+      <div class="text-gray-500 font-semibold py-1">3</div>
+      <div class="bg-green-100 rounded py-1">3</div>
+      <div class="bg-green-200 rounded py-1">6</div>
+      <div class="bg-yellow-200 rounded py-1 ring-2 ring-green-500">9</div>
+      <div class="bg-yellow-300 rounded py-1">12</div>
+      <div class="bg-orange-400 text-white rounded py-1 ring-2 ring-red-700 font-bold">15</div>
+      <!-- P=2 -->
+      <div class="text-gray-500 font-semibold py-1">2</div>
+      <div class="bg-green-100 rounded py-1">2</div>
+      <div class="bg-green-100 rounded py-1">4</div>
+      <div class="bg-green-200 rounded py-1">6</div>
+      <div class="bg-yellow-200 rounded py-1">8</div>
+      <div class="bg-yellow-300 rounded py-1">10</div>
+      <!-- P=1 -->
+      <div class="text-gray-500 font-semibold py-1">1</div>
+      <div class="bg-green-100 rounded py-1">1</div>
+      <div class="bg-green-100 rounded py-1">2</div>
+      <div class="bg-green-100 rounded py-1">3</div>
+      <div class="bg-green-200 rounded py-1">4</div>
+      <div class="bg-green-200 rounded py-1">5</div>
+    </div>
+    <div class="flex gap-4 mt-3 text-xs">
+      <span class="flex items-center gap-1"><span class="w-3 h-3 bg-green-200 rounded"></span> Bajo (1-8)</span>
+      <span class="flex items-center gap-1"><span class="w-3 h-3 bg-yellow-300 rounded"></span> Medio (9-12)</span>
+      <span class="flex items-center gap-1"><span class="w-3 h-3 bg-orange-400 rounded"></span> Alto (13-16)</span>
+      <span class="flex items-center gap-1"><span class="w-3 h-3 bg-red-500 rounded"></span> Crítico (≥17)</span>
+      <span class="flex items-center gap-1"><span class="w-3 h-3 border-2 border-red-700 rounded"></span> Amenaza activa</span>
+    </div>
+  </div>
+
+  <!-- Tabla de Amenazas -->
+  <div class="bg-white rounded-2xl shadow overflow-hidden">
+    <table>
+      <thead>
+        <tr>
+          <th class="w-16">ID</th>
+          <th>Amenaza</th>
+          <th class="w-28">STRIDE</th>
+          <th class="w-10 text-center">P</th>
+          <th class="w-10 text-center">I</th>
+          <th class="w-14 text-center">R=P×I</th>
+          <th class="w-24 text-center">Nivel</th>
+          <th>Tratamiento</th>
+          <th class="w-28">Responsable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="font-mono font-bold text-red-700">AM-01</span></td>
+          <td>
+            <p class="font-semibold">Inyección SQL</p>
+            <p class="text-xs text-gray-400">Manipulación directa de consultas DB</p>
+          </td>
+          <td class="text-xs">Tampering</td>
+          <td class="text-center font-bold text-red-600">4</td>
+          <td class="text-center font-bold text-red-600">5</td>
+          <td class="text-center"><span class="font-bold text-white badge-critico px-2 py-0.5 rounded-full text-xs">20</span></td>
+          <td class="text-center"><span class="badge-critico text-xs font-bold px-2 py-1 rounded-full">CRÍTICO</span></td>
+          <td class="text-xs">Mitigar — Prepared Statements con <code>?</code></td>
+          <td class="text-xs">Dev Backend</td>
+        </tr>
+        <tr>
+          <td><span class="font-mono font-bold text-orange-700">AM-02</span></td>
+          <td>
+            <p class="font-semibold">Acceso IDOR</p>
+            <p class="text-xs text-gray-400">Acceso a recursos de otro usuario</p>
+          </td>
+          <td class="text-xs">Elevation of Privilege</td>
+          <td class="text-center font-bold text-orange-600">4</td>
+          <td class="text-center font-bold text-orange-600">4</td>
+          <td class="text-center"><span class="font-bold text-white badge-alto px-2 py-0.5 rounded-full text-xs">16</span></td>
+          <td class="text-center"><span class="badge-alto text-xs font-bold px-2 py-1 rounded-full">ALTO</span></td>
+          <td class="text-xs">Mitigar — Verificar <code>owner_id == user_id</code> → HTTP 403</td>
+          <td class="text-xs">Dev Backend</td>
+        </tr>
+        <tr>
+          <td><span class="font-mono font-bold text-orange-700">AM-03</span></td>
+          <td>
+            <p class="font-semibold">Fuerza Bruta</p>
+            <p class="text-xs text-gray-400">Intentos masivos de login automatizado</p>
+          </td>
+          <td class="text-xs">DoS / Spoofing</td>
+          <td class="text-center font-bold text-orange-600">4</td>
+          <td class="text-center font-bold text-orange-600">4</td>
+          <td class="text-center"><span class="font-bold text-white badge-alto px-2 py-0.5 rounded-full text-xs">16</span></td>
+          <td class="text-center"><span class="badge-alto text-xs font-bold px-2 py-1 rounded-full">ALTO</span></td>
+          <td class="text-xs">Mitigar — Rate Limiter progresivo (IP + cuenta)</td>
+          <td class="text-xs">Dev Backend</td>
+        </tr>
+        <tr>
+          <td><span class="font-mono font-bold text-orange-700">AM-04</span></td>
+          <td>
+            <p class="font-semibold">Reutilización de Token de Reseteo</p>
+            <p class="text-xs text-gray-400">Token de reset usado más de una vez</p>
+          </td>
+          <td class="text-xs">Spoofing</td>
+          <td class="text-center font-bold text-orange-600">3</td>
+          <td class="text-center font-bold text-orange-600">5</td>
+          <td class="text-center"><span class="font-bold text-white badge-alto px-2 py-0.5 rounded-full text-xs">15</span></td>
+          <td class="text-center"><span class="badge-alto text-xs font-bold px-2 py-1 rounded-full">ALTO</span></td>
+          <td class="text-xs">Mitigar — Token de un solo uso SHA-256, TTL 1h</td>
+          <td class="text-xs">Dev Backend</td>
+        </tr>
+        <tr>
+          <td><span class="font-mono font-bold text-green-700">AM-05</span></td>
+          <td>
+            <p class="font-semibold">Cross-Site Scripting (XSS)</p>
+            <p class="text-xs text-gray-400">Inyección de scripts en renderizado dinámico</p>
+          </td>
+          <td class="text-xs">Tampering</td>
+          <td class="text-center font-bold text-yellow-600">3</td>
+          <td class="text-center font-bold text-yellow-600">3</td>
+          <td class="text-center"><span class="font-bold text-white badge-medio-b px-2 py-0.5 rounded-full text-xs">9</span></td>
+          <td class="text-center"><span class="badge-medio text-xs font-bold px-2 py-1 rounded-full">MEDIO</span></td>
+          <td class="text-xs">Mitigar — <code>markupsafe.escape()</code> en salidas</td>
+          <td class="text-xs">Dev Backend</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     SECCIÓN 4 — PROPUESTA DE CÓDIGO SEGURO
+═════════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<div class="max-w-5xl mx-auto px-8 py-12">
+  <div class="section-title">4. Propuesta de Código Seguro</div>
+  <p class="text-sm text-gray-500 mb-8">Comparativa de código vulnerable vs. código seguro. Los archivos <code class="bg-gray-100 px-1 rounded text-xs">app_vulnerable.py</code> y <code class="bg-gray-100 px-1 rounded text-xs">app_segura.py</code> están en el repositorio para verificación.</p>
+
+  <!-- Vulnerabilidad 1: SQLi -->
+  <div class="bg-white rounded-2xl shadow p-6 mb-6">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-lg">🔴</span>
+      <div>
+        <h3 class="font-bold text-gray-800">Vulnerabilidad 1 — Inyección SQL (CWE-89)</h3>
+        <p class="text-xs text-gray-500">Bandit reporta B608 en <code>app_vulnerable.py</code> línea 49</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-5 h-5 rounded bg-red-500 text-white flex items-center justify-center text-xs font-bold">✗</span>
+          <span class="text-sm font-semibold text-red-700">ANTES — Código Vulnerable</span>
+        </div>
+        <div class="code-block"><span class="comment"># app_vulnerable.py — línea 49</span>
+<span class="comment"># ⚠ Bandit: B608 CWE-89 Medium</span>
+<span class="keyword">@app</span>.route(<span class="string">"/tareas"</span>)
+<span class="keyword">def</span> listar_tareas():
+    user_id = request.args.get(<span class="string">"user_id"</span>)
+    <span class="comment"># ⛔ Interpolación directa → SQLi</span>
+    query = <span class="danger">f"SELECT * FROM tareas
+             WHERE user_id = {user_id}"</span>
+    cur.execute(query)
+    <span class="keyword">return</span> jsonify(cur.fetchall())</div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-5 h-5 rounded bg-green-500 text-white flex items-center justify-center text-xs font-bold">✓</span>
+          <span class="text-sm font-semibold text-green-700">DESPUÉS — Código Seguro</span>
+        </div>
+        <div class="code-block"><span class="comment"># app_segura.py — Prepared Statement</span>
+<span class="comment"># ✅ Bandit: 0 issues</span>
+<span class="keyword">@app</span>.route(<span class="string">"/tareas"</span>)
+<span class="keyword">def</span> listar_tareas():
+    user_id = request.args.get(<span class="string">"user_id"</span>)
+    <span class="comment"># ✅ Parámetro separado → imposible SQLi</span>
+    cur.execute(
+        <span class="safe">"SELECT * FROM tareas
+         WHERE user_id = ?"</span>,
+        (user_id,)
+    )
+    <span class="keyword">return</span> jsonify(cur.fetchall())</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vulnerabilidad 2: IDOR -->
+  <div class="bg-white rounded-2xl shadow p-6 mb-6">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-lg">🟠</span>
+      <div>
+        <h3 class="font-bold text-gray-800">Vulnerabilidad 2 — IDOR / Broken Access Control (CWE-284)</h3>
+        <p class="text-xs text-gray-500">Pylint reporta W0612 — variable <code>user_id_session</code> definida pero nunca usada</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-5 h-5 rounded bg-red-500 text-white flex items-center justify-center text-xs font-bold">✗</span>
+          <span class="text-sm font-semibold text-red-700">ANTES — Código Vulnerable</span>
+        </div>
+        <div class="code-block"><span class="comment"># app_vulnerable.py</span>
+<span class="comment"># ⚠ Pylint W0612: unused variable</span>
+<span class="keyword">@app</span>.route(<span class="string">"/tareas/&lt;id&gt;"</span>,
+           methods=[<span class="string">"DELETE"</span>])
+<span class="keyword">def</span> eliminar_tarea(id):
+    <span class="comment"># ⛔ Se obtiene pero NUNCA se verifica</span>
+    <span class="danger">user_id_session = session.get(<span class="string">"user_id"</span>)</span>
+    cur.execute(
+        <span class="danger">f"DELETE FROM tareas WHERE id={id}"</span>)
+    <span class="keyword">return</span> <span class="string">"Eliminado"</span></div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-5 h-5 rounded bg-green-500 text-white flex items-center justify-center text-xs font-bold">✓</span>
+          <span class="text-sm font-semibold text-green-700">DESPUÉS — Código Seguro</span>
+        </div>
+        <div class="code-block"><span class="comment"># app_segura.py + main.py</span>
+<span class="comment"># ✅ Verifica propietario antes de eliminar</span>
+<span class="keyword">@app</span>.route(<span class="string">"/tareas/&lt;id&gt;"</span>,
+           methods=[<span class="string">"DELETE"</span>])
+<span class="keyword">def</span> eliminar_tarea(id):
+    user_id = session.get(<span class="string">"user_id"</span>)
+    cur.execute(
+        <span class="safe">"SELECT owner_id FROM tareas WHERE id=?"</span>,
+        (id,))
+    tarea = cur.fetchone()
+    <span class="safe">if tarea[<span class="string">"owner_id"</span>] != user_id:</span>
+        <span class="safe">abort(403)  <span class="comment"># HTTP 403 Forbidden</span></span>
+    cur.execute(<span class="safe">"DELETE FROM tareas WHERE id=?"</span>,
+                (id,))</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vulnerabilidad 3: XSS -->
+  <div class="bg-white rounded-2xl shadow p-6 mb-8">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center text-lg">🟡</span>
+      <div>
+        <h3 class="font-bold text-gray-800">Vulnerabilidad 3 — XSS / Reflected (CWE-79)</h3>
+        <p class="text-xs text-gray-500">Bandit reporta B201 CWE-94 High en <code>app_vulnerable.py</code> línea 72 (render_template_string sin escape)</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-5 h-5 rounded bg-red-500 text-white flex items-center justify-center text-xs font-bold">✗</span>
+          <span class="text-sm font-semibold text-red-700">ANTES — Código Vulnerable</span>
+        </div>
+        <div class="code-block"><span class="comment"># app_vulnerable.py — línea 72</span>
+<span class="comment"># ⚠ Bandit B201 CWE-94 High</span>
+<span class="keyword">from</span> flask <span class="keyword">import</span> render_template_string
+
+<span class="keyword">@app</span>.route(<span class="string">"/comentario"</span>)
+<span class="keyword">def</span> mostrar_comentario():
+    comentario = request.args.get(
+        <span class="string">"texto"</span>)
+    <span class="comment"># ⛔ XSS: &lt;script&gt;alert('xss')&lt;/script&gt;</span>
+    <span class="keyword">return</span> <span class="danger">render_template_string(
+        f"&lt;p&gt;{comentario}&lt;/p&gt;")</span></div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-5 h-5 rounded bg-green-500 text-white flex items-center justify-center text-xs font-bold">✓</span>
+          <span class="text-sm font-semibold text-green-700">DESPUÉS — Código Seguro</span>
+        </div>
+        <div class="code-block"><span class="comment"># app_segura.py</span>
+<span class="comment"># ✅ Bandit: 0 issues</span>
+<span class="keyword">from</span> markupsafe <span class="keyword">import</span> escape
+
+<span class="keyword">@app</span>.route(<span class="string">"/comentario"</span>)
+<span class="keyword">def</span> mostrar_comentario():
+    comentario = request.args.get(
+        <span class="string">"texto"</span>)
+    <span class="comment"># ✅ escape() neutraliza &lt;script&gt;</span>
+    <span class="keyword">return</span> <span class="safe">f"&lt;p&gt;{escape(comentario)}&lt;/p&gt;"</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Pruebas Negativas -->
+  <div class="section-title">4.1 Pruebas Negativas Automatizadas (pytest)</div>
+  <div class="bg-white rounded-2xl shadow overflow-hidden">
+    <table>
+      <thead>
+        <tr>
+          <th class="w-28">Test ID</th>
+          <th>Descripción</th>
+          <th class="w-24">Input Malicioso</th>
+          <th class="w-28">Resultado Esperado</th>
+          <th class="w-24 text-center">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="font-mono text-xs text-violet-700">test_03_idor</td>
+          <td class="text-xs">Acceso a tarea de otro usuario (IDOR)</td>
+          <td class="text-xs font-mono">DELETE /tasks/{id_ajeno}</td>
+          <td class="text-xs font-bold text-orange-700">HTTP 403</td>
+          <td class="text-center"><span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">✅ PASS</span></td>
+        </tr>
+        <tr>
+          <td class="font-mono text-xs text-violet-700">test_06_brute</td>
+          <td class="text-xs">Fuerza bruta — 4+ intentos login fallidos</td>
+          <td class="text-xs font-mono">password incorrecta x4</td>
+          <td class="text-xs font-bold text-orange-700">HTTP 429</td>
+          <td class="text-center"><span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">✅ PASS</span></td>
+        </tr>
+        <tr>
+          <td class="font-mono text-xs text-violet-700">test_09_revoke</td>
+          <td class="text-xs">Token viejo tras cambio de contraseña</td>
+          <td class="text-xs font-mono">JWT anterior (token_version old)</td>
+          <td class="text-xs font-bold text-red-700">HTTP 401</td>
+          <td class="text-center"><span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">✅ PASS</span></td>
+        </tr>
+        <tr>
+          <td class="font-mono text-xs text-violet-700">test_17_sqli</td>
+          <td class="text-xs">Inyección SQL en búsqueda de tareas</td>
+          <td class="text-xs font-mono">' OR 1=1 --</td>
+          <td class="text-xs font-bold text-green-700">Lista vacía []</td>
+          <td class="text-center"><span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">✅ PASS</span></td>
+        </tr>
+        <tr>
+          <td class="font-mono text-xs text-violet-700">test_14_mass</td>
+          <td class="text-xs">Mass Assignment — inyectar campo is_admin</td>
+          <td class="text-xs font-mono">{"is_admin": true, ...}</td>
+          <td class="text-xs font-bold text-red-700">HTTP 422 (Pydantic forbid)</td>
+          <td class="text-center"><span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">✅ PASS</span></td>
+        </tr>
+        <tr>
+          <td class="font-mono text-xs text-violet-700">test_18_null</td>
+          <td class="text-xs">Campo obligatorio nulo</td>
+          <td class="text-xs font-mono">{"title": null, ...}</td>
+          <td class="text-xs font-bold text-red-700">HTTP 422</td>
+          <td class="text-center"><span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">✅ PASS</span></td>
+        </tr>
+        <tr>
+          <td class="font-mono text-xs text-violet-700">test_11_empty</td>
+          <td class="text-xs">Búsqueda con cadena vacía</td>
+          <td class="text-xs font-mono">q=""</td>
+          <td class="text-xs font-bold text-green-700">HTTP 200 — lista vacía []</td>
+          <td class="text-center"><span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">✅ PASS</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="p-4 bg-green-50 border-t border-green-200 flex items-center gap-3">
+      <span class="text-2xl">✅</span>
+      <div>
+        <p class="font-bold text-green-800 text-sm">19 pruebas ejecutadas — 100% PASS — 0 fallos</p>
+        <p class="text-xs text-green-600">Tiempo total: 9.67 segundos | Comando: <code>pytest test_security.py -v</code></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     SECCIÓN 5 — CONCLUSIONES Y EVIDENCIAS
+═════════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<div class="max-w-5xl mx-auto px-8 py-12">
+  <div class="section-title">5. Conclusiones y Evidencias</div>
+
+  <!-- Reflexión del equipo -->
+  <div class="bg-white rounded-2xl shadow p-6 mb-8">
+    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <span class="text-xl">💡</span> Reflexión del Equipo
+    </h3>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-indigo-50 rounded-xl p-4 border-l-4 border-indigo-500">
+        <p class="font-semibold text-indigo-800 text-sm mb-2">🔒 Seguridad desde el diseño (Shift-Left)</p>
+        <p class="text-xs text-gray-700">Implementar STRIDE y los requisitos de seguridad (RS-01 a RS-05) desde la fase de requisitos nos permitió anticipar vulnerabilidades críticas como SQLi e IDOR antes de escribir la primera línea de código, reduciendo el costo de corrección hasta 10× frente a detectarlas en producción.</p>
+      </div>
+      <div class="bg-violet-50 rounded-xl p-4 border-l-4 border-violet-500">
+        <p class="font-semibold text-violet-800 text-sm mb-2">🤖 Valor del análisis estático (SAST)</p>
+        <p class="text-xs text-gray-700">Bandit detectó automáticamente CWE-89 (B608) en <code>app_vulnerable.py</code> y CWE-94 (B201), dos vulnerabilidades que un revisor humano podría omitir. La comparación entre la app vulnerable y la segura demostró que 0 issues en Bandit es un indicador tangible de mejora en calidad de código.</p>
+      </div>
+      <div class="bg-cyan-50 rounded-xl p-4 border-l-4 border-cyan-500">
+        <p class="font-semibold text-cyan-800 text-sm mb-2">🧪 Pruebas negativas como red de seguridad</p>
+        <p class="text-xs text-gray-700">Las 19 pruebas automatizadas —incluyendo pruebas negativas que inyectan payloads maliciosos reales— garantizan que cada refactorización del código no rompa los controles de seguridad. Este enfoque permite evolucionar el software con confianza.</p>
+      </div>
+      <div class="bg-green-50 rounded-xl p-4 border-l-4 border-green-500">
+        <p class="font-semibold text-green-800 text-sm mb-2">🚀 Despliegue seguro y observable</p>
+        <p class="text-xs text-gray-700">La combinación de HTTPS en Render, Security Headers middleware, CORS regex restrictivo y <code>audit.log</code> estructurado transforma el sistema de una API básica en un servicio observable y defendible en producción, cumpliendo con los requisitos OWASP Top 10.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Métricas de logro -->
+  <div class="bg-white rounded-2xl shadow p-6 mb-8">
+    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <span class="text-xl">📊</span> Métricas de Logro
+    </h3>
+    <div class="grid grid-cols-4 gap-4 text-center">
+      <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl p-4">
+        <p class="text-3xl font-black">19</p>
+        <p class="text-xs text-green-100 mt-1">Pruebas pytest<br/>100% passing</p>
+      </div>
+      <div class="bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl p-4">
+        <p class="text-3xl font-black">0</p>
+        <p class="text-xs text-red-100 mt-1">Issues Bandit<br/>en app_segura</p>
+      </div>
+      <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-xl p-4">
+        <p class="text-3xl font-black">3</p>
+        <p class="text-xs text-indigo-100 mt-1">Vulnerabilidades<br/>corregidas</p>
+      </div>
+      <div class="bg-gradient-to-br from-violet-500 to-violet-600 text-white rounded-xl p-4">
+        <p class="text-3xl font-black">6</p>
+        <p class="text-xs text-violet-100 mt-1">Etapas SSDLC<br/>implementadas</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evidencias — Capturas de pantalla -->
+  <div class="section-title" style="margin-top:2rem">5.1 Evidencias — Capturas de Pantalla del Software</div>
+  <p class="text-sm text-gray-500 mb-6">Capturas reales del sistema <strong>Gestión de Tareas API</strong> en funcionamiento, demostrando los controles de seguridad implementados.</p>
+
+  <!-- Galería de evidencias -->
+  <div class="space-y-6">
+
+    <!-- Fila 1: Login -->
+    <div class="bg-white rounded-2xl shadow overflow-hidden">
+      <div class="bg-indigo-700 text-white px-5 py-3 flex items-center gap-2">
+        <span>🔐</span>
+        <span class="font-semibold text-sm">Autenticación y Control de Acceso</span>
+      </div>
+      <div class="grid grid-cols-2 gap-4 p-4">
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/LOGIN.png" alt="Pantalla de Login" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src='';this.alt='[Imagen no cargada]';this.className='rounded-xl w-full border-2 border-dashed border-gray-300 h-32 flex items-center justify-center bg-gray-50'" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Pantalla principal de Login</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/inicio de sesion.png" alt="Inicio de Sesión" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Inicio de sesión exitoso</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila 2: Seguridad -->
+    <div class="bg-white rounded-2xl shadow overflow-hidden">
+      <div class="bg-red-700 text-white px-5 py-3 flex items-center gap-2">
+        <span>🛡️</span>
+        <span class="font-semibold text-sm">Controles de Seguridad Activos</span>
+      </div>
+      <div class="grid grid-cols-3 gap-4 p-4">
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/seguridad en el inicio de sesion.png" alt="Seguridad Login" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Seguridad en inicio de sesión</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/denegacion al inicio de sesion de usuarios no creados.png" alt="Denegación acceso" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Denegación a usuarios no registrados</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/error en la cracion de la contraseña-debe ser segura.png" alt="Validación contraseña" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Validación de contraseña segura</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila 3: Registro -->
+    <div class="bg-white rounded-2xl shadow overflow-hidden">
+      <div class="bg-cyan-700 text-white px-5 py-3 flex items-center gap-2">
+        <span>👤</span>
+        <span class="font-semibold text-sm">Gestión de Usuarios</span>
+      </div>
+      <div class="grid grid-cols-3 gap-4 p-4">
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/creacion de cuenta.png" alt="Crear cuenta" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Creación de cuenta nueva</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/confirmacion de la creacion de la cuenta.png" alt="Confirmación cuenta" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Confirmación de registro</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/cuenta ya creada.png" alt="Cuenta existente" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Protección contra duplicados</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila 4: Tareas CRUD -->
+    <div class="bg-white rounded-2xl shadow overflow-hidden">
+      <div class="bg-violet-700 text-white px-5 py-3 flex items-center gap-2">
+        <span>📋</span>
+        <span class="font-semibold text-sm">Gestión de Tareas (CRUD Seguro)</span>
+      </div>
+      <div class="grid grid-cols-3 gap-4 p-4">
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/creacion de tarea.png" alt="Crear tarea" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Creación de tarea</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/confirmacion de la creacion de la tarea.png" alt="Confirmar tarea" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Confirmación de creación</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/lista de tareas.png" alt="Lista de tareas" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Lista de tareas del usuario</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-4 p-4 pt-0">
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/editar una tarea creada.png" alt="Editar tarea" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Edición de tarea</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/tarea editada realizada.png" alt="Tarea editada" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Tarea actualizada con éxito</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/buscar tareas.png" alt="Buscar tareas" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Búsqueda segura de tareas</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila 5: Eliminación -->
+    <div class="bg-white rounded-2xl shadow overflow-hidden">
+      <div class="bg-red-800 text-white px-5 py-3 flex items-center gap-2">
+        <span>🗑️</span>
+        <span class="font-semibold text-sm">Eliminación Controlada (Anti-IDOR)</span>
+      </div>
+      <div class="grid grid-cols-2 gap-4 p-4">
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/eliminar una tarea.png" alt="Eliminar tarea" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Solicitud de eliminación</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/tarea eliminada.png" alt="Tarea eliminada" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Tarea eliminada (solo el propietario puede hacerlo)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila 6: Perfiles y API -->
+    <div class="bg-white rounded-2xl shadow overflow-hidden">
+      <div class="bg-green-700 text-white px-5 py-3 flex items-center gap-2">
+        <span>👥</span>
+        <span class="font-semibold text-sm">Roles y API Docs</span>
+      </div>
+      <div class="grid grid-cols-3 gap-4 p-4">
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/perfil del admin.png" alt="Perfil admin" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Vista de Administrador (RBAC)</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/perfil de docente.png" alt="Perfil docente" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Vista de Docente (RBAC)</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/APIsdelSoftware1.png" alt="API Docs" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src='CAPTURAS DE PANTALLA DEL SOFTWARE/APIs del software 1.png'" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Documentación API (FastAPI /docs)</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 p-4 pt-0">
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/APIs del software 2.png" alt="API Docs 2" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Endpoints de Autenticación (API)</p>
+        </div>
+        <div>
+          <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/APIs del software 3.png" alt="API Docs 3" class="rounded-xl w-full border border-gray-200 shadow-sm" onerror="this.src=''" />
+          <p class="text-xs text-center text-gray-500 mt-2 font-medium">Endpoints de Gestión de Tareas (API)</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- fin galería -->
+
+  <!-- Links finales -->
+  <div class="bg-white rounded-2xl shadow p-6 mt-8">
+    <h3 class="font-bold text-gray-800 mb-4">🔗 Referencias del Proyecto</h3>
+    <div class="grid grid-cols-2 gap-4 text-sm">
+      <div class="bg-gray-50 rounded-xl p-4">
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Repositorio GitHub</p>
+        <p class="font-mono text-xs text-blue-700 break-all">https://github.com/GamoLG/PRACTICA-4-INGENIERIA-DE-SOFTWARE-II</p>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-4">
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Demo en Producción (Render)</p>
+        <p class="font-mono text-xs text-blue-700 break-all">https://practica-4-ingenieria-de-software-ii.onrender.com</p>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-4">
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Documentación API (Swagger)</p>
+        <p class="font-mono text-xs text-blue-700 break-all">https://practica-4-ingenieria-de-software-ii.onrender.com/docs</p>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-4">
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Informe SAST Completo</p>
+        <p class="font-mono text-xs text-gray-600">INFORME_ACTIVIDADES_3_Y_4.md (en repositorio)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer del documento -->
+  <div class="mt-8 text-center text-xs text-gray-400 border-t border-gray-200 pt-6">
+    <p class="font-semibold text-gray-600">Universidad Nacional de San Antonio Abad del Cusco — UNSAAC</p>
+    <p>Escuela Profesional de Ingeniería Informática y de Sistemas | Ingeniería de Software II</p>
+    <p class="mt-1">Docente: Ing. Alex Fernando Huillca Huaman | Equipo 02 | Noviembre 2026</p>
+    <p class="mt-2 text-gray-300">Mini Dossier de Software Seguro — Tarea 4.1 — Actividad 4.3</p>
+  </div>
+
+</div><!-- fin sección 5 -->
+
+</body>
+</html>
